@@ -3,6 +3,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import env from '../environment'
 import dBConnection from '../database/mongoose/setup'
+import userRouter from '../../modules/user/app/handler/route'
 
 // import { errorMiddleware } from './error.js';
 
@@ -19,7 +20,7 @@ class ExpressServer {
 
         this.initializeCORS();
         this.initializeMiddlewares();
-        // this.initializeDBConnection()
+        this.initializeDBConnection()
         this.initializeRoutes();
     }
     
@@ -38,7 +39,7 @@ class ExpressServer {
     }
 
     private initializeRoutes() {
-        // this.app.use('/login', loginRouter);
+        this.app.use('/user', userRouter);
         this.app.use("/health", (req, res) => res.json("Health check"));
     }
 
