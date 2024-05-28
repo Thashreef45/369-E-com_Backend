@@ -1,17 +1,27 @@
 interface IRepository {
     //------------------------------------- category -------------------------------------
+
     createSubCategory(
         id: string,
-        subcategory: {
-        name: string, subcategory: { name: string, description: string }
-    }): any
+        subcategory: { name: string, description: string }
+    ): any
 
     createCategory(name: string, description: string) : any
-    
+
     getCategory(name:string) : any
+    getCategoryById(id:string) :any
+
+
 
 
     //------------------------------------- product -------------------------------------
+
+    // create product
+    createProduct(name: String,description: String,
+        price: Number,images: String[],
+        thumbnail: String,stock: Number
+    ) : any
+
     getProduct(id: string): any
     getProducts(data: string[]): any
     getAllProducts(): any
