@@ -8,21 +8,27 @@ const adminRouter = express()
 //login
 adminRouter.post('/login',controller.login)
 
-//COMPLETED
-
 
 //create category 
 adminRouter.post('/category',controller.createProduct)
 
+
 //create subcategory 
-adminRouter.post('/subcategory',controller.createProduct)
+adminRouter.post('/subcategory',controller.createSubCategory)
+
+
+
+//COMPLETED
+
+
+
+
 
 
 //pending
-// creaet subcategory
 
 
-//add product
+//create product
 adminRouter.post('/product',controller.createProduct)
 
 

@@ -16,18 +16,21 @@ class productRepository implements IRepository {
         const updated = await newCategory.save()
     }
 
-    // find a category 
-    async getCategory(name:string) {
-        const result  = await categoryModel.findOne({name:name})
+    // find a category by name 
+    async getCategory(name: string) {
+        const result = await categoryModel.findOne({ name: name })
         return result
     }
-    
+
+    /*find a category by its _id */
+    async getCategoryById(id: string) {
+        const result = await categoryModel.findOne({ _id: id })
+        return result
+    }
+
 
     // create sub category 
-    async createSubCategory(
-        id: string,
-        subcategory: { name: string, subcategory: { name: string, description: string } }
-    ) {
+    async createSubCategory(id: string, subcategory: { name: string, description: string }) {
         const updated = await categoryModel.updateOne(
             { _id: id },
             {
@@ -44,6 +47,18 @@ class productRepository implements IRepository {
 
     //------------------------------------- PRODUCT -------------------------------------
 
+    //create new product
+    async createProduct(
+        name: String, description: String,
+        price: Number, images: String[],
+        thumbnail: String, stock: Number) {
+
+        const newProduct = await new productModel({
+            name, description, price, images, thumbnail, stock
+        })
+    }
+
+
     // fetch a single product
     async getProduct(id: string) {
         return await productModel.findOne({ _id: id })
@@ -58,6 +73,7 @@ class productRepository implements IRepository {
     async getAllProducts() {
         return await productModel.find()
     }
+
 
 }
 

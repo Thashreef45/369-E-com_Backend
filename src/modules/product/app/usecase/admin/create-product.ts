@@ -1,12 +1,29 @@
+import StatusCode from "../../../infrastructure/config/staus-code"
 import IRepository from "../../../infrastructure/interface/IRepository"
 
 class CreateProduct {
     private repository : IRepository 
-    constructor(){}
+    
+    constructor(dependencies:Dependencies){
+        this.repository = dependencies.repository
+    }
 
+    async execute(data:Input){
+        const created  = await this.repository.createProduct(
+            data.name,
+            data.description,
+            data.price,
+            data.images,
+            data.thumbnail,
+            data.stock
+        )
 
+        return {
+            response  : {message : "Product created succesfull"},
+            status : StatusCode.CREATED
+        }
+    }
 
-    execute(data:Input){}
 }
 
 export default CreateProduct
@@ -17,5 +34,10 @@ interface Dependencies {
 }
 
 interface Input {
-
+    name: String
+    description: String
+    price: Number
+    images: [String]
+    thumbnail: String
+    stock: Number
 }
