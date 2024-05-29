@@ -34,16 +34,12 @@ userRouter.post('/wishlist',middleware,controller.addToWishlist)
 userRouter.delete('/wishlist',middleware,controller.removeFromWishlist)
 
 
-// get all products
+// get all products / filtering by queries
 userRouter.get('/products',controller.getProducts)
 
 
 // fetching a single product
-userRouter.get('/product',controller.fetchProduct)  // pending work -- todo id should be in params
-
-
-//search a product todo:pending 
-userRouter.get('/product',controller.fetchProduct)
+userRouter.get('/product/:productId',controller.fetchProduct)  // pending work -- todo id should be in params
 
 
 //add new address

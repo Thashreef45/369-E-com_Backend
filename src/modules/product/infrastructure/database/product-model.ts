@@ -29,6 +29,16 @@ const productSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
+    subcategoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category.subcategories',
+        required: true
     }
 }, { timestamps: true });
 
