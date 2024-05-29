@@ -10,7 +10,7 @@ adminRouter.post('/login',controller.login)
 
 
 //create category 
-adminRouter.post('/category',controller.createProduct)
+adminRouter.post('/category',controller.createProduct)  //-- pending category, subcategory
 
 
 //create subcategory 

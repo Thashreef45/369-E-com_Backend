@@ -19,7 +19,8 @@ interface IRepository {
     // create product
     createProduct(name: String,description: String,
         price: Number,images: String[],
-        thumbnail: String,stock: Number
+        thumbnail: String,stock: Number,
+        categoryId : String,subCategoryId : String
     ) : any
 
     getProduct(id: string): any

@@ -33,13 +33,14 @@ export const getProduct = async (productId: string) => {
 }
 
 
-// get all products
-export const getAllProducts = async () => {
+// get all products || filter by query
+export const getAllProducts = async (query) => {
     const dependencies = {
         repository: productRepository
     }
+    
     const interactor = new GetAllProducts(dependencies)
-    const output = await interactor.execute()
+    const output = await interactor.execute(query)
     return output
 }
 

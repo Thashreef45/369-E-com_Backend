@@ -164,15 +164,17 @@ export const removeFromWishlist = async (req: Request, res: Response) => {
 }
 
 
-// fetch all products
+
+// fetch all products || filter by queries
 export const getProducts = async (req: Request, res: Response) => {
 
+    const query = req.query
     const dependencies = {
         getAllProducts: productPublisher.getProducts
     }
 
     const interactor = new GetAllProducts(dependencies)
-    const output = await interactor.execute()
+    const output = await interactor.execute(query)
     res.status(output.status).json(output.response)
 }
 
@@ -181,6 +183,10 @@ export const getProducts = async (req: Request, res: Response) => {
 
 // fetch a product
 export const fetchProduct = async (req: Request, res: Response) => {
+
+    const data = {
+        productID: req.params.productId
+    }
 
     const dependencies = {
         getAllProducts: productPublisher.getProduct

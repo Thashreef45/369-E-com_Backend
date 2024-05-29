@@ -75,7 +75,6 @@ export const createSubCategory = async (req: Request, res: Response) => {
 
 
 
-
 // create new product
 export const createProduct = async (req: Request, res: Response) => {
     const data = {
@@ -85,6 +84,8 @@ export const createProduct = async (req: Request, res: Response) => {
         images: req.body.images , //[String]
         thumbnail:  req.body.thumbnail,//String
         stock: req.body.stock ,// Number
+        categoryId : req.body.categoryId,
+        subCategoryId : req.body.subCategoryId,
     }
     const dependencies = {
         createProduct: productPublisher.createNewProduct

@@ -8,10 +8,10 @@ class GetAllProducts {
         this.getAllProducts = dependencies.getAllProducts
     }
 
-    async execute() {
+    async execute(query) : Promise<Output>  {
 
         // fetch products
-        const products = await this.getAllProducts()
+        const products = await this.getAllProducts(query)
 
         // response
         return {
@@ -25,7 +25,11 @@ export default GetAllProducts
 
 
 interface Dependencies {
-    getAllProducts(): Promise<any[]> //todo:implementations of interface
+    getAllProducts(query:any): Promise<any> //todo:implementations of interface
 }
 
+interface Output {
+    response : {message:string , data :any},
+    status : StatusCode
+}
 

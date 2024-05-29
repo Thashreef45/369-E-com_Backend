@@ -24,9 +24,12 @@ export const createNewProduct = async (
     price: Number,
     images: [String],
     thumbnail: String,
-    stock: Number) => {
+    stock: Number,
+    categoryId : String,
+    subCategoryId : String
+) => {
 
-    const result = await eventPublisher.createProduct({name,description,price,images,thumbnail,stock})
+    const result = await eventPublisher.createProduct({name,description,price,images,thumbnail,stock,categoryId,subCategoryId})
     return result
 }
 

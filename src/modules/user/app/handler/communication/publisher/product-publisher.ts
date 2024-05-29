@@ -7,8 +7,8 @@ export const getProductsById = async (productIds: string[]) => {
 
 
 // fetch all products
-export const getProducts = async () => {
-    const response = await productPublisher.getAllProducts()
+export const getProducts = async (query) => {
+    const response = await productPublisher.getAllProducts(query)
     return response
 }
 

@@ -15,7 +15,9 @@ class CreateProduct {
             data.price,
             data.images,
             data.thumbnail,
-            data.stock
+            data.stock,
+            data.categoryId,
+            data.subCategoryId
         )
 
         return {
@@ -40,4 +42,6 @@ interface Input {
     images: [String]
     thumbnail: String
     stock: Number
+    categoryId : String,
+    subCategoryId : String
 }
