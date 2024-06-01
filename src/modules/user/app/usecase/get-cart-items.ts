@@ -25,20 +25,19 @@ class GetCartItems {
         // create array wich have ids of user cart items
         const idArray = this.cartItems(user.cart)
 
-        if (!idArray.length) {
-            return {
-                response: { message: "Success", data: [] },
-                status: StatusCode.OK
-            }
+        if (!idArray.length) return {
+            response: { message: "Success", data: [] },
+            status: StatusCode.OK
         }
 
         // fetch datas of that products
         const cartData = await this.getProducts(idArray)
 
+        const responseData = this.attachCartQuantiy(cartData,user.cart)
 
         // response
         return {
-            response: { message: "Success", data: cartData },
+            response: { message: "Success", data: responseData },
             status: StatusCode.OK
         }
     }
@@ -47,8 +46,19 @@ class GetCartItems {
     //create a array of id's of user cart items eg:["id1","id2","id3"]
     private cartItems(data: Cart[]): string[] {
         return data.map((items: Cart) => {
-            return items.product_id
+            return items.productId
         })
+    }
+
+
+    private attachCartQuantiy (data:any[],cartData:{productId:string,quantity:number}[]) {
+        cartData.forEach((cart) => {
+            for(let i = 0 ; i < data.length ; i++){
+                if(data[i]._id == cart.productId) data[i].quantity = cart.quantity
+            }
+
+        })
+        return cartData
     }
 }
 
@@ -65,7 +75,7 @@ interface Dependencies {
 }
 
 interface Cart {
-    product_id: string
+    productId: string
     quantity: number
 }
 

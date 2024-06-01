@@ -11,7 +11,22 @@ class RemoveFromWishlist {
 
     async execute(data: Input) {
 
-        const response = await this.repository.removeFromWishlist(data.phone,data.productId)
+        // check user exist or not 
+        const user = await this.repository.findByPhone(data.phone)
+        if (!user) return {
+            response: { message: 'User not found' },
+            status: StatusCode.NOT_FOUND
+        }
+
+
+        const isExist = this.checkWishlist(user.wishlist,data.productId)
+        if(!isExist) return {
+            response: { message: "Product not exist on wishlist" },
+            status: StatusCode.BAD_REQUEST
+        }
+
+
+        const response = await this.repository.removeFromWishlist(data.phone, data.productId)
         // response todo : pending with 404 , 400 (not updated)
         return {
             response: { message: "Success" },
@@ -19,6 +34,12 @@ class RemoveFromWishlist {
         }
     }
 
+
+    private checkWishlist (wishlist : string[], productID:string) {
+        for(let i=0 ;  i < wishlist.length ; i++){
+            if(wishlist[i] == productID) return true
+        } return false
+    }
 }
 
 export default RemoveFromWishlist

@@ -12,6 +12,10 @@ interface IRepository {
     getCategoryById(id:string) :any
 
 
+    //fetch all categories
+    fetchAllCategories () : any
+
+
 
 
     //------------------------------------- product -------------------------------------

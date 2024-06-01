@@ -7,7 +7,7 @@ export const getProductsById = async (productIds: string[]) => {
 
 
 // fetch all products
-export const getProducts = async (query) => {
+export const getProducts = async (query:any) => {
     const response = await productPublisher.getAllProducts(query)
     return response
 }
