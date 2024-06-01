@@ -44,8 +44,9 @@ class UserRepository implements IRepository {
                 }
             }
         );
-        // return ''
+        return result
     }
+
 
     async updateCartProductCount(phone: string, productId: string, count: number) {
         await userModel.updateOne(
@@ -55,6 +56,7 @@ class UserRepository implements IRepository {
             }
         )
     }
+
 
     async removeFromCart(phone: string, productId: string) {
         await userModel.updateOne(
@@ -75,11 +77,11 @@ class UserRepository implements IRepository {
             { phone: phone },
             {
                 $addToSet: {
-                    wishlist: { productId: productId }
+                    wishlist: productId
                 }
             }
         );
-        // return '' 
+        return result
     }
 
 
@@ -89,7 +91,7 @@ class UserRepository implements IRepository {
             { phone: phone, "cart.productId": productId },
             {
                 $pull: {
-                    wishlist: { productId: productId }
+                    wishlist: productId
                 }
             }
         )

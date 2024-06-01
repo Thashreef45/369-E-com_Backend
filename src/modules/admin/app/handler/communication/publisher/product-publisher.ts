@@ -16,6 +16,13 @@ export const createNewSubCategory = async (categoryId: string, name: string, des
     return result
 }
 
+// publisher for fetching all categories along with its sub-category
+export const getAllCategories = async () => {
+
+    const result = await eventPublisher.fetchAllCategory()
+    return result
+}
+
 
 // publisher for creating a product
 export const createNewProduct = async (
@@ -31,6 +38,13 @@ export const createNewProduct = async (
 
     const result = await eventPublisher.createProduct({name,description,price,images,thumbnail,stock,categoryId,subCategoryId})
     return result
+}
+
+
+// fetch all products
+export const getProducts = async (query:any) => {
+    const response = await eventPublisher.getAllProducts(query)
+    return response
 }
 
 

@@ -1,5 +1,4 @@
 import StatusCode from '../../infrastructure/config/staus-code'
-import IRepository from '../../infrastructure/interface/IRepository'
 
 class GetAllProducts {
 
@@ -10,7 +9,6 @@ class GetAllProducts {
     }
 
     async execute(query:any) : Promise<Output>  {
-
 
         // fetch products
         const products = await this.getAllProducts(query)
@@ -30,9 +28,8 @@ interface Dependencies {
     getAllProducts(query:any): Promise<any> //todo:implementations of interface
 }
 
-
 interface Output {
-    response : {message:string , data ?:any},
+    response : {message:string , data :any},
     status : StatusCode
 }
 

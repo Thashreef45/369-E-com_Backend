@@ -1,16 +1,34 @@
 import {sign,verify} from 'jsonwebtoken'
 import env from '../config/environment'
 
-const createToken = (phone : string) => {
-    const token = {
-        phone : phone,
-        role : "user"
-    }
 
-    // todo : time has to be changed
-    const time = 0
+// Common function to generate token
+const generateToken = (phone :string, time:string) => {
+    
+    const payload = { phone : phone,role : "user" }
 
-    return sign(token,env.JWT_SIGNATURE,{expiresIn:time})
+    return sign(payload,env.JWT_SIGNATURE,{expiresIn:time})
 }
 
-export default createToken
+
+// Generate token for 5 minute
+const createTempToken = (phone : string) : string => {
+    const token = generateToken(phone,'5m')
+    return token
+    
+}
+
+
+//Generate token for 3 day
+const createToken = (phone : string) : string => {
+    const token = generateToken(phone,'3d')
+    return token
+}
+
+
+
+
+export {
+    createToken,
+    createTempToken,
+} 

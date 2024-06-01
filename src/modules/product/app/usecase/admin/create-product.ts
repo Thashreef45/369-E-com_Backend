@@ -9,21 +9,34 @@ class CreateProduct {
     }
 
     async execute(data:Input){
-        const created  = await this.repository.createProduct(
-            data.name,
-            data.description,
-            data.price,
-            data.images,
-            data.thumbnail,
-            data.stock,
-            data.categoryId,
-            data.subCategoryId
-        )
+        try {
 
-        return {
-            response  : {message : "Product created succesfull"},
-            status : StatusCode.CREATED
+            const created  = await this.repository.createProduct(
+                data.name,
+                data.description,
+                data.price,
+                data.images,
+                data.thumbnail,
+                data.stock,
+                data.categoryId,
+                data.subCategoryId
+            )
+
+
+            //todo : have to verify  created , not created  , internal errors
+            
+            return {
+                response  : {message : "Product created succesfull"},
+                status : StatusCode.CREATED
+            }
+        } catch (error) {
+
+            return {
+                response  : {message : "Product created failed"},
+                status : StatusCode.INTERNAL_ERROR
+            }
         }
+        
     }
 
 }

@@ -18,25 +18,34 @@ adminRouter.post('/subcategory',controller.createSubCategory)
 
 
 
-//COMPLETED
+// get all catogery with subcategory
+adminRouter.get('/category',controller.fetchAllCategory)
 
-
-
-
-
-
-//pending
 
 
 //create product
 adminRouter.post('/product',controller.createProduct)
 
 
+//-----------------------COMPLETED-------------------
+
+
+
+//get all products
+adminRouter.get('/products',controller.getAllProducts)
+
+//pending
+
+
+//fetch a product
+
+
+
+
 
 
 //todo - -- pendings 
-//get all products
-adminRouter.get('/products',controller.login)
+
 
 //get a product
 

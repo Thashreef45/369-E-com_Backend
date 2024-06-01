@@ -26,37 +26,70 @@ userRouter.patch('/cart',middleware,controller.updateCart)
 userRouter.delete('/cart',middleware,controller.removeFromCart)
 
 
+
 // add to wishlist
 userRouter.post('/wishlist',middleware,controller.addToWishlist)
+
 
 
 // remove from wishlist
 userRouter.delete('/wishlist',middleware,controller.removeFromWishlist)
 
 
+
 // get all products / filtering by queries
 userRouter.get('/products',controller.getProducts)
 
 
+
 // fetching a single product
-userRouter.get('/product/:productId',controller.fetchProduct)  // pending work -- todo id should be in params
+userRouter.get('/product/:productId',controller.fetchProduct)
+
 
 
 //add new address
 userRouter.post('/address',middleware,controller.addAddress)
 
 
+
 //fetch a address
 userRouter.get('/address',middleware,controller.getAddress)
+
 
 
 //update a address
 userRouter.patch('/address',middleware,controller.updateAddress)
 
 
+
+// -----------------------------------------------------
+
+
+
+
 //remove address
 userRouter.delete('/address',middleware,controller.deleteAddress)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------- pending work -------------------------------------------------
+
+
+// rate a product 
+userRouter.post('/rate',controller.rateProduct)  
 
 //payment
 // userRouter.post('/checkout',middleware,controller)

@@ -1,58 +1,56 @@
-import {Schema,model} from "mongoose";
+import { Schema, model } from "mongoose";
 
-const userSchema = new Schema ({
-    name : {
-        type : String,
-        trim : true 
+const userSchema = new Schema({
+    name: {
+        type: String,
+        trim: true
     },
-    dob : String,
-    phone : {
-        require : true,
-        unique : true,
-        type : String
+    dob: String,
+    phone: {
+        require: true,
+        unique: true,
+        type: String
     },
-    address : [
+    address: [
         {
-            name : String,
-            address : String,
-            phone : String,
-            pin : String,
+            name: String,
+            address: String,
+            phone: String,
+            pin: String,
         }
     ],
-    
-    cart : [
+
+    cart: [
         {
-            productId : {
-                type : Schema.Types.ObjectId,
-                ref : "Product",
-                unique : true
+            productId: {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+                unique: true
             },
-            quantity : {
-                type : Number,
-                default : 1,
+            quantity: {
+                type: Number,
+                default: 1,
             }
         }
     ],
 
-    wishlist : [
+    wishlist: [
         {
-            productId : {
-                type : Schema.Types.ObjectId,
-                ref : "Product",
-                unique : true
-            },
-        }
+            type: Schema.Types.ObjectId,
+            ref: "Product",
+            unique: true
+        },
     ],
 
-    otp : String
+    otp: String
 
     // otp : {
     //     number : String,
     //     createAt : Date,
     // }
 
-},{ timestamps: true })
+}, { timestamps: true })
 
 
-const userModel = model('user',userSchema)
+const userModel = model('User', userSchema)
 export default userModel

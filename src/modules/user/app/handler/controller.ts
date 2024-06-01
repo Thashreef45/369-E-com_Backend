@@ -10,7 +10,7 @@ import * as productPublisher from './communication/publisher/product-publisher' 
 import userRepository from '../../infrastructure/repository/user-repository'
 //services
 import generateOtp from '../../infrastructure/services/generate-otp'
-import createToken from '../../infrastructure/services/generateToken'
+import {createToken,createTempToken} from '../../infrastructure/services/generateToken'
 
 //usecase
 import Login_Signup from '../usecase/login-signup'
@@ -26,6 +26,7 @@ import AddNewAddress from "../usecase/add-new-address";
 import GetAddress from "../usecase/get-a-address";
 import DeleteAddress from "../usecase/remove-a-address";
 import UpdateAddress from "../usecase/update-a-address";
+import GetProduct from "../usecase/get-a-product";
 
 //repository instance
 const repository = new userRepository()
@@ -33,7 +34,7 @@ const repository = new userRepository()
 
 
 
-// Handler functions
+//----------------------- Handler functions -----------------------
 
 export const login_signup = async (req: Request, res: Response) => {
     const data = {
@@ -42,7 +43,7 @@ export const login_signup = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
         generateOtp,
-        createToken,
+        createToken : createTempToken,
         sendOtp: notificationPublisher.sendLoginSignUpOtp
     }
 
@@ -52,12 +53,15 @@ export const login_signup = async (req: Request, res: Response) => {
 }
 
 
+
+
 export const verifyOtp = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
         otp: req.body.otp
     }
     const dependencies = {
+        createToken : createToken ,
         repository
     }
 
@@ -67,6 +71,8 @@ export const verifyOtp = async (req: Request, res: Response) => {
 
     // console.log("hey , whatsup!")
 }
+
+
 
 
 export const getCartItems = async (req: Request, res: Response) => {
@@ -83,6 +89,8 @@ export const getCartItems = async (req: Request, res: Response) => {
     res.status(output.status).json(output.response)
 }
 
+
+
 //add to cart
 export const addToCart = async (req: Request, res: Response) => {
     const data = {
@@ -90,6 +98,7 @@ export const addToCart = async (req: Request, res: Response) => {
         productId: req.body.productId,
     }
     const dependencies = {
+        getProduct: productPublisher.getProduct,
         repository,
     }
 
@@ -97,6 +106,7 @@ export const addToCart = async (req: Request, res: Response) => {
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
+
 
 
 // update cart count
@@ -116,6 +126,8 @@ export const updateCart = async (req: Request, res: Response) => {
 }
 
 
+
+
 //remove from cart
 export const removeFromCart = async (req: Request, res: Response) => {
     const data = {
@@ -132,6 +144,8 @@ export const removeFromCart = async (req: Request, res: Response) => {
 }
 
 
+
+
 // add to wishlist
 export const addToWishlist = async (req: Request, res: Response) => {
     const data = {
@@ -139,6 +153,7 @@ export const addToWishlist = async (req: Request, res: Response) => {
         productId: req.body.productId,
     }
     const dependencies = {
+        getProduct: productPublisher.getProduct,
         repository,
     }
 
@@ -146,6 +161,7 @@ export const addToWishlist = async (req: Request, res: Response) => {
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
+
 
 
 //remove from wishlist
@@ -187,15 +203,33 @@ export const fetchProduct = async (req: Request, res: Response) => {
     const data = {
         productID: req.params.productId
     }
+    const dependencies = {
+        getProduct: productPublisher.getProduct
+    }
+
+    const interactor = new GetProduct(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+// rate a product  -- pending
+export const rateProduct = async (req: Request, res: Response) => {
+
+    const data = {
+        productID: req.body.productId
+    }
 
     const dependencies = {
-        getAllProducts: productPublisher.getProduct
+        // getAllProducts: productPublisher.getProduct
     }
 
     // const interactor = new GetAllProducts(dependencies)
     // const output = await interactor.execute()
     // res.status(output.status).json(output.response)
 }
+
+
 
 
 // add a address

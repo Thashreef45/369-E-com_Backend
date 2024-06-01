@@ -11,9 +11,8 @@ class GetAddress {
 
     async execute(data: Input) {
 
-        // db data fetch
+        // fetch user,check user exist or not
         const user = await this.repository.findByPhone(data.phone)
-
         if (!user) {
             return {
                 response: { message: 'User not found' },
@@ -21,10 +20,12 @@ class GetAddress {
             }
         }
 
+
+        //check address exist or not
         const address = this.fetchAddress(user.address, data.addressId)
         if(!address) {
             return {
-                response: { message: 'No address found' },
+                response: { message: 'Address not found' },
                 status: StatusCode.NOT_FOUND
             }
         }
@@ -37,7 +38,7 @@ class GetAddress {
     }
 
 
-    private fetchAddress(addressArray: Address[], addressId) {
+    private fetchAddress(addressArray: Address[], addressId:string) {
         const address = addressArray.filter((x: Address) => x._id == addressId)
         if (address.length) return address[0]
         else return null

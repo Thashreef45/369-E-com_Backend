@@ -11,7 +11,7 @@ class UpdateAddress {
 
     async execute(data: Input) {
 
-        // db data fetch
+        // check user exist or not
         const user = await this.repository.findByPhone(data.phone)
         if (!user) {
             return {
@@ -20,15 +20,30 @@ class UpdateAddress {
             }
         }
 
-        const response = await this.repository.updateAddress(data.phone,data.addressId,data.address)
-        // const response = await this.repository.updateCartProductCount(
-        //     data.phone,data.productId,data.count
-        // )
-        // response
+
+        // check address exist or not
+        const addressExist = this.checkAddress(user.address, data.addressId)
+        if (!addressExist) return {
+            response: { message: "Address not found" },
+            status: StatusCode.NOT_FOUND
+        }
+
+
+        //update the address
+        const response = await this.repository.updateAddress(data.phone, data.addressId, data.address)
         return {
             response: { message: "Success" },
             status: StatusCode.OK
         }
+    }
+
+
+
+    // check address exist or not
+    private checkAddress(address: any[], id: string): boolean {
+        for (let i = 0; i < address.length; i++) {
+            if (address[i]._id == id) return true
+        } return false
     }
 
 }

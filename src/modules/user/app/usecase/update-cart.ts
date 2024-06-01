@@ -13,18 +13,16 @@ class UpdateCartItem {
 
         if (data.count < 0 ) {
             return {
-                response: { message: `Product count cannot be less than 0 `},
+                response: { message: `Product count cannot be less than zero `},
                 status: StatusCode.BAD_REQUEST
             }
         }
 
         // db data fetch
         const user = await this.repository.findByPhone(data.phone)
-        if (!user) {
-            return {
-                response: { message: 'User not found' },
-                status: StatusCode.NOT_FOUND
-            }
+        if (!user) return {
+            response: { message: 'User not found' },
+            status: StatusCode.NOT_FOUND
         }
 
         const response = await this.repository.updateCartProductCount(

@@ -11,15 +11,36 @@ class DeleteAddress {
 
     async execute(data: Input) {
 
-        // todo : checks pending notfound , not updated
+        // check user exist or not
+        const user = await this.repository.findByPhone(data.phone)
+        if (!user) {
+            return {
+                response: { message: 'User not found' },
+                status: StatusCode.NOT_FOUND
+            }
+        }
 
-        const response = await this.repository.removeAddress(data.phone,data.addressId)
-        // if(!response) {}
+        const isExist = this.checkAddress(user.address,data.addressId)
+        if(!isExist) return {
+            response: { message: 'Address not found' },
+            status: StatusCode.NOT_FOUND
+        }
+
+
+        const response = await this.repository.removeAddress(data.phone, data.addressId)
+
         // response,
         return {
-            response: { message: "Address removed" },
+            response: { message: "Success" },
             status: StatusCode.OK
         }
+    }
+
+
+    private checkAddress(address : {_id:string}[], id:string) {
+        for(let i = 0 ; i < address.length; i++){
+            if(address[i]._id == id) return true
+        }return false
     }
 
 }

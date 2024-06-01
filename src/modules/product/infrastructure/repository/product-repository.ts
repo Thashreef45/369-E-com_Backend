@@ -42,6 +42,13 @@ class productRepository implements IRepository {
     }
 
 
+    // fetch all categories
+    async fetchAllCategories() {
+        const updated = await categoryModel.find()
+        return updated
+    }
+
+
 
 
 
@@ -73,6 +80,7 @@ class productRepository implements IRepository {
         return await productModel.find({ _id: { $in: data } })
     }
 
+    
     // fetch every products
     async getAllProducts() {
         return await productModel.find()

@@ -11,20 +11,22 @@ class AddNewAddress {
 
     async execute(data: Input) {
 
-        // db data fetch
-        //todo : checks pending for notfound , not updated 
-        // const user = await this.repository.findByPhone(data.phone)
-        // if (!user) {
-        //     return {
-        //         response: { message: 'User not found' },
-        //         status: StatusCode.NOT_FOUND
-        //     }
-        // }
+        //check user exist or not
+        const user = await this.repository.findByPhone(data.phone)
+        if (!user) {
+            return {
+                response: { message: 'User not found' },
+                status: StatusCode.NOT_FOUND
+            }
+        }
 
+
+        // add new address
         const response = await this.repository.addNewAddress(data.phone,data.address)
-        // response todo: updated , not updated , notfound
+
+        // response todo: updated , not updated 
         return {
-            response: { message: "Address added succesfully" },
+            response: { message: "Success" },
             status: StatusCode.OK
         }
     }

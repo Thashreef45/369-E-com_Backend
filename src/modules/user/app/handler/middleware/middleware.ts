@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import env from '../../../infrastructure/config/environment';
+import StatusCode from '../../../infrastructure/config/staus-code';
 
 const middleware = (req: Request, res: Response, next: NextFunction) => {
 
@@ -15,12 +16,12 @@ const middleware = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, env.JWT_SIGNATURE, (err, user) => {
         if (err) {
             if (err.name === 'TokenExpiredError') {
-                res.status(403).json({ message: 'Token expired' }); 
+                res.status(StatusCode.UNAUTHORIZED).json({ message: 'Token expired' }); 
             } else {
-                res.status(403).json({ message: 'Token verification failed' });
+                res.status(StatusCode.UNAUTHORIZED).json({ message: 'Token verification failed' });
             }
             if (typeof user == 'object' && user?.role != 'user'){
-                return res.status(403).json({ message: 'Forbidden : Access denied' });
+                return res.status(StatusCode.FORBIDDEN).json({ message: 'Forbidden : Access denied' });
             }
         }
         if(typeof user == 'object' &&  user?.phone){

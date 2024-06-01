@@ -16,6 +16,8 @@ import Login from "../usecase/login"
 import CreateCategory from "../usecase/create-category"
 import CreateSubCategory from "../usecase/create-subcategory"
 import CreateProduct from "../usecase/create-product"
+import FetchAllCategory from "../usecase/fetch-all-category"
+import GetAllProducts from "../usecase/get-all-products"
 
 
 const repository = new AdminRepository()
@@ -75,6 +77,20 @@ export const createSubCategory = async (req: Request, res: Response) => {
 
 
 
+// Fetch all category and sub-category
+export const fetchAllCategory = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        fetchAllCategory: productPublisher.getAllCategories
+    }
+
+    const interactor = new FetchAllCategory(dependencies)
+    const output = await interactor.execute()
+    res.status(output.status).json(output.response)
+}
+
+
+
 // create new product
 export const createProduct = async (req: Request, res: Response) => {
     const data = {
@@ -93,6 +109,23 @@ export const createProduct = async (req: Request, res: Response) => {
 
     const interactor = new CreateProduct(dependencies)
     const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+
+// fetch all products || filtered by queries
+
+export const getAllProducts = async (req: Request, res: Response) => {
+    const query = req.query
+
+    const dependencies = {
+        getAllProducts: productPublisher.getProducts
+    }
+
+    const interactor = new GetAllProducts(dependencies)
+    const output = await interactor.execute(query)
     res.status(output.status).json(output.response)
 }
 
