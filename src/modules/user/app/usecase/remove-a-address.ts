@@ -11,6 +11,13 @@ class DeleteAddress {
 
     async execute(data: Input) {
 
+        //check input credentials
+        if (data.addressId) return {
+            response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
+        }
+
+
         // check user exist or not
         const user = await this.repository.findByPhone(data.phone)
         if (!user) {
@@ -19,9 +26,10 @@ class DeleteAddress {
                 status: StatusCode.NOT_FOUND
             }
         }
+        
 
-        const isExist = this.checkAddress(user.address,data.addressId)
-        if(!isExist) return {
+        const isExist = this.checkAddress(user.address, data.addressId)
+        if (!isExist) return {
             response: { message: 'Address not found' },
             status: StatusCode.NOT_FOUND
         }
@@ -37,10 +45,10 @@ class DeleteAddress {
     }
 
 
-    private checkAddress(address : {_id:string}[], id:string) {
-        for(let i = 0 ; i < address.length; i++){
-            if(address[i]._id == id) return true
-        }return false
+    private checkAddress(address: { _id: string }[], id: string) {
+        for (let i = 0; i < address.length; i++) {
+            if (address[i]._id == id) return true
+        } return false
     }
 
 }

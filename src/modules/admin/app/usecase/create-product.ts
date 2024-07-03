@@ -10,37 +10,37 @@ class CreateProduct {
 
     async execute(data: Input): Promise<Output> {
 
+
         // validating the input
         const validInput = this.CheckInputData(data)
-
         if (!validInput) return {
-            response: { message: "Missing credentials" },
+            response: { message: "Credentials missing" },
             status: StatusCode.BAD_REQUEST
         }
 
-        // create the product passing the data to dependency
-        const created:Output = await this.createNewProduct(data)
-        if(created) return created
-        
 
-        return {
-            response: { message: "Internal error" },
-            status: StatusCode.INTERNAL_ERROR
+        try {
+
+            // create product
+            const updated: Output = await this.createProduct(
+                data.name, data.description, data.price,
+                data.images, data.thumbnail, data.stock,
+                data.categoryId, data.subCategoryId
+            )
+
+            return {
+                response: updated.response,
+                status: updated.status
+            }
+
+        } catch (error) {
+            
+            return {
+                response: { message: "Product creating failed" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
 
-    }
-
-
-    // create product 
-    private createNewProduct(data: Input) {
-
-        //to create a product , passing data to the dependency
-        const updated = this.createProduct(
-            data.name, data.description, data.price,
-            data.images, data.thumbnail, data.stock,
-            data.categoryId , data.subCategoryId
-        )
-        return updated
     }
 
 
@@ -58,24 +58,24 @@ class CreateProduct {
 export default CreateProduct
 
 interface Dependencies {
-    createProduct(name: String, description: String, price: Number
-        , images: [String], thumbnail: String, stock: Number,
-        categoryId : String,subCategoryId : String
+    createProduct(name: string, description: string, price: number
+        , images: string[], thumbnail: string, stock: number,
+        categoryId: string, subCategoryId: string
     ): any
 }
 
 interface Input {
-    name: String
-    description: String
-    price: Number
-    images: [String]
-    thumbnail: String
-    stock: Number
-    categoryId : String,
-    subCategoryId : String,
+    name: string
+    description: string
+    price: number
+    images: string[]
+    thumbnail: string
+    stock: number
+    categoryId: string,
+    subCategoryId: string,
 }
 
 interface Output {
-    response: { message: String },
+    response: { message: string },
     status: StatusCode
 }

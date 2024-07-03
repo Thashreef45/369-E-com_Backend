@@ -8,21 +8,36 @@ class CreateCategory {
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
     }
-
+    // Unauthorized
     async execute(data: Input): Promise<Output> {
-        const isExist = await this.repository.getCategory(data.name)
-        
-        if(isExist) {
+
+        try {
+
+
+            //check if category already exist or not  (checking with name)
+            const isExist = await this.repository.getCategory(data.name)
+            if (isExist) return {
+                response: { message: "Category already exist" }, status: StatusCode.CONFLICT
+            }
+
+
+
+            // create category
+            const created = await this.repository.createCategory(data.name, data.description)
+            console.log(created)
             return {
-                response: {message:"Category already exist"}, status: StatusCode.CONFLICT
+                response: { message: "Success",category:created}, status: StatusCode.CREATED
+            }
+
+
+        } catch (error) {
+
+            return {
+                response: { message: "Error creating category" },
+                status: StatusCode.INTERNAL_ERROR
             }
         }
 
-        const created = await this.repository.createCategory(data.name,data.description)
-        //todo : after succefull update succefull return
-        return {
-            response: {message:"Category created"}, status: StatusCode.CREATED
-        }
     }
 }
 
@@ -40,6 +55,6 @@ interface Input {
 }
 
 interface Output {
+    response: { message: string  , category?:{}}
     status: StatusCode
-    response: Object
 }

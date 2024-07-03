@@ -16,37 +16,49 @@ class Login_Signup {
         this.sendOtp = dependencies.sendOtp
     }
 
-    async execute({ phone }: Input) {
+    async execute(data: Input) {
 
-        const user = await this.repository.findByPhone(phone)
+        if (!data.phone) return {
+            response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
+        }
 
-        const otp = this.generateOtp()
-        const token = this.createToken(phone)
+        try {
+            const user = await this.repository.findByPhone(data.phone)
 
-        if (!user) {
+            const otp = this.generateOtp()
+            const token = this.createToken(data.phone)
 
-            // Update user to database
-            const createUser = await this.repository.createUser(phone, otp)
+            if (!user) {
 
-            // send otp to the user
-            this.sendOtp(phone, otp)
+                // Update user to database
+                const createUser = await this.repository.createUser(data.phone, otp)
 
-            return {
-                response: { message: 'Account created', token: token },
-                status: StatusCode.CREATED
+                // send otp to the user
+                this.sendOtp(data.phone, otp)
+
+                return {
+                    response: { message: 'Account created', token: token },
+                    status: StatusCode.CREATED
+                }
+
+            } else {
+
+                // Update user data with new otp
+                const updateDB = await this.repository.updateOtp(data.phone, otp)
+
+                // send otp to the user
+                this.sendOtp(data.phone, otp)
+
+                return {
+                    response: { message: 'Login success', token: token },
+                    status: StatusCode.OK
+                }
             }
-
-        }else {
-
-            // Update user data with new otp
-            const updateDB = await this.repository.updateOtp(phone, otp)
-
-            // send otp to the user
-            this.sendOtp(phone, otp)
-
+        } catch (error) {
             return {
-                response: { message: 'Login success', token: token },
-                status: StatusCode.OK
+                response: { message: 'Internal error'},
+                status: StatusCode.INTERNAL_ERROR
             }
         }
 

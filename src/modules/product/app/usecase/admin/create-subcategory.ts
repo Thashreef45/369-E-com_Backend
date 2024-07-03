@@ -12,38 +12,35 @@ class CreateSubCategory {
     async execute(data: Input): Promise<Output> {
 
 
-        const isExist = await this.repository.getCategoryById(data.categoryId)
-        // return if category not exist
-        if (!isExist) return {
-            response: { message: "Category not exist" }, status: StatusCode.NOT_FOUND
+        try {
+            // checks that category exist or not
+            const isExist = await this.repository.getCategoryById(data.categoryId)
+            if (!isExist) return {
+                response: { message: "Category not exist" }, status: StatusCode.NOT_FOUND
+            }
+
+
+            // checks that sub-category already exist or not
+            const subCategoryNotExist = this.checkSubCategory(data.name, isExist?.subcategories)
+            if (!subCategoryNotExist) return {
+                response: { message: "Sub-Category already exist" }, status: StatusCode.CONFLICT
+            }
+
+
+            ///
+            const subcategory = { name: data.name, description: data.description }
+            const updated = await this.repository.createSubCategory(data.categoryId, subcategory)
+            return {
+                response: { message: "Success",}, status: StatusCode.CREATED
+            }
+
+        } catch (error) {
+            return {
+                response: { message: "Error creating sub-category" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
 
-
-        // returns true if subcategory not exist , otherwise returns false
-        const subCategoryNotExist = this.checkSubCategory(data.name, isExist?.subcategories)
-
-        if (!subCategoryNotExist) return {
-            response: { message: "Sub-Category already exist" }, status: StatusCode.CONFLICT
-        }
-
-
-        const updated = await this.createSubCategory(data)
-        // response after creating the sub-category
-        return {
-            response: { message: "Sub-Category created" }, status: StatusCode.CREATED
-        }
-
-
-    }
-
-    // sub-category creation 
-    private async createSubCategory(data: Input) {
-
-        const subcategory = {
-            name: data.name, description: data.description
-        }
-
-        const created = await this.repository.createSubCategory(data.categoryId, subcategory)
 
     }
 
@@ -72,7 +69,7 @@ interface Input {
 }
 
 interface Output {
+    response: { message: string, data?: {} }
     status: StatusCode
-    response: Object
 }
 

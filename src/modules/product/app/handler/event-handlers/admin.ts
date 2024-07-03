@@ -7,6 +7,8 @@ import CreateCategory from '../../usecase/admin/create-category'
 import CreateSubCategory from '../../usecase/admin/create-subcategory'
 import FetchAllCategory from '../../usecase/admin/fetch-all-categories'
 import GetAllProducts from '../../usecase/admin/get-all-products'
+import GetAProduct from '../../usecase/admin/get-a-product'
+import UpdateProduct from '../../usecase/admin/update-a-product'
 
 // repository instance
 const productRepository = new repository()
@@ -81,5 +83,41 @@ export const getAllProducts = async (query:any) => {
 
     const interactor = new GetAllProducts(dependencies)
     const output = await interactor.execute(query)
+    return output
+}
+
+
+
+// fetch a product
+export const getAProduct = async (productId:string) => {
+
+    const data = {
+        id : productId
+    }
+    const dependencies = {
+        repository: productRepository
+    }
+
+    const interactor = new GetAProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
+
+
+// update a product
+export const updateProduct = async (data:{
+    productId: string, name: string ,description: string ,price: number ,images: string[] ,
+    thumbnail: string, stock: number ,categoryId: string ,subCategoryId: string}) => {
+
+    // const data = data
+
+    const dependencies = {
+        repository: productRepository
+    }
+
+    const interactor = new UpdateProduct(dependencies)
+    const output = await interactor.execute(data)
     return output
 }

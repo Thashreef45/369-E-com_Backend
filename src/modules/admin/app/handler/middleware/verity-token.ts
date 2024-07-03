@@ -1,34 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import env from '../../../infrastructure/config/environment';
+import StatusCode from '../../../infrastructure/config/staus-code';
 
 
 // verify token
 const middleware = (req: Request, res: Response, next: NextFunction) => {
 
     // adminToken || token name?
-    let token = req.headers['adminToken'] as string
-    
+    let token = req.headers['admintoken'] as string
+
     if (!token) {
-        res.status(401).json({ message: 'No token provided' }); // Unauthorized
+        res.status(StatusCode.UNAUTHORIZED).json({ message: 'No token provided' }); // Unauthorized
     }
 
     token = token.split(' ')[1];
-    
+
     jwt.verify(token, env.JWT_SIGNATURE, (err, admin) => {
+
+        // err decrypting the token
         if (err) {
+
             if (err.name === 'TokenExpiredError') {
-                res.status(403).json({ message: 'Token expired' }); 
+                res.status(StatusCode.FORBIDDEN).json({ message: 'Token expired' });
             } else {
-                res.status(403).json({ message: 'Token verification failed' });
+                res.status(StatusCode.FORBIDDEN).json({ message: 'Token verification failed' });
             }
-            if (typeof admin == 'object' && admin?.role != 'admin'){
-                return res.status(403).json({ message: 'Forbidden : Access denied' });
-            }
+
         }
-        if(typeof admin == 'object' &&  admin?.email){
-            req.body.email =  admin.email
-            next(); 
+
+        //checking the access/role
+        if (typeof admin == 'object' && admin?.role != 'admin') {
+            return res.status(StatusCode.FORBIDDEN).json({ message: 'Forbidden : Access denied' });
+        }
+
+        // attaching the admin email with body
+        if (typeof admin == 'object' && admin?.email) {
+            req.body.email = admin.email
+            next();
         }
     });
 };

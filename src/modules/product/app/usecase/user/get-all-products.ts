@@ -16,11 +16,12 @@ class GetAllProducts {
 
         const products = await this.repository.getAllProducts()
 
-
-
         return products
     }
 
+
+
+    //method to create query
     private createQuery(queries:any) {
 
         const { limit, category, page_no, query, lowest_price, highest_price, rating, sort } = queries
@@ -29,13 +30,12 @@ class GetAllProducts {
         const pageNumber = page_no ? parseInt(page_no as string, 10) : 1;
         const skip = (pageNumber - 1) * limitNumber;
 
+
         // Building the query to inject based on queries/conditions (filtration query)
-        const conditions: any = {};
+        const conditions: any = {}
 
         //category id ,
-        if (category) {
-            conditions.category = category;
-        }
+        if (category) conditions.category = category
 
 
         // search query ,searching from name and description -- (i , for uppercase and lowercase)
@@ -46,18 +46,21 @@ class GetAllProducts {
             ]
         }
 
+
+        //price filtration
         if (lowest_price || highest_price) {
-            conditions.price = {};
+            conditions.price = {}
             if (lowest_price) {
-                conditions.price.$gte = parseFloat(lowest_price as string);
+                conditions.price.$gte = parseFloat(lowest_price as string)
             }
             if (highest_price) {
-                conditions.price.$lte = parseFloat(highest_price as string);
+                conditions.price.$lte = parseFloat(highest_price as string)
             }
         }
 
+        // rating filtration
         if (rating) {
-            conditions.rating = { $gte: parseFloat(rating as string) };
+            conditions.rating = { $gte: parseFloat(rating as string) }
         }
 
         // Sorting logic
@@ -83,13 +86,7 @@ class GetAllProducts {
 
         //Ending
 
-
-        ///------------------------------------veruthe---------------------------------
-        if (query.limit || query.category || query.page_no || query.query ||
-            query.lowest_price || query.highest_price || query.rating || query.sort
-        ) console.log("hi")
-
-
+        // demo of `req.query` object
         // {
         //     "limit": "10",
         //     "category": "ObjectId("6d038j472j88dx89j")",
@@ -109,6 +106,13 @@ export default GetAllProducts
 interface Dependencies {
     repository: IRepository
 }
+
+
+///------------------------------------veruthe---------------------------------
+// if (query.limit || query.category || query.page_no || query.query ||
+//     query.lowest_price || query.highest_price || query.rating || query.sort
+// ) console.log("hi")
+
 
 
 // // Default values for pagination

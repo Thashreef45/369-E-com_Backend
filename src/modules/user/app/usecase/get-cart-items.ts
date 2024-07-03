@@ -11,35 +11,48 @@ class GetCartItems {
         this.getProducts = dependencies.getProducts
     }
 
-    async execute(data: Input) {
+    async execute(data: Input): Promise<Output> {
 
-        // db data fetch
-        const user = await this.repository.findByPhone(data.phone)
-        if (!user) {
-            return {
+
+        try {
+
+
+            // check user exist or not
+            const user = await this.repository.findByPhone(data.phone)
+            if (!user) return {
                 response: { message: 'User not found' },
                 status: StatusCode.NOT_FOUND
             }
+
+
+            // create array wich have ids of user cart items
+            const idArray = this.cartItems(user.cart)
+
+            // return if cart is empty
+            if (!idArray.length) return {
+                response: { message: "Success", data: [] },
+                status: StatusCode.OK
+            }
+
+
+            // fetch datas of that products
+            const cartData = await this.getProducts(idArray)
+
+            const responseData = this.attachCartQuantiy(cartData, user.cart)
+            // response
+            return {
+                response: { message: "Success", data: responseData },
+                status: StatusCode.OK
+            }
+
+        } catch (error) {
+
+            return {
+                response: { message: "Error fetching cart" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
 
-        // create array wich have ids of user cart items
-        const idArray = this.cartItems(user.cart)
-
-        if (!idArray.length) return {
-            response: { message: "Success", data: [] },
-            status: StatusCode.OK
-        }
-
-        // fetch datas of that products
-        const cartData = await this.getProducts(idArray)
-
-        const responseData = this.attachCartQuantiy(cartData,user.cart)
-
-        // response
-        return {
-            response: { message: "Success", data: responseData },
-            status: StatusCode.OK
-        }
     }
 
 
@@ -51,10 +64,10 @@ class GetCartItems {
     }
 
 
-    private attachCartQuantiy (data:any[],cartData:{productId:string,quantity:number}[]) {
+    private attachCartQuantiy(data: any[], cartData: { productId: string, quantity: number }[]) {
         cartData.forEach((cart) => {
-            for(let i = 0 ; i < data.length ; i++){
-                if(data[i]._id == cart.productId) data[i].quantity = cart.quantity
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]._id == cart.productId) data[i].quantity = cart.quantity
             }
 
         })
@@ -69,9 +82,14 @@ interface Input {
     phone: string,
 }
 
+interface Output {
+    response: { message: string, data?: {}[] },
+    status: StatusCode
+}
+
 interface Dependencies {
     repository: IRepository
-    getProducts(idArray: string[]): Promise<any[]> //todo:implementations of interface
+    getProducts(idArray: string[]): Promise<any[]>
 }
 
 interface Cart {

@@ -11,19 +11,23 @@ class FetchAllCategory {
 
     async execute(): Promise<Output> {
 
-        //fetching category data
-        const categories = await this.fetchAllCategory()
+        try {
+            //fetching category data
+            const categories = await this.fetchAllCategory()
 
+            return {
+                response: { message: 'Success', data: categories },
+                status: StatusCode.OK
+            }
 
-        if (!categories) return {
-            response: { message: 'Category fetching failed' },
-            status: StatusCode.BAD_REQUEST
+        } catch (error) {
+
+            return {
+                response: { message: 'Category fetching failed' },
+                status: StatusCode.BAD_REQUEST
+            }
         }
 
-        return {
-            response: { message: 'Success', data: categories },
-            status: StatusCode.ACCEPTED
-        }
     }
 }
 

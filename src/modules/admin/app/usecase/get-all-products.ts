@@ -11,7 +11,7 @@ class GetAllProducts {
     async execute(query:any) : Promise<Output>  {
 
         // fetch products
-        const products = await this.getAllProducts(query)
+        const products  = await this.getAllProducts(query)
 
         // response
         return {

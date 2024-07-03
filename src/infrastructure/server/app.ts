@@ -3,8 +3,9 @@ import cors from 'cors';
 import logger from 'morgan';
 import env from '../environment'
 import dBConnection from '../database/mongoose/setup'
-import userRouter from '../../modules/user/app/handler/route'
 
+import userRouter from '../../modules/user/app/handler/route'
+import adminRouter from '../../modules/admin/app/handler/route'
 // import { errorMiddleware } from './error.js';
 
 import nocache from 'nocache';
@@ -40,6 +41,9 @@ class ExpressServer {
 
     private initializeRoutes() {
         this.app.use('/user', userRouter);
+        this.app.use('/admin',adminRouter);
+        // this.app.use('/vendor', userRouter);
+
         this.app.use("/health", (req, res) => res.json("Health check"));
     }
 

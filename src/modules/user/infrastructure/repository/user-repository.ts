@@ -10,11 +10,16 @@ class UserRepository implements IRepository {
 
 
     async createUser(phone: string, otp: string) {
-        const newUser = new userModel({
-            phone,
-            otp: otp
-        })
-        await newUser.save()
+        try {
+            const newUser = new userModel({
+                phone,
+                otp: otp
+            })
+            await newUser.save()
+        } catch (error) {
+            // have to throw error
+            
+        }
 
         // return ""
     }
@@ -99,16 +104,16 @@ class UserRepository implements IRepository {
 
 
     // add new address
-    async addNewAddress(phone: string, address:{name:string,phone:string,address:string,pin:string}) {
+    async addNewAddress(phone: string, address: { name: string, phone: string, address: string, pin: string }) {
         await userModel.updateOne(
             { phone: phone },
             {
                 $push: {
                     address: {
-                        name : address.name,
-                        phone :  address.phone,
-                        address : address.address,
-                        pin : address.pin
+                        name: address.name,
+                        phone: address.phone,
+                        address: address.address,
+                        pin: address.pin
                     }
                 }
             }
@@ -116,7 +121,7 @@ class UserRepository implements IRepository {
     }
 
     //patch update address
-    async updateAddress(phone : string,addressId : string,address :{name:string,phone:string,address:string,pin:string}) {
+    async updateAddress(phone: string, addressId: string, address: { name: string, phone: string, address: string, pin: string }) {
         await userModel.updateOne(
             { phone: phone, "address._id": addressId },
             {
@@ -129,7 +134,7 @@ class UserRepository implements IRepository {
             }
         )
     }
-    
+
 
     // remove an address
     async removeAddress(phone: string, addressId: string) {
