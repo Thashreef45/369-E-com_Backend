@@ -10,13 +10,20 @@ class GetProduct {
 
     async execute(data:Input) : Promise<Output>  {
 
+        
+        if (!data.productID) return {
+            response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
+        }
+
         // fetch a product
         const product = await this.getProduct(data.productID)
+        console.log(product,'rp')
 
         if(!product) return {
             response: { message: "Product not found"},
             status: StatusCode.NOT_FOUND
-        } 
+        }
 
         //succesfull response
         return {

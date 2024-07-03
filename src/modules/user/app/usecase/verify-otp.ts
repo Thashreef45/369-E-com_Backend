@@ -13,33 +13,46 @@ class verifyOtp {
 
     async execute(data: Input): Promise<Output> {
 
-        // db data fetch
-        const user = await this.repository.findByPhone(data.phone)
-        if (!user) {
-            return {
-                response: { message: 'Account not found' },
-                status: StatusCode.NOT_FOUND
-            }
+        if (!data.otp || !data.phone) return {
+            response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
         }
 
-        //checking the otp 
-        if (user.otp != data.otp) {
-            return {
-                response: { message: 'Invalid OTP' },
-                status: StatusCode.UNAUTHORIZED
+
+        try {
+            // db data fetch
+            const user = await this.repository.findByPhone(data.phone)
+            if (!user) {
+                return {
+                    response: { message: 'Account not found' },
+                    status: StatusCode.NOT_FOUND
+                }
             }
-        }
 
-        // todo
-        // const token = generateToken()
-        // const refreshToken = generateRefreshToken()
+            //checking the otp 
+            if (user.otp != data.otp) {
+                return {
+                    response: { message: 'Invalid OTP' },
+                    status: StatusCode.UNAUTHORIZED
+                }
+            }
 
-        const token = this.createToken(data.phone)
+            // todo
+            // const token = generateToken()
+            // const refreshToken = generateRefreshToken()
 
-        //response message with token
-        return {
-            response: { message: "Success", token: token },
-            status: StatusCode.OK
+            const token = this.createToken(data.phone)
+
+            //response message with token
+            return {
+                response: { message: "Success", token: token },
+                status: StatusCode.OK
+            }
+        } catch (error) {
+            return {
+                response: { message: "Internal error" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
     }
 }
@@ -54,7 +67,7 @@ interface Input {
 
 interface Dependencies {
     repository: IRepository
-    createToken(phone:string): any
+    createToken(phone: string): any
 }
 
 

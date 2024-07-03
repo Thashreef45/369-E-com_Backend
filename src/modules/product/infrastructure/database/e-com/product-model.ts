@@ -37,11 +37,24 @@ const productSchema = new Schema({
         required: true,
         trim: true,
     },
+
     price: {
         type: Number,
         required: true,
         min: 0,
     },
+
+    actualPrice : {
+        type: Number,
+        required: true,
+        min: 0,
+    },
+
+    discount:{
+        type: Boolean,
+        default : false
+    },
+
     images: {
         type: [String],
         default: [],
@@ -85,17 +98,17 @@ const productSchema = new Schema({
 
 // ---------------------------- VIRTUAL FIELD------------------------------
 // Virtual field for average rating
-productSchema.virtual('averageRating').get(function () {
+// productSchema.virtual('averageRating').get(function () {
     
-    if (this.feedbacks.length === 0) return 0
+//     if (this.feedbacks.length === 0) return 0
 
-    const totalRating = this.feedbacks.reduce((acc: number, feedback: any) => acc + feedback.rating, 0)
-    return totalRating / this.feedbacks.length
-});
+//     const totalRating = this.feedbacks.reduce((acc: number, feedback: any) => acc + feedback.rating, 0)
+//     return totalRating / this.feedbacks.length
+// });
 
 // Serialize
-productSchema.set('toJSON', { virtuals: true });
-productSchema.set('toObject', { virtuals: true });
+// productSchema.set('toJSON', { virtuals: true });
+// productSchema.set('toObject', { virtuals: true });
 
 // ---------------------------------------------------------------------------
 

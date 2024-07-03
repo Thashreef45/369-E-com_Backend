@@ -1,38 +1,61 @@
 import express from "express";
 import * as controller from './controller'
-// import middleware from './middleware/middleware' //
+import middleware from './middleware/verity-token' //
 
 
-const adminRouter = express()
+const router = express()
 
 //login
-adminRouter.post('/login',controller.login)
+router.post('/login',controller.login)
 
 
 //create category 
-adminRouter.post('/category',controller.createProduct)  //-- pending category, subcategory
+router.post('/category',middleware,controller.createCategory)
 
 
 //create subcategory 
-adminRouter.post('/subcategory',controller.createSubCategory)
+router.post('/subcategory',controller.createSubCategory)
 
 
 
 // get all catogery with subcategory
-adminRouter.get('/category',controller.fetchAllCategory)
+router.get('/category',controller.fetchAllCategory)
 
 
 
 //create product
-adminRouter.post('/product',controller.createProduct)
+router.post('/product',controller.createProduct)
 
+
+
+//get a product
+router.get('/product/:productId',controller.getAProduct)
 
 //-----------------------COMPLETED-------------------
 
 
 
-//get all products
-adminRouter.get('/products',controller.getAllProducts)
+//get all products   <<----------->> Pending works are there , have to recheck
+router.get('/products',controller.getAllProducts)
+
+
+
+// ---------------------------   Working on    -------------------------------
+
+
+// update a product 
+router.patch('/product',controller.updateProduct)
+
+
+
+// fetch all users 
+// router.get('/products',controller)
+
+
+
+
+
+
 
 //pending
 
@@ -53,6 +76,6 @@ adminRouter.get('/products',controller.getAllProducts)
 
 
 
-export default adminRouter
+export default router
 
 

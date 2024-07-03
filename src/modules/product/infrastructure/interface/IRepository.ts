@@ -28,8 +28,16 @@ interface IRepository {
     ) : any
 
     getProduct(id: string): any
+    getProductByName(name: string) : any
+
     getProducts(data: string[]): any
     getAllProducts(): any
+
+    updateProduct(data: {
+        productId: string, name: string, description: string,
+        price: number, images: string[], thumbnail: string,
+        stock: number, categoryId: string, subCategoryId: string
+    }) : any
 }
 
 export default IRepository

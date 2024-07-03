@@ -32,6 +32,11 @@ userRouter.post('/wishlist',middleware,controller.addToWishlist)
 
 
 
+//fetch wishlist
+userRouter.get('/wishlist',middleware,controller.fetchWishlist)
+
+
+
 // remove from wishlist
 userRouter.delete('/wishlist',middleware,controller.removeFromWishlist)
 
@@ -53,7 +58,7 @@ userRouter.post('/address',middleware,controller.addAddress)
 
 
 //fetch a address
-userRouter.get('/address',middleware,controller.getAddress)
+userRouter.get('/address/:addressId',middleware,controller.getAddress)
 
 
 

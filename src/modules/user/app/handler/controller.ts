@@ -27,6 +27,7 @@ import GetAddress from "../usecase/get-a-address";
 import DeleteAddress from "../usecase/remove-a-address";
 import UpdateAddress from "../usecase/update-a-address";
 import GetProduct from "../usecase/get-a-product";
+import FetchWishlist from "../usecase/fetch-user-wishlist";
 
 //repository instance
 const repository = new userRepository()
@@ -68,13 +69,11 @@ export const verifyOtp = async (req: Request, res: Response) => {
     const interactor = new VerifyOtp(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
-
-    // console.log("hey , whatsup!")
 }
 
 
 
-
+// fetch user cart 
 export const getCartItems = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
@@ -158,6 +157,23 @@ export const addToWishlist = async (req: Request, res: Response) => {
     }
 
     const interactor = new AddToWishlist(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+// fetch user wishlist
+export const fetchWishlist = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+    }
+    const dependencies = {
+        repository,
+        getProducts: productPublisher.getProductsById
+    }
+
+    const interactor = new FetchWishlist(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }

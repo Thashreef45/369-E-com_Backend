@@ -8,7 +8,7 @@ const userSchema = new Schema({
     dob: String,
     phone: {
         require: true,
-        unique: true,
+        // unique: true,
         type: String
     },
     address: [
@@ -17,6 +17,10 @@ const userSchema = new Schema({
             address: String,
             phone: String,
             pin: String,
+            active : {
+                type : Boolean,
+                default : true
+            }
         }
     ],
 
@@ -25,7 +29,6 @@ const userSchema = new Schema({
             productId: {
                 type: Schema.Types.ObjectId,
                 ref: "Product",
-                unique: true
             },
             quantity: {
                 type: Number,
@@ -33,12 +36,13 @@ const userSchema = new Schema({
             }
         }
     ],
+    // unique: true
 
     wishlist: [
         {
             type: Schema.Types.ObjectId,
             ref: "Product",
-            unique: true
+            // unique: true
         },
     ],
 

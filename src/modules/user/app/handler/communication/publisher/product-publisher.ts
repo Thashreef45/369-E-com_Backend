@@ -14,8 +14,8 @@ export const getProducts = async (query:any) => {
 
 
 //fetch a product
-export const getProduct = async () => {
-    const response = await productPublisher.getProduct
+export const getProduct = async (productID:string) => {
+    const response = await productPublisher.getProduct(productID)
     return response
 }
 

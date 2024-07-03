@@ -22,12 +22,11 @@ class RemoveFromWishlist {
         const isExist = this.checkWishlist(user.wishlist,data.productId)
         if(!isExist) return {
             response: { message: "Product not exist on wishlist" },
-            status: StatusCode.BAD_REQUEST
+            status: StatusCode.NOT_FOUND
         }
 
 
         const response = await this.repository.removeFromWishlist(data.phone, data.productId)
-        // response todo : pending with 404 , 400 (not updated)
         return {
             response: { message: "Success" },
             status: StatusCode.OK

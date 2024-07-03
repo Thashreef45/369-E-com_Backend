@@ -1,5 +1,6 @@
 import IRepository from '../../infrastructure/interface/IRepository'
 import StatusCode from '../../infrastructure/config/staus-code'
+import { response } from 'express'
 
 class AddToCart {
 
@@ -13,35 +14,54 @@ class AddToCart {
 
     async execute(data: Input) {
 
-        const user = await this.repository.findByPhone(data.phone)
-        if (!user) return {
-            response: { message: 'User not found' },
-            status: StatusCode.NOT_FOUND
+
+        // check input credentials
+        if (!data.productId) return {
+            response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
         }
 
 
-        const notInCart = this.CheckCart(user.cart, data.productId)
-        if (!notInCart) return {
-            response: { message: "Product already exist in cart" },
-            status: StatusCode.CONFLICT
+        try {
+
+            //check user
+            const user = await this.repository.findByPhone(data.phone)
+            if (!user) return {
+                response: { message: 'User not found' },
+                status: StatusCode.NOT_FOUND
+            }
+
+
+            // check product already exist in cart
+            const notInCart = this.CheckCart(user.cart, data.productId)
+            if (!notInCart) return {
+                response: { message: "Product already exist in cart" },
+                status: StatusCode.CONFLICT
+            }
+
+
+            //fetching the product
+            const isProductExist = await this.getProduct(data.productId)
+            if (!isProductExist) return {
+                response: { message: "Product not found" },
+                status: StatusCode.NOT_FOUND
+            }
+
+
+            // update the product in user cart
+            const response = await this.repository.addToCart(data.phone, data.productId)
+            // response
+            return {
+                response: { message: "Success" },
+                status: StatusCode.OK
+            }
+        } catch (error) {
+            return {
+                response: { message: "Error adding to cart" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
 
-
-        //fetching the product 
-        const isProductExist = await this.getProduct(data.productId)
-        if (!isProductExist) return {
-            response: { message: "Product not found" },
-            status: StatusCode.NOT_FOUND
-        }
-
-
-        // update the product in user cart
-        const response = await this.repository.addToCart(data.phone, data.productId)
-        // response
-        return {
-            response: { message: "Success" },
-            status: StatusCode.OK
-        }
     }
 
 

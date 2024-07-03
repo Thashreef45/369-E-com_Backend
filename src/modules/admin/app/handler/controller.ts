@@ -1,4 +1,3 @@
-//packages
 import { Request, Response } from "express"
 
 //event publishers
@@ -6,6 +5,7 @@ import * as productPublisher from '../handler/communication/publisher/product-pu
 
 //dependencies
 import AdminRepository from "../../infrastructure/repository/admin-repository"
+
 //services
 import createToken from "../../infrastructure/services/generateToken"
 import { hashPassword, verifyPassword } from '../../infrastructure/services/hash-password'
@@ -18,6 +18,8 @@ import CreateSubCategory from "../usecase/create-subcategory"
 import CreateProduct from "../usecase/create-product"
 import FetchAllCategory from "../usecase/fetch-all-category"
 import GetAllProducts from "../usecase/get-all-products"
+import GetProduct from "../usecase/get-a-product"
+import UpdateProduct from "../usecase/update-a-product"
 
 
 const repository = new AdminRepository()
@@ -42,8 +44,10 @@ export const login = async (req: Request, res: Response) => {
 
 
 
+
 // create new category
 export const createCategory = async (req: Request, res: Response) => {
+
     const data = {
         name: req.body.name,
         description: req.body.description
@@ -51,11 +55,13 @@ export const createCategory = async (req: Request, res: Response) => {
     const dependencies = {
         createCategory: productPublisher.createNewCategory
     }
-
+    
     const interactor = new CreateCategory(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
+
+
 
 
 
@@ -77,6 +83,9 @@ export const createSubCategory = async (req: Request, res: Response) => {
 
 
 
+
+
+
 // Fetch all category and sub-category
 export const fetchAllCategory = async (req: Request, res: Response) => {
 
@@ -91,15 +100,18 @@ export const fetchAllCategory = async (req: Request, res: Response) => {
 
 
 
+
+
+
 // create new product
 export const createProduct = async (req: Request, res: Response) => {
     const data = {
-        name: req.body.name,//String
-        description: req.body.description ,//String
-        price: req.body.price , //Number,
-        images: req.body.images , //[String]
-        thumbnail:  req.body.thumbnail,//String
-        stock: req.body.stock ,// Number
+        name: req.body.name,
+        description: req.body.description ,
+        price: req.body.price ,
+        images: req.body.images ,
+        thumbnail:  req.body.thumbnail,
+        stock: req.body.stock ,
         categoryId : req.body.categoryId,
         subCategoryId : req.body.subCategoryId,
     }
@@ -115,8 +127,8 @@ export const createProduct = async (req: Request, res: Response) => {
 
 
 
-// fetch all products || filtered by queries
 
+// fetch all products || filtered by queries
 export const getAllProducts = async (req: Request, res: Response) => {
     const query = req.query
 
@@ -126,6 +138,54 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
     const interactor = new GetAllProducts(dependencies)
     const output = await interactor.execute(query)
+    res.status(output.status).json(output.response)
+}
+
+
+
+
+// fetch a product
+export const getAProduct = async (req: Request, res: Response) => {
+    
+    const data = {
+        productId : req.params.productId
+    }
+    const dependencies = {
+        fetchProduct: productPublisher.getProduct
+    }
+
+    const interactor = new GetProduct(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+
+// update a product
+export const updateProduct = async (req: Request, res: Response) => {
+
+    const data = {
+        productId : req.params.productId,
+        name: req.body.name,//String
+        description: req.body.description ,//String
+        price: req.body.price , //Number,
+
+        actualPrice: req.body.actualPrice,
+        offer:req.body.offer,
+
+        images: req.body.images , //[String]
+        thumbnail:  req.body.thumbnail,//String
+        stock: req.body.stock ,// Number
+        categoryId : req.body.categoryId,
+        subCategoryId : req.body.subCategoryId,
+    }
+    const dependencies = {
+        updateProduct : productPublisher.updateProduct
+    }
+
+    const interactor = new UpdateProduct(dependencies)
+    const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
 
