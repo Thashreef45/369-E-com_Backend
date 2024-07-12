@@ -49,7 +49,7 @@ class DeletFromCart {
         } catch (error) {
 
             return {
-                response: { message: "Erro removing product from cart" },
+                response: { message: "Error removing product from cart" },
                 status: StatusCode.INTERNAL_ERROR
             }
         }
@@ -59,9 +59,9 @@ class DeletFromCart {
 
 
     // checking that productId exist or not in cart
-    checkCart(productID: string, cart: { productID: string }[]): boolean {
+    checkCart(productId: string, cart: { productId: string }[]): boolean {
         for (let i = 0; i < cart.length; i++) {
-            if (cart[i].productID == productID) return true
+            if (cart[i].productId == productId) return true
         } return false
     }
 

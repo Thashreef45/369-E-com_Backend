@@ -34,7 +34,7 @@ class AddToWishlist {
 
             //check that it is a valid product
             const isExist = await this.getProduct(data.productId)
-            if (isExist) return {
+            if (!isExist) return {
                 response: { message: "Product not found" },
                 status: StatusCode.NOT_FOUND
             }

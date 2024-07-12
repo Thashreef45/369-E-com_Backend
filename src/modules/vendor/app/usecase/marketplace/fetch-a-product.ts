@@ -1,4 +1,4 @@
-import StatusCode from "../../infrastructure/config/staus-code"
+import StatusCode from "../../../infrastructure/config/staus-code"
 
 
 

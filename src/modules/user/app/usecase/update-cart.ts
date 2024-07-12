@@ -11,11 +11,13 @@ class UpdateCartItem {
 
     async execute(data: Input) {
 
+
         //check input credentials
-        if (!data.productId || data.count) return {
+        if (!data.productId || !data.count) return {
             response: { message: "Credentials missing" },
             status: StatusCode.BAD_REQUEST
         }
+
 
         if (data.count < 0) return {
             response: { message: `Product count cannot be less than zero ` },
@@ -40,6 +42,10 @@ class UpdateCartItem {
                 response: { message: 'Product not found in cart' },
                 status: StatusCode.NOT_FOUND
             }
+
+
+            //check stock
+            
 
 
             //update cart

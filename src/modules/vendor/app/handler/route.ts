@@ -6,7 +6,7 @@ const router = express()
 
 
 //register
-// router.post('/register',controller.register)
+router.post('/register',controller.register)
 
 //login
 // router.post('/login',controller.login)

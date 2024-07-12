@@ -26,6 +26,7 @@ const categorySchema = new Schema({
         type: String,
         trim: true,
     },
+
     subcategories: [subcategorySchema],
 }, { timestamps: true })
 
