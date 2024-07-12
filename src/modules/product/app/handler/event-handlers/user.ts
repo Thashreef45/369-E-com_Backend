@@ -5,6 +5,7 @@ import repository from '../../../infrastructure/repository/product-repository'
 import GetProducts from "../../usecase/user/get-products"
 import GetAllProducts from '../../usecase/user/get-all-products'
 import GetAProduct from '../../usecase/user/get-a-product'
+import CheckoutUserCart from '../../usecase/user/checkout-cart'
 
 const productRepository = new repository()
 
@@ -23,7 +24,7 @@ export const getProducts = async (data: string[]) => {
 
 // get a product by id
 export const getProduct = async (productId: string) => {
-    const data = { id : productId}
+    const data = { id: productId }
     const dependencies = {
         repository: productRepository
     }
@@ -34,13 +35,25 @@ export const getProduct = async (productId: string) => {
 
 
 // get all products || filter by query
-export const getAllProducts = async (query:any) => {
+export const getAllProducts = async (query: any) => {
     const dependencies = {
         repository: productRepository
     }
 
     const interactor = new GetAllProducts(dependencies)
     const output = await interactor.execute(query)
+    return output
+}
+
+
+// checkout user cart
+export const checkoutUserCart = async (data: { productID: string, quantity: number }[]) => {
+    const dependencies = {
+        repository: productRepository
+    }
+
+    const interactor = new CheckoutUserCart(dependencies)
+    const output = await interactor.execute(data)
     return output
 }
 

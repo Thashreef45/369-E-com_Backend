@@ -13,6 +13,7 @@ class FetchWishlist {
 
     async execute(data: Input) {
 
+
         // db data fetch
         const user = await this.repository.findByPhone(data.phone)
         if (!user) return {
@@ -21,44 +22,26 @@ class FetchWishlist {
         }
 
 
-        // create array wich have ids of user cart items
-        const idArray = this.setWishlistProductId(user.wishlist)
 
-        if (!idArray.length) return {
+        // return empty arry if nothing in user wishlist
+        if (!user?.wishlist?.length) return {
             response: { message: "Success", data: [] },
             status: StatusCode.OK
         }
 
-        // fetch datas of that products
-        const cartData = await this.getProducts(idArray)
 
-        const responseData = this.attachCartQuantiy(cartData, user.cart)
+
+        // fetch datas of that products
+        const cartData = await this.getProducts(user.wishlist)
 
         // response
         return {
-            response: { message: "Success", data: responseData },
+            response: { message: "Success", data: cartData },
             status: StatusCode.OK
         }
     }
 
 
-    //create a array of id's of user cart items eg:["id1","id2","id3"]
-    private setWishlistProductId(data: Cart[]): string[] {
-        return data.map((items: Cart) => {
-            return items.productId
-        })
-    }
-
-
-    private attachCartQuantiy(data: any[], cartData: { productId: string, quantity: number }[]) {
-        cartData.forEach((cart) => {
-            for (let i = 0; i < data.length; i++) {
-                if (data[i]._id == cart.productId) data[i].quantity = cart.quantity
-            }
-
-        })
-        return cartData
-    }
 }
 
 export default FetchWishlist

@@ -25,7 +25,8 @@ import UpdateProduct from "../usecase/update-a-product"
 const repository = new AdminRepository()
 
 
-//login 
+
+//login
 export const login = async (req: Request, res: Response) => {
     const data = {
         email: req.body.email,
@@ -162,6 +163,7 @@ export const getAProduct = async (req: Request, res: Response) => {
 
 
 
+
 // update a product
 export const updateProduct = async (req: Request, res: Response) => {
 
@@ -179,6 +181,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         stock: req.body.stock ,// Number
         categoryId : req.body.categoryId,
         subCategoryId : req.body.subCategoryId,
+
     }
     const dependencies = {
         updateProduct : productPublisher.updateProduct

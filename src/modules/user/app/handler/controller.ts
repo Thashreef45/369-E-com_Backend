@@ -6,11 +6,16 @@ import * as notificationPublisher from './communication/publisher/notification-p
 import * as productPublisher from './communication/publisher/product-publisher' // product event publisher
 
 
+// response wrapper
+import responseHandler from "./response-handler";
+
+
 //dependencies
 import userRepository from '../../infrastructure/repository/user-repository'
+
 //services
 import generateOtp from '../../infrastructure/services/generate-otp'
-import {createToken,createTempToken} from '../../infrastructure/services/generateToken'
+import { createToken, createTempToken } from '../../infrastructure/services/generateToken'
 
 //usecase
 import Login_Signup from '../usecase/login-signup'
@@ -28,6 +33,10 @@ import DeleteAddress from "../usecase/remove-a-address";
 import UpdateAddress from "../usecase/update-a-address";
 import GetProduct from "../usecase/get-a-product";
 import FetchWishlist from "../usecase/fetch-user-wishlist";
+import CartCheckout from "../usecase/cart-checkout";
+
+
+
 
 //repository instance
 const repository = new userRepository()
@@ -37,39 +46,48 @@ const repository = new userRepository()
 
 //----------------------- Handler functions -----------------------
 
+
+
 export const login_signup = async (req: Request, res: Response) => {
+
     const data = {
         phone: req.body.phone
     }
     const dependencies = {
         repository,
         generateOtp,
-        createToken : createTempToken,
+        createToken: createTempToken,
         sendOtp: notificationPublisher.sendLoginSignUpOtp
     }
 
+
     const interactor = new Login_Signup(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
 
 
 
 
+
+
+// verify otp 
 export const verifyOtp = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
         otp: req.body.otp
     }
     const dependencies = {
-        createToken : createToken ,
+        createToken: createToken,
         repository
     }
 
     const interactor = new VerifyOtp(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -85,8 +103,10 @@ export const getCartItems = async (req: Request, res: Response) => {
 
     const interactor = new GetCartItems(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -103,8 +123,11 @@ export const addToCart = async (req: Request, res: Response) => {
 
     const interactor = new AddToCart(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
+
 
 
 
@@ -121,8 +144,10 @@ export const updateCart = async (req: Request, res: Response) => {
 
     const interactor = new UpdateCartItem(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -139,8 +164,9 @@ export const removeFromCart = async (req: Request, res: Response) => {
 
     const interactor = new DeletFromCart(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
 
 
 
@@ -158,8 +184,10 @@ export const addToWishlist = async (req: Request, res: Response) => {
 
     const interactor = new AddToWishlist(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -175,8 +203,10 @@ export const fetchWishlist = async (req: Request, res: Response) => {
 
     const interactor = new FetchWishlist(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -192,8 +222,10 @@ export const removeFromWishlist = async (req: Request, res: Response) => {
 
     const interactor = new RemoveFromWishlist(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -207,8 +239,9 @@ export const getProducts = async (req: Request, res: Response) => {
 
     const interactor = new GetAllProducts(dependencies)
     const output = await interactor.execute(query)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
 
 
 
@@ -225,8 +258,10 @@ export const fetchProduct = async (req: Request, res: Response) => {
 
     const interactor = new GetProduct(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 // rate a product  -- pending
@@ -253,10 +288,10 @@ export const addAddress = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone, // Identity
         address: {
-            name: req.body.address.name,
-            address: req.body.address.address,
-            phone: req.body.address.phone,
-            pin: req.body.address.pin
+            name: req.body?.address?.name,
+            address: req.body?.address?.address,
+            phone: req.body?.address?.phone,
+            pin: req.body?.address?.pin
         }
     }
     const dependencies = {
@@ -265,8 +300,10 @@ export const addAddress = async (req: Request, res: Response) => {
 
     const interactor = new AddNewAddress(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 // fetch a address
@@ -281,8 +318,10 @@ export const getAddress = async (req: Request, res: Response) => {
 
     const interactor = new GetAddress(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
+
+
 
 
 
@@ -304,7 +343,7 @@ export const updateAddress = async (req: Request, res: Response) => {
 
     const interactor = new UpdateAddress(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
 }
 
 
@@ -322,5 +361,42 @@ export const deleteAddress = async (req: Request, res: Response) => {
 
     const interactor = new DeleteAddress(dependencies)
     const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
+    responseHandler(req, res, output)
+}
+
+
+
+
+// cart checkout
+export const cartCheckout = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+        addressId: req.body.addressId
+    }
+    const dependencies = {
+        repository,
+        checkoutCart : productPublisher.checkoutCart
+    }
+
+    const interactor = new CartCheckout(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+
+// Product checkout
+export const productCheckout = async (req: Request, res: Response) => {
+    // const data = {
+    //     phone: req.body.phone,
+    //     addressId: req.body.addressId
+    // }
+    // const dependencies = {
+    //     repository,
+    // }
+
+    // const interactor = new DeleteAddress(dependencies)
+    // const output = await interactor.execute(data)
+    // responseHandler(req, res, output)
 }

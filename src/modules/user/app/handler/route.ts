@@ -42,6 +42,7 @@ userRouter.delete('/wishlist',middleware,controller.removeFromWishlist)
 
 
 
+
 // get all products / filtering by queries
 userRouter.get('/products',controller.getProducts)
 
@@ -56,6 +57,7 @@ userRouter.get('/product/:productId',controller.fetchProduct)
 userRouter.post('/address',middleware,controller.addAddress)
 
 
+//fetch all address
 
 //fetch a address
 userRouter.get('/address/:addressId',middleware,controller.getAddress)
@@ -80,24 +82,31 @@ userRouter.delete('/address',middleware,controller.deleteAddress)
 
 
 
-
-
-
-
-
-
-
-
-
-
 //--------------------------------- pending work -------------------------------------------------
 
 
-// rate a product 
-userRouter.post('/rate',controller.rateProduct)  
 
-//payment
-// userRouter.post('/checkout',middleware,controller)
+// rate a product 
+userRouter.post('/rate',middleware,controller.rateProduct)
+
+
+
+
+//Product checkout
+userRouter.post('/checkout',middleware,controller.productCheckout)
+
+
+
+
+// Cart checkout
+userRouter.post('/cart/checkout',middleware,controller.cartCheckout)
+
+
+
+
+// verify payement
+userRouter.post('/payment',controller.rateProduct)
+
 
 
 

@@ -18,7 +18,7 @@ class UserRepository implements IRepository {
             await newUser.save()
         } catch (error) {
             // have to throw error
-            
+
         }
 
         // return ""
@@ -32,7 +32,7 @@ class UserRepository implements IRepository {
         })
 
         // todo : handling issuse on data fetching,
-        // if(!result.matchedCount){
+        // if(!result.matchedaddToCartCount){
         //     return { status:404 }
         // } return {status:200}
     }
@@ -43,7 +43,7 @@ class UserRepository implements IRepository {
             {
                 $addToSet: {
                     cart: {
-                        product_id: productId,
+                        productId,
                         quantity: 1
                     }
                 }
@@ -68,7 +68,7 @@ class UserRepository implements IRepository {
             { phone: phone, "cart.productId": productId },
             {
                 $pull: {
-                    cart: { product_id: productId }
+                    cart: { productId }
                 }
             }
         )
@@ -81,7 +81,7 @@ class UserRepository implements IRepository {
         const result = await userModel.updateOne(
             { phone: phone },
             {
-                $addToSet: {
+                $push: {
                     wishlist: productId
                 }
             }
@@ -92,60 +92,80 @@ class UserRepository implements IRepository {
 
     // remove from wishlist
     async removeFromWishlist(phone: string, productId: string) {
-        await userModel.updateOne(
-            { phone: phone, "cart.productId": productId },
-            {
-                $pull: {
-                    wishlist: productId
+        try {
+            const updated = await userModel.updateOne(
+                { phone: phone },
+                {
+                    $pull: { wishlist: productId }
                 }
-            }
-        )
+            )
+            console.log(updated, 'here is your updated data')
+        } catch (error) {
+            throw new Error('Error removing product from wishlist')
+        }
     }
 
 
     // add new address
     async addNewAddress(phone: string, address: { name: string, phone: string, address: string, pin: string }) {
-        await userModel.updateOne(
-            { phone: phone },
-            {
-                $push: {
-                    address: {
-                        name: address.name,
-                        phone: address.phone,
-                        address: address.address,
-                        pin: address.pin
+        try {
+            await userModel.updateOne(
+                { phone: phone },
+                {
+                    $push: {
+                        address: {
+                            name: address.name,
+                            phone: address.phone,
+                            address: address.address,
+                            pin: address.pin
+                        }
                     }
                 }
-            }
-        )
+            )
+        } catch (error) {
+            throw new Error('Error creating address')
+        }
     }
 
     //patch update address
     async updateAddress(phone: string, addressId: string, address: { name: string, phone: string, address: string, pin: string }) {
-        await userModel.updateOne(
-            { phone: phone, "address._id": addressId },
-            {
-                $set: {
-                    "address.$.name": address.name,
-                    "address.$.phone": address.phone,
-                    "address.$.address": address.address,
-                    "address.$.pin": address.pin
+
+        try {
+            await userModel.updateOne(
+                { phone: phone, "address._id": addressId },
+                {
+                    $set: {
+                        "address.$.name": address.name,
+                        "address.$.phone": address.phone,
+                        "address.$.address": address.address,
+                        "address.$.pin": address.pin
+                    }
                 }
-            }
-        )
+            )
+
+        } catch (error) {
+            throw new Error('Error updating address')
+        }
     }
+
 
 
     // remove an address
     async removeAddress(phone: string, addressId: string) {
-        await userModel.updateOne(
-            { phone: phone, "address._id": addressId },
-            {
-                $pull: {
-                    address: { _id: addressId }
+
+        try {
+            await userModel.updateOne(
+                { phone: phone, "address._id": addressId },
+                {
+                    $pull: {
+                        address: { _id: addressId }
+                    }
                 }
-            }
-        )
+            )
+
+        } catch (error) {
+            throw new Error('Error removing address')
+        }
     }
 }
 

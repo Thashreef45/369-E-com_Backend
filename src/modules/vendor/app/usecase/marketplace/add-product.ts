@@ -1,11 +1,11 @@
-import StatusCode from '../../infrastructure/config/staus-code'
+import StatusCode from '../../../infrastructure/config/staus-code'
 
 class AddProduct {
 
     private fetchUser
     private createProduct
 
-    constructor(dependencies:Dependencies) {
+    constructor(dependencies: Dependencies) {
         this.fetchUser = dependencies.fetchUser
         this.createProduct = dependencies.createProduct
     }
@@ -22,6 +22,7 @@ class AddProduct {
 
         try {
 
+
             // fetch User 
             const user = await this.fetchUser(data.phone)
             if (!user) return {
@@ -36,13 +37,13 @@ class AddProduct {
             // product creation
             const updated = await this.createProduct(data)
             return {
-                response : updated.response,
-                status : updated.status
+                response: updated.response,
+                status: updated.status
             }
 
 
         } catch (error) {
-            
+
             return {
                 response: { message: "Error adding product" },
                 status: StatusCode.INTERNAL_ERROR
@@ -65,7 +66,7 @@ interface Input {
     userId: string
 
     // pending -- have to implement in middleware
-    phone : string
+    phone: string
 }
 
 interface Output {
@@ -74,6 +75,6 @@ interface Output {
 }
 
 interface Dependencies {
-    fetchUser(phone:string) : {}
-    createProduct(data:Input):any
+    fetchUser(phone: string): {}
+    createProduct(data: Input): any
 }

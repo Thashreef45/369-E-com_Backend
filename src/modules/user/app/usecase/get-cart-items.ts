@@ -16,7 +16,6 @@ class GetCartItems {
 
         try {
 
-
             // check user exist or not
             const user = await this.repository.findByPhone(data.phone)
             if (!user) return {
@@ -27,6 +26,7 @@ class GetCartItems {
 
             // create array wich have ids of user cart items
             const idArray = this.cartItems(user.cart)
+
 
             // return if cart is empty
             if (!idArray.length) return {
@@ -41,7 +41,7 @@ class GetCartItems {
             const responseData = this.attachCartQuantiy(cartData, user.cart)
             // response
             return {
-                response: { message: "Success", data: responseData },
+                response: { message: "Success", data: cartData },
                 status: StatusCode.OK
             }
 
@@ -64,14 +64,16 @@ class GetCartItems {
     }
 
 
+
+    //method for attaching cart quantity with product
     private attachCartQuantiy(data: any[], cartData: { productId: string, quantity: number }[]) {
+
         cartData.forEach((cart) => {
             for (let i = 0; i < data.length; i++) {
-                if (data[i]._id == cart.productId) data[i].quantity = cart.quantity
+                if (String(data[i]._id) == String(cart.productId)) data[i].quantity = cart.quantity
             }
-
         })
-        return cartData
+        return data
     }
 }
 

@@ -100,7 +100,7 @@ class productRepository implements IRepository {
 
     // fetch mulitiple products by id
     async getProducts(data: string[]) {
-        return await productModel.find({ _id: { $in: data } }, { feedbacks: 0 })
+        return await productModel.find({ _id: { $in: data } }, { feedbacks: 0 }).lean()
     }
 
 

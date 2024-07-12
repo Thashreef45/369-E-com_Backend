@@ -1,25 +1,26 @@
-import StatusCode from "../../infrastructure/config/staus-code"
+import StatusCode from "../../../infrastructure/config/staus-code"
 
 
-class ActivatePost {
+
+class UpdateProduct {
 
     private fetchUser
-    private activatePost
+    private updateProduct
 
     constructor(dependencies: Dependencies) {
         this.fetchUser = dependencies.fetchUser
-        this.activatePost = dependencies.activatePost
+        this.updateProduct = dependencies.updateProduct
     }
-
 
     async execute(data: Input): Promise<Output> {
 
-        // credential check
-        if (!data.productId) return {
+        //checking the credentials
+        if (!data.name || !data.description || !data.price ||
+            !data.thumbnail || !data.categoryId //|| !data.quantity
+        ) return {
             response: { message: "Credentials missing" },
             status: StatusCode.BAD_REQUEST
         }
-
 
         try {
 
@@ -30,14 +31,9 @@ class ActivatePost {
                 status: StatusCode.NOT_FOUND
             }
 
+            data.userId = user._id
 
-            // params for publisher
-            const param = {
-                userId: user._id, productId: data.productId
-            }
-            // publish
-            const updated: Output = await this.activatePost(param)
-            // response
+            const updated:Output = await this.updateProduct(data)
             return {
                 response: updated.response,
                 status: updated.status
@@ -49,16 +45,26 @@ class ActivatePost {
                 status: StatusCode.INTERNAL_ERROR
             }
         }
+
+
+
     }
 }
 
-
-export default ActivatePost
+export default UpdateProduct
 
 
 interface Input {
-    phone: string
-    productId: string
+    name: string,
+    description: string,
+    price: number,
+    thumbnail: string,
+    images: string[],
+    categoryId: string,
+    // quantity: string,
+    productId: string,
+    phone: string,
+    userId?: string,
 }
 
 interface Output {
@@ -67,6 +73,6 @@ interface Output {
 }
 
 interface Dependencies {
-    fetchUser(userId: string): any
-    activatePost(param: { userId: string, productId: string })
+    fetchUser(userId: string): {}
+    updateProduct(data: Input): {}
 }

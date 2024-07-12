@@ -9,25 +9,45 @@ class AddNewAddress {
         this.repository = dependencies.repository
     }
 
-    async execute(data: Input) {
+    async execute(data: Input): Promise<Output> {
 
-        //check user exist or not
-        const user = await this.repository.findByPhone(data.phone)
-        if (!user) {
-            return {
-                response: { message: 'User not found' },
-                status: StatusCode.NOT_FOUND
+
+        try {
+
+            
+            // check credentials
+            if (!data.address || !data.address.address || !data.address.name
+                || !data.address.phone || data.address.pin
+            ) return {
+                response: { message: "Credentials missing" },
+                status: StatusCode.BAD_REQUEST
             }
-        }
 
 
-        // add new address
-        const response = await this.repository.addNewAddress(data.phone,data.address)
+            //check user exist or not
+            const user = await this.repository.findByPhone(data.phone)
+            if (!user) {
+                return {
+                    response: { message: 'User not found' },
+                    status: StatusCode.NOT_FOUND
+                }
+            }
 
-        // response todo: updated , not updated 
-        return {
-            response: { message: "Success" },
-            status: StatusCode.OK
+
+            // add new address
+            const response = await this.repository.addNewAddress(data.phone, data.address)
+            // response todo: updated , not updated 
+
+            return {
+                response: { message: "Success" },
+                status: StatusCode.OK
+            }
+
+        } catch (error) {
+            return {
+                response: { message: "Error adding new address" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
     }
 
@@ -37,8 +57,8 @@ export default AddNewAddress
 
 
 interface Input {
-    phone : string
-    address : Address
+    phone: string
+    address: Address
 }
 
 interface Address {
@@ -46,6 +66,11 @@ interface Address {
     address: string,
     phone: string,
     pin: string
+}
+
+interface Output {
+    response: { message: string },
+    status: StatusCode
 }
 
 interface Dependencies {

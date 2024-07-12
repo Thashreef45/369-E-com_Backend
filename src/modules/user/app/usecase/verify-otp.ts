@@ -13,6 +13,8 @@ class verifyOtp {
 
     async execute(data: Input): Promise<Output> {
 
+
+        //check input credentials
         if (!data.otp || !data.phone) return {
             response: { message: "Credentials missing" },
             status: StatusCode.BAD_REQUEST
@@ -20,21 +22,21 @@ class verifyOtp {
 
 
         try {
-            // db data fetch
+
+
+            // check user
             const user = await this.repository.findByPhone(data.phone)
-            if (!user) {
-                return {
-                    response: { message: 'Account not found' },
-                    status: StatusCode.NOT_FOUND
-                }
+            if (!user) return {
+                response: { message: 'Account not found' },
+                status: StatusCode.NOT_FOUND
             }
 
+
+
             //checking the otp 
-            if (user.otp != data.otp) {
-                return {
-                    response: { message: 'Invalid OTP' },
-                    status: StatusCode.UNAUTHORIZED
-                }
+            if (user.otp != data.otp) return {
+                response: { message: 'Invalid OTP' },
+                status: StatusCode.UNAUTHORIZED
             }
 
             // todo
@@ -43,11 +45,19 @@ class verifyOtp {
 
             const token = this.createToken(data.phone)
 
+            
+            //demo function 
+            //const updated = await remove_otp_from_db(data.phone)
+            
+
             //response message with token
             return {
-                response: { message: "Success", token: token },
+                response: { message: "Success", token: token,
+                    // refreshToken : ""
+                 },
                 status: StatusCode.OK
             }
+
         } catch (error) {
             return {
                 response: { message: "Internal error" },

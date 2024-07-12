@@ -31,6 +31,7 @@ export const createProduct = async (data:any) => {
 }
 
 
+
 // fetch a product
 export const getProduct = async (id:string) => {
 

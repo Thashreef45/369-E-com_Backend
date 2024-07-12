@@ -7,15 +7,27 @@ export const getProductsById = async (productIds: string[]) => {
 
 
 // fetch all products
-export const getProducts = async (query:any) => {
+export const getProducts = async (query: any) => {
     const response = await productPublisher.getAllProducts(query)
     return response
 }
 
 
+
 //fetch a product
-export const getProduct = async (productID:string) => {
+export const getProduct = async (productID: string) => {
     const response = await productPublisher.getProduct(productID)
+    return response
+}
+
+
+
+//checkout cart
+export const checkoutCart = async (
+    data: { productID: string, quantity: number }[]
+) => {
+
+    const response = await productPublisher.checkoutUserCart(data)
     return response
 }
 

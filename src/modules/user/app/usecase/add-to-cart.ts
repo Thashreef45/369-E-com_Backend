@@ -24,6 +24,7 @@ class AddToCart {
 
         try {
 
+
             //check user
             const user = await this.repository.findByPhone(data.phone)
             if (!user) return {
@@ -48,6 +49,10 @@ class AddToCart {
             }
 
 
+            //stock check
+            
+
+
             // update the product in user cart
             const response = await this.repository.addToCart(data.phone, data.productId)
             // response
@@ -55,7 +60,9 @@ class AddToCart {
                 response: { message: "Success" },
                 status: StatusCode.OK
             }
+
         } catch (error) {
+            
             return {
                 response: { message: "Error adding to cart" },
                 status: StatusCode.INTERNAL_ERROR

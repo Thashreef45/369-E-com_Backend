@@ -78,6 +78,7 @@ const productSchema = new Schema({
         ref: 'Category.subcategories',
         required: true
     },
+
     feedbacks: {
         type: [feedbackSchema],
         default: []
