@@ -69,13 +69,17 @@ class productRepository implements IRepository {
     async createProduct(
         name: String, description: String,
         price: Number, images: String[],
-        thumbnail: String, stock: Number,
-        categoryId: String, subCategoryId: String
+        thumbnail: String, stock: Number,categoryId: String,
+         subCategoryId: String,ownerId:string, isAdmin : boolean
     ) {
 
         const newProduct = new productModel({
             name, description, price, actualPrice: price, images, thumbnail,
-            stock, categoryId, subcategoryId: subCategoryId
+            stock, categoryId, subcategoryId: subCategoryId ,
+            ownership : {
+                ownerId : ownerId,
+                isAdmin : isAdmin
+            }
         })
 
         const updated = await newProduct.save()

@@ -2,14 +2,14 @@
 
 //repository
 import MarketPlaceRepository from "../../../infrastructure/repository/market-place-repository"
-import ActivatePost from "../../usecase/vendor/activate-post"
 
 //usecase
-import CreateProduct from "../../usecase/vendor/create-product"
-import GetAProduct from "../../usecase/vendor/fetch-a-product"
-import FetchAllPosts from "../../usecase/vendor/fetch-user-posts"
-import RemoveProduct from "../../usecase/vendor/remove-product"
-import UpdateProduct from "../../usecase/vendor/update-product"
+import CreateProduct from "../../usecase/vendor/B2B/create-product"
+import GetAProduct from "../../usecase/vendor/B2B/fetch-a-product"
+import FetchAllPosts from "../../usecase/vendor/B2B/fetch-user-posts"
+import RemoveProduct from "../../usecase/vendor/B2B/remove-product"
+import UpdateProduct from "../../usecase/vendor/B2B/update-product"
+import ActivatePost from "../../usecase/vendor/B2B/activate-post"
 
 
 // B2B Repository instance

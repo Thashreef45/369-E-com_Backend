@@ -1,4 +1,4 @@
-import * as vendorConsumer from '../../../../../product/app/handler/event-handlers/vendor'
+import * as vendorConsumer from '../../../../../product/app/handler/event-handlers/vendor-B2B'
 
 
 // create product 
