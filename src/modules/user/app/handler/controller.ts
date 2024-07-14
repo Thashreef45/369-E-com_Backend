@@ -49,7 +49,6 @@ const repository = new userRepository()
 
 
 export const login_signup = async (req: Request, res: Response) => {
-
     const data = {
         phone: req.body.phone
     }

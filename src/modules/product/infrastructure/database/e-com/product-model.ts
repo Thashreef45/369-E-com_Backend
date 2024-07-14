@@ -84,6 +84,17 @@ const productSchema = new Schema({
         default: []
     },
 
+
+
+    ownership  : {
+        
+        isAdmin : {
+            type : Boolean,
+            default : false
+        },
+        ownerId : Schema.Types.ObjectId,
+    }
+
     // // total no.of rating
     // ratingCount : {
     //     type : Number,
@@ -94,6 +105,7 @@ const productSchema = new Schema({
     //     type : Number,
     //     default: 0
     // }
+
 }, { timestamps: true });
 
 

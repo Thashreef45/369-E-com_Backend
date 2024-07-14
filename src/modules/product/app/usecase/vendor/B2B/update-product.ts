@@ -1,5 +1,5 @@
-import StatusCode from "../../../infrastructure/config/staus-code"
-import IRepository from "../../../infrastructure/interface/IRepository-B2B"
+import StatusCode from "../../../../infrastructure/config/staus-code"
+import IRepository from "../../../../infrastructure/interface/IRepository-B2B"
 
 
 class UpdateProduct {

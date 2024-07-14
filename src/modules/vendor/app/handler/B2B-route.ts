@@ -1,15 +1,8 @@
 import express from 'express'
-import * as controller from './controller'
+import * as controller from './B2B-controller'
 import middleware from './middleware/middleware'
 
 const router = express()
-
-
-//register
-router.post('/register',controller.register)
-
-//login
-// router.post('/login',controller.login)
 
 
 // add product
