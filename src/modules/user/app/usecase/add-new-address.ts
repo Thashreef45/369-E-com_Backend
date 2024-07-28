@@ -14,30 +14,24 @@ class AddNewAddress {
 
         try {
 
-            
-            // check credentials
-            if (!data.address || !data.address.address || !data.address.name
-                || !data.address.phone || data.address.pin
-            ) return {
-                response: { message: "Credentials missing" },
-                status: StatusCode.BAD_REQUEST
+            // Check input credentials
+            const credentials = this.checkCredentials(data)
+            if (!credentials.success) return {
+                response: { message: credentials.message },
+                status: credentials.status
             }
 
 
             //check user exist or not
             const user = await this.repository.findByPhone(data.phone)
-            if (!user) {
-                return {
-                    response: { message: 'User not found' },
-                    status: StatusCode.NOT_FOUND
-                }
+            if (!user) return {
+                response: { message: 'User not found' },
+                status: StatusCode.NOT_FOUND
             }
 
 
-            // add new address
-            const response = await this.repository.addNewAddress(data.phone, data.address)
-            // response todo: updated , not updated 
 
+            const response = await this.repository.addNewAddress(data.phone, data.address)
             return {
                 response: { message: "Success" },
                 status: StatusCode.OK
@@ -48,6 +42,49 @@ class AddNewAddress {
                 response: { message: "Error adding new address" },
                 status: StatusCode.INTERNAL_ERROR
             }
+        }
+    }
+
+
+
+    /** Method for checking input credentials */
+    private checkCredentials(data: Input): { message: string, status: StatusCode, success: boolean } {
+        const address = data.address
+
+        // check input credentials exist or not
+        if (!address || !address.address ||
+            !address.name || !address.phone || !address.pin
+        ) return {
+            message: "Credentials missing",
+            status: StatusCode.INTERNAL_ERROR,
+            success: false
+        }
+
+
+        // check input credential types
+        if (
+            typeof address.address != 'string' ||
+            typeof address.name != 'string' ||
+            typeof address.phone != 'string' ||
+            typeof address.pin != 'string'
+        ) return {
+            message: "Credentials types not matching",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        if (address.address.length > 250) return {
+            message: "Address length should be less than 300 characters",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        return {
+            message: "",
+            status: StatusCode.OK,
+            success: true
         }
     }
 

@@ -1,11 +1,12 @@
 
-
 // repository
-import ProductRepository from "../../../infrastructure/repository/product-repository"
+import ProductRepository from "../../../infrastructure/repository/repository-B2C"
 
 
 // usecase
+import GetAProduct from "../../usecase/vendor/B2C/fetch-a-product"
 import CreateProduct from "../../usecase/vendor/B2C/create-product"
+import UpdateProduct from "../../usecase/vendor/B2C/update-product"
 
 
 
@@ -19,7 +20,7 @@ const repository = new ProductRepository()
 
 
 // create product
-export const createProduct = async (data:any) => {
+export const createProduct = async (data: any) => {
 
     data = data
 
@@ -34,30 +35,31 @@ export const createProduct = async (data:any) => {
 
 
 
-// // fetch a product
-// export const getProduct = async (id:string) => {
+// fetch a product
+export const getProduct = async (id: string) => {
+    const data = { id }
 
-//     const data = { id }
-//     const dependencies = {
-//         repository: repository
-//     }
+    const dependencies = {
+        repository: repository
+    }
 
-//     const interactor = new GetAProduct(dependencies)
-//     const output = await interactor.execute(data)
-//     return output
-// }
-
+    const interactor = new GetAProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
 
 
-// // update product 
-// export const updateProduct = async (data:any) => {
 
-//     // const data = { id }
-//     const dependencies = {
-//         repository: repository
-//     }
 
-//     const interactor = new UpdateProduct(dependencies)
-//     const output = await interactor.execute(data)
-//     return output
-// }
+// update product 
+export const updateProduct = async (data:any) => {
+
+    // const data = { id }
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new UpdateProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}

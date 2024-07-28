@@ -7,21 +7,28 @@ import * as productPublisher from "./communication/publisher/B2B-product-publish
 import * as notificationPublisher from './communication/publisher/notification-publisher'
 
 
-// usecase
-import AddProduct from "../usecase/marketplace/add-product"
-import GetAProduct from "../usecase/marketplace/fetch-a-product"
-import UpdateProduct from '../usecase/marketplace/update-product'
-import RemoveProduct from "../usecase/marketplace/remove-product"
-import FetchUserPost from "../usecase/marketplace/fetch-user-posts"
-import ActivatePost from "../usecase/marketplace/activate-post"
+//dependencies
+import Repository from "../../infrastructure/repository/repository"
 
+
+// usecase
+import AddProduct from "../usecase/B2B/add-product"
+import GetAProduct from "../usecase/B2B/fetch-a-product"
+import UpdateProduct from '../usecase/B2B/update-product'
+import RemoveProduct from "../usecase/B2B/remove-product"
+import FetchUserPost from "../usecase/B2B/fetch-user-posts"
+import ActivatePost from "../usecase/B2B/activate-post"
+
+
+//repository instance
+const repository = new Repository()
 
 
 //  create new product
 export const addproduct =  async(req : Request, res : Response) => {
     const dependencies = {
-        fetchUser : userPublisher.fetchUserByPhone,
-        createProduct : productPublisher.createProduct
+        createProduct : productPublisher.createProduct,
+        repository,
     }
     const data = req.body
 
@@ -52,8 +59,8 @@ export const getProduct = async(req : Request, res : Response) => {
 // update a product
 export const updateProduct = async(req : Request, res : Response) => {
     const dependencies = {
-        fetchUser : userPublisher.fetchUserByPhone,
-        updateProduct : productPublisher.updateProduct
+        updateProduct : productPublisher.updateProduct,
+        repository,
     }
 
     const data = {
@@ -64,7 +71,7 @@ export const updateProduct = async(req : Request, res : Response) => {
         images : req.body.images,
         categoryId: req.body.categoryId,
         productId : req.body.productId,
-        phone : req.body.phone
+        email : req.body.email
     }
 
     const interactor = new UpdateProduct(dependencies)
@@ -78,12 +85,13 @@ export const updateProduct = async(req : Request, res : Response) => {
 //  remove a product
 export const removeProduct = async(req : Request, res : Response) => {
     const dependencies = {
-        // fetchProduct : productPublisher.getProduct
-        fetchUser : userPublisher.fetchUserByPhone,
-        removeProduct : productPublisher.removeProduct
+        // fetchProduct : productPublisher.getProduct ==
+
+        removeProduct : productPublisher.removeProduct,
+        repository
     }
     const data = {
-        phone : req.body.phone,
+        email : req.body.email,
         productId : req.body.productId
     }
 
@@ -97,15 +105,15 @@ export const removeProduct = async(req : Request, res : Response) => {
 
 
 //  fetch user posts
-export const getUserPosts = async(req : Request, res : Response) => {
+export const getVenodrPosts = async(req : Request, res : Response) => {
     const dependencies = {
-        fetchUser : userPublisher.fetchUserByPhone,
-        fetchUserPosts : productPublisher.fetchAllPost
+        fetchUserPosts : productPublisher.fetchAllPost,
+        repository,
     }
     
     const data = {
-        phone : req.body.phone,
-        query : req.query.active
+        email : req.body?.email,
+        query : req.query?.ActivatePost
     }
 
     const interactor = new FetchUserPost(dependencies)
@@ -120,12 +128,13 @@ export const getUserPosts = async(req : Request, res : Response) => {
 // activate user product || post
 export const activatePost = async(req : Request, res : Response) => {
     const dependencies = {
-        fetchUser : userPublisher.fetchUserByPhone,
-        activatePost : productPublisher.activatePost
+        // fetchUser : userPublisher.fetchUserByPhone,
+        activatePost : productPublisher.activatePost,
+        repository
     }
 
     const data = {
-        phone : req.body.phone,
+        email : req.body.email,
         productId : req.body.productId
     }
 

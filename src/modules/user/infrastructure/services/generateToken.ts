@@ -3,17 +3,18 @@ import env from '../config/environment'
 
 
 // Common function to generate token
-const generateToken = (phone :string, time:string) => {
+const generateToken = (phone :string, time:string,signature:string) => {
     
     const payload = { phone : phone,role : "user" }
 
-    return sign(payload,env.JWT_SIGNATURE,{expiresIn:time})
+    return sign(payload,signature,{expiresIn:time})
 }
 
 
 // Generate token for 5 minute
 const createTempToken = (phone : string) : string => {
-    const token = generateToken(phone,'5m')
+
+    const token = generateToken(phone,'5m',env.OTP_JWT_SIGNATURE)
     return token
     
 }
@@ -21,7 +22,8 @@ const createTempToken = (phone : string) : string => {
 
 //Generate token for 3 day
 const createToken = (phone : string) : string => {
-    const token = generateToken(phone,'3d')
+    
+    const token = generateToken(phone,'3d',env.JWT_SIGNATURE)
     return token
 }
 

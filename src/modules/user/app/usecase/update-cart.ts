@@ -4,12 +4,13 @@ import StatusCode from '../../infrastructure/config/staus-code'
 class UpdateCartItem {
 
     private repository: IRepository
+    private getProduct: any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
     }
 
-    async execute(data: Input) {
+    async execute(data: Input): Promise<Output> {
 
 
         //check input credentials
@@ -19,13 +20,12 @@ class UpdateCartItem {
         }
 
 
-        if (data.count < 0) return {
-            response: { message: `Product count cannot be less than zero ` },
+        if (data.count < 1) return {
+            response: { message: `Product count cannot be less than one ` },
             status: StatusCode.BAD_REQUEST
         }
 
 
-        
         try {
 
             // check user exist or not
@@ -37,22 +37,27 @@ class UpdateCartItem {
 
 
             //check that product exist or not cart
-            const productExistInCart = this.checkCartProduct(data.productId,user.cart)
-            if(!productExistInCart) return {
+            const productExistInCart = this.checkCartProduct(data.productId, user.cart)
+            if (!productExistInCart) return {
                 response: { message: 'Product not found in cart' },
                 status: StatusCode.NOT_FOUND
             }
 
 
             //check stock
-            
+            const product = await this.getProduct(data.productId)
+            if (!product.stock || data.count > product.stock) return {
+                response: { message: "Product not in stock" },
+                status: StatusCode.CONFLICT
+            }
+
+            // if (data.count >)
 
 
             //update cart
             const update = await this.repository.updateCartProductCount(
                 data.phone, data.productId, data.count
             )
-            // response
             return {
                 response: { message: "Success" },
                 status: StatusCode.OK
@@ -67,10 +72,10 @@ class UpdateCartItem {
         }
     }
 
-    checkCartProduct(productId: string, cart: {productId:string}[]) {
-        for(let i = 0  ; i < cart.length ; i++){
-            if(cart[i].productId == productId) return true
-        }return false
+    checkCartProduct(productId: string, cart: { productId: string }[]) {
+        for (let i = 0; i < cart.length; i++) {
+            if (cart[i].productId == productId) return true
+        } return false
     }
 
 }
@@ -84,8 +89,14 @@ interface Input {
     count: number
 }
 
+interface Output {
+    response: { message: string }
+    status: StatusCode
+}
+
 interface Dependencies {
     repository: IRepository
+    getProduct(productId: string): any
 }
 
 

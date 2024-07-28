@@ -5,14 +5,14 @@ import { response } from 'express'
 class AddToCart {
 
     private repository: IRepository
-    private getProduct
+    private getProduct : any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
         this.getProduct = dependencies.getProduct
     }
 
-    async execute(data: Input) {
+    async execute(data: Input): Promise<Output> {
 
 
         // check input credentials
@@ -24,12 +24,18 @@ class AddToCart {
 
         try {
 
-
             //check user
             const user = await this.repository.findByPhone(data.phone)
             if (!user) return {
                 response: { message: 'User not found' },
                 status: StatusCode.NOT_FOUND
+            }
+
+
+            // check cart limit
+            if (user?.cart?.length == 10) return {
+                response: { message: 'Cart limit reached. Cannot add more items.' },
+                status: StatusCode.BAD_REQUEST
             }
 
 
@@ -50,7 +56,10 @@ class AddToCart {
 
 
             //stock check
-            
+            if (!isProductExist.stock) return {
+                response: { message: "Product not in stock" },
+                status: StatusCode.CONFLICT
+            }
 
 
             // update the product in user cart
@@ -62,7 +71,7 @@ class AddToCart {
             }
 
         } catch (error) {
-            
+
             return {
                 response: { message: "Error adding to cart" },
                 status: StatusCode.INTERNAL_ERROR
@@ -90,8 +99,13 @@ interface Input {
     productId: string,
 }
 
+interface Output {
+    response: { message: string },
+    status: StatusCode
+}
+
 interface Dependencies {
-    getProduct(productID: string): any
+    getProduct(productId: string): any
     repository: IRepository
 }
 

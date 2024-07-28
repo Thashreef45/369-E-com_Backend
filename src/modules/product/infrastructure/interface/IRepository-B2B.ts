@@ -3,9 +3,13 @@
 interface IRepository {
     //------------------------------------- category -------------------------------------
 
-    createCategory(name: string, description: string): any
+    createCategory(data: { name: string, description: string }): Promise<any>
 
     findCategory(id: string): any
+
+
+    /** Fetch all categories */
+    fetchAllCategories(): Promise<any>
 
 
 
@@ -32,12 +36,14 @@ interface IRepository {
     removeProduct(productId: string): any
 
 
-    fetchUserAllPosts(userId: string): any
+    fetchOwnerAllPosts(ownerId: string): any
 
 
-    fetchUserPosts(userId: string, active: boolean): any
+    fetchOwnerPosts(ownerId: string, active: boolean): any
 
-    activateProduct(productId: string) : any
+    activateProduct(productId: string): any
+
+
 
 }
 

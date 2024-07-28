@@ -14,12 +14,37 @@ class GetAllProducts {
 
         // fetch products
         const products = await this.getAllProducts(query)
+        const resData  = this.ResponseMapper(products)
 
         // response
         return {
-            response: { message: "Success", data: products },
+            response: { message: "Success", data: resData },
             status: StatusCode.OK
         }
+    }
+
+
+    ResponseMapper(data: Products[]): ResponseMapperOutput[] {
+
+        // let obj:ResponseMapperOutput | any = {}
+        const arr: ResponseMapperOutput[] = []
+
+
+        for (let i = 0; i < data.length; i++) {
+            arr.push({
+                _id : data[i]._id,
+                name: data[i].name,
+                description : data[i].description,
+                price : data[i].price,
+                actualPrice : data[i].actualPrice,
+                offer : data[i].offer,
+                thumbnail : data[i].thumbnail,
+                stock : data[i].stock,
+                averageRating : data[i].averageRating
+            })
+        }
+
+        return arr
     }
 }
 
@@ -34,5 +59,52 @@ interface Dependencies {
 interface Output {
     response : {message:string , data ?:any},
     status : StatusCode
+}
+
+
+
+interface ResponseMapperOutput {
+    _id : string
+    name: string
+    description: string
+
+    price: string
+
+    actualPrice: string
+
+    offer: boolean
+
+    thumbnail: string
+    stock: number
+
+    averageRating: number
+}
+
+interface Products {
+    _id : string
+    name: string
+    description: string
+
+    price: string
+
+    actualPrice: string
+
+    offer: boolean
+
+    images: string[]
+    thumbnail: string
+    stock: number
+    categoryId: string
+    subcategoryId: string
+
+    rating: {
+        one: number
+        two: number
+        three: number
+        four: number
+        five: number
+    },
+
+    averageRating: number
 }
 

@@ -17,7 +17,7 @@ class FetchAllPosts {
 
             // fetching all posts
             if (typeof data.query == 'undefined') {
-                const posts = await this.repository.fetchUserAllPosts(data.userId)
+                const posts = await this.repository.fetchOwnerAllPosts(data.ownerId)
                 return {
                     response: { message: "Succes", data: posts },
                     status: StatusCode.OK
@@ -27,7 +27,7 @@ class FetchAllPosts {
 
             // fetching posts on active - true/false
             if (data.query == true || data.query == false) {
-                const posts = await this.repository.fetchUserPosts(data.userId, data.query)
+                const posts = await this.repository.fetchOwnerPosts(data.ownerId, data.query)
                 return {
                     response: { message: "Success", data: posts },
                     status: StatusCode.OK
@@ -49,7 +49,7 @@ export default FetchAllPosts
 
 
 interface Input {
-    userId: string,
+    ownerId: string,
     query?: boolean | undefined
 }
 

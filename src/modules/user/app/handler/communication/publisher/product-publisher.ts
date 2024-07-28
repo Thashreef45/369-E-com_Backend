@@ -15,8 +15,14 @@ export const getProducts = async (query: any) => {
 
 
 //fetch a product
-export const getProduct = async (productID: string) => {
-    const response = await productPublisher.getProduct(productID)
+export const getProduct = async (productId: string) => {
+    const response = await productPublisher.getProduct(productId)
+    return response
+}
+
+export const getCategories = async (): Promise<any> => {
+
+    const response = await productPublisher.getAllCategories
     return response
 }
 
@@ -24,10 +30,19 @@ export const getProduct = async (productID: string) => {
 
 //checkout cart
 export const checkoutCart = async (
-    data: { productID: string, quantity: number }[]
+    data: { productId: string, quantity: number }[]
 ) => {
 
     const response = await productPublisher.checkoutUserCart(data)
+    return response
+}
+
+
+
+// product rating
+export const rateProduct = async (data: { userId: string, productId: string,comment: string,rating: number}) => {
+
+    const response = await productPublisher.rateProduct(data)
     return response
 }
 

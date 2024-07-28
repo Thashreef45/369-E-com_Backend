@@ -1,3 +1,4 @@
+import membershipModel from "../database/membership-model";
 import userModel from "../database/user-model";
 import IRepository from "../interface/IRepository";
 
@@ -157,14 +158,89 @@ class UserRepository implements IRepository {
             await userModel.updateOne(
                 { phone: phone, "address._id": addressId },
                 {
-                    $pull: {
-                        address: { _id: addressId }
+                    $set: {
+                        "address.$.active": false
                     }
                 }
             )
 
         } catch (error) {
             throw new Error('Error removing address')
+        }
+    }
+
+
+
+
+    /**Create membership -- admin role */
+    async createMembership(data: {
+        name: string,
+        description: string,
+        price: number,
+        features: string[],
+        thumbanail: string
+    }) {
+        try {
+            const created = await membershipModel.create({
+                name: data.name,
+                description: data.description,
+                price: data.price,
+                features: data.features,
+                thumbanail: data.thumbanail
+            })
+
+            await created.save()
+            return created
+
+        } catch (error) {
+            throw new Error('Error creating membership')
+        }
+    }
+
+
+    //fetch  membership by name
+    async findMembershipByName(name: string) {
+        try {
+            const membership = await membershipModel.findOne({ name: name })
+            return membership
+        } catch (error) {
+            throw new Error('Error finding membership')
+        }
+    }
+
+
+    // fethch membership by Id
+    async findMembershipById(id: string) {
+        try {
+            const membership = await membershipModel.findOne({ _id: id })
+            return membership
+        } catch (error) {
+            throw new Error('Error finding membership')
+        }
+    }
+
+
+    async updateMembership(data: {
+        membershipId: string, name: string, description: string,
+        price: number, features: string[], thumbanail: string
+    }) {
+        try {
+            const updated = await membershipModel.updateOne(
+                { _id: data.membershipId },
+                {
+                    $set: {
+                        name: data.name,
+                        description: data.description,
+                        price: data.price,
+                        features: data.features,
+                        thumbanail: data.thumbanail
+                    }
+                }
+            )
+
+            return updated
+        } catch (error) {
+            throw new Error('Error updating membership')
         }
     }
 }

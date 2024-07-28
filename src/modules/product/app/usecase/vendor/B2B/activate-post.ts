@@ -20,7 +20,7 @@ class ActivatePost {
             }
 
             // check authentic or not
-            if (data.userId != product.userId) return {
+            if (data.ownerId != product.userId) return {
                 response: { message: "Access denied" },
                 status: StatusCode.FORBIDDEN
             }
@@ -54,7 +54,7 @@ export default ActivatePost
 
 
 interface Input {
-    userId: string,
+    ownerId: string,
     productId: string
 }
 

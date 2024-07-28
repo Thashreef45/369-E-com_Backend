@@ -46,8 +46,9 @@ class GetAddress {
 
     private fetchAddress(addressArray: Address[], addressId: string) {
         const address = addressArray.filter((x: Address) => x._id == addressId)
+        if(address.length && !address[0].active) return null
         if (address.length) return address[0]
-        else return null
+        return null
     }
 
 }
@@ -65,9 +66,10 @@ interface Dependencies {
 }
 
 interface Address {
-    _id: String
-    name: String,
-    address: String,
-    phone: String,
-    pin: String,
+    _id: string
+    name: string,
+    address: string,
+    phone: string,
+    pin: string,
+    active : boolean
 }

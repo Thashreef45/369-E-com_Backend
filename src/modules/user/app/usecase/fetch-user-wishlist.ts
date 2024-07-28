@@ -32,14 +32,39 @@ class FetchWishlist {
 
 
         // fetch datas of that products
-        const cartData = await this.getProducts(user.wishlist)
+        const wishlist = await this.getProducts(user.wishlist)
 
         // response
         return {
-            response: { message: "Success", data: cartData },
+            response: { message: "Success", data: wishlist },
             status: StatusCode.OK
         }
     }
+
+    ResponseMapper(data: Products[]): ResponseMapperOutput[] {
+
+        // let obj:ResponseMapperOutput | any = {}
+        const arr: ResponseMapperOutput[] = []
+
+
+        for (let i = 0; i < data.length; i++) {
+            arr.push({
+                _id : data[i]._id,
+                name: data[i].name,
+                description : data[i].description,
+                price : data[i].price,
+                actualPrice : data[i].actualPrice,
+                offer : data[i].offer,
+                thumbnail : data[i].thumbnail,
+                stock : data[i].stock,
+                averageRating : data[i].averageRating
+            })
+        }
+
+        return arr
+    }
+
+
 
 
 }
@@ -56,8 +81,50 @@ interface Dependencies {
     getProducts(idArray: string[]): Promise<any[]> //todo:implementations of interface
 }
 
-interface Cart {
-    productId: string
-    quantity: number
+
+interface ResponseMapperOutput {
+    _id : string
+    name: string
+    description: string
+
+    price: string
+
+    actualPrice: string
+
+    offer: boolean
+
+    thumbnail: string
+    stock: number
+
+    averageRating: number
+}
+
+interface Products {
+
+    _id : string
+    name: string
+    description: string
+
+    price: string
+
+    actualPrice: string
+
+    offer: boolean
+
+    images: string[]
+    thumbnail: string
+    stock: number
+    categoryId: string
+    subcategoryId: string
+
+    rating: {
+        one: number
+        two: number
+        three: number
+        four: number
+        five: number
+    },
+
+    averageRating: number
 }
 

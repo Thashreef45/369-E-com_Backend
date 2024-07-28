@@ -1,7 +1,7 @@
 // ------------------   CONSUMER FOR VENDOR MODULE ---------------------
 
 //repository
-import MarketPlaceRepository from "../../../infrastructure/repository/market-place-repository"
+import MarketPlaceRepository from "../../../infrastructure/repository/repository-B2B"
 
 //usecase
 import CreateProduct from "../../usecase/vendor/B2B/create-product"
@@ -61,7 +61,7 @@ export const updateProduct = async (data:any) => {
 }
 
 
-export const removeProduct = async (data:{userId:string,productId:string}) => {
+export const removeProduct = async (data:{ownerId:string,productId:string}) => {
 
     // const data = { id }
     const dependencies = {
@@ -74,10 +74,10 @@ export const removeProduct = async (data:{userId:string,productId:string}) => {
 }
 
 
-export const fetchAllPosts = async (data:{userId:string,query?:boolean|undefined}) => {
+export const fetchAllPosts = async (data:{ownerId:string,query?:boolean|undefined}) => {
 
     const params = { 
-        userId : data.userId,
+        ownerId : data.ownerId,
         query : data.query
     }
     const dependencies = {
@@ -91,10 +91,10 @@ export const fetchAllPosts = async (data:{userId:string,query?:boolean|undefined
 
 
 
-export const activatePost = async (data:{userId:string,productId:string}) => {
+export const activatePost = async (data:{ownerId:string,productId:string}) => {
 
     const params = {
-        userId : data.userId,
+        ownerId : data.ownerId,
         productId : data.productId
     }
     const dependencies = {

@@ -32,7 +32,7 @@ class CreateProduct {
 
             //check product already exist or not with same name
             const productExist = await this.repository.getProductByName(data.name)
-            if(productExist) return {
+            if (productExist) return {
                 response: { message: "Product with same name already exist" },
                 status: StatusCode.CONFLICT
             }
@@ -50,9 +50,9 @@ class CreateProduct {
                 data.categoryId,
                 data.subCategoryId,
                 data.ownerId,
-                false
+                false // isAdmin
             )
-            
+
 
             return {
                 response: { message: "Success", data: created },
@@ -72,11 +72,11 @@ class CreateProduct {
 
 
     //method for checking sub-category exist or not in category
-    checkCategory(subcategories: {_id:string}[], subCategoryId: string): boolean {
+    checkCategory(subcategories: { _id: string }[], subCategoryId: string): boolean {
 
-        for(let i = 0 ; i < subcategories.length ; i++){
-            if(subcategories[i]?._id == subCategoryId) return true
-        }return false
+        for (let i = 0; i < subcategories.length; i++) {
+            if (subcategories[i]?._id == subCategoryId) return true
+        } return false
 
     }
 
@@ -100,5 +100,5 @@ interface Input {
     stock: number
     categoryId: string,
     subCategoryId: string
-    ownerId : string,
+    ownerId: string,
 }

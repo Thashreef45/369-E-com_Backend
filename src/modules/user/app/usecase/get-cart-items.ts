@@ -27,12 +27,12 @@ class GetCartItems {
             // create array wich have ids of user cart items
             const idArray = this.cartItems(user.cart)
 
-
             // return if cart is empty
             if (!idArray.length) return {
                 response: { message: "Success", data: [] },
                 status: StatusCode.OK
             }
+
 
 
             // fetch datas of that products
@@ -41,7 +41,7 @@ class GetCartItems {
             const responseData = this.attachCartQuantiy(cartData, user.cart)
             // response
             return {
-                response: { message: "Success", data: cartData },
+                response: { message: "Success", data: responseData },
                 status: StatusCode.OK
             }
 
@@ -66,14 +66,36 @@ class GetCartItems {
 
 
     //method for attaching cart quantity with product
-    private attachCartQuantiy(data: any[], cartData: { productId: string, quantity: number }[]) {
+    private attachCartQuantiy(data: Product[], cartData: { productId: string, quantity: number, categoryId: string, subcategoryId: string }[]) {
 
-        cartData.forEach((cart) => {
-            for (let i = 0; i < data.length; i++) {
-                if (String(data[i]._id) == String(cart.productId)) data[i].quantity = cart.quantity
+
+        let arr: Product | any = []
+
+        for (let i = 0; i < cartData.length; i++) {
+            
+            const obj = this.fileterCartObject(data[i])
+
+            // loop to attach cart quantity along with product details
+            for(let j = 0 ; j < cartData.length ; j++){
+                if(String(obj._id) == String(cartData[j].productId)) obj.quantity = cartData[j].quantity
             }
-        })
-        return data
+            arr.push(obj)
+        }
+        return arr
+    }
+
+    private fileterCartObject(data: Product) : Product {
+        return {
+            _id: data._id,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            actualPrice: data.actualPrice,
+            discount: data.discount,
+            thumbnail: data.thumbnail,
+            stock: data.stock,
+            quantity: 0
+        }
     }
 }
 
@@ -97,5 +119,17 @@ interface Dependencies {
 interface Cart {
     productId: string
     quantity: number
+}
+
+interface Product {
+    "_id": string
+    "name": string
+    "description": string
+    "price": number
+    "actualPrice": number
+    "discount": boolean
+    "thumbnail": string
+    "stock": number
+    "quantity": number
 }
 

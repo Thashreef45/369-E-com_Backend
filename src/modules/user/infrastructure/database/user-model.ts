@@ -11,6 +11,16 @@ const userSchema = new Schema({
         // unique: true,
         type: String
     },
+
+    // membership
+    // membershipModel
+    membership : {
+        purchased : {
+            type : [Schema.Types.ObjectId],
+            default : []
+        },
+    },
+
     address: [
         {
             name: String,

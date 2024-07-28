@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 //event publishers
 import * as notificationPublisher from './communication/publisher/notification-publisher' //notification event publisher
 import * as productPublisher from './communication/publisher/product-publisher' // product event publisher
+import * as orderPublisher from './communication/publisher/order-publisher' // order event publisher
 
 
 // response wrapper
@@ -31,9 +32,16 @@ import AddNewAddress from "../usecase/add-new-address";
 import GetAddress from "../usecase/get-a-address";
 import DeleteAddress from "../usecase/remove-a-address";
 import UpdateAddress from "../usecase/update-a-address";
+import FetchAllAddress from "../usecase/fetch-all-address";
 import GetProduct from "../usecase/get-a-product";
 import FetchWishlist from "../usecase/fetch-user-wishlist";
 import CartCheckout from "../usecase/cart-checkout";
+import FetchAllCategories from "../usecase/fetch-all-categories";
+import ProductRating from "../usecase/product-rating";
+import FetchOrders from "../usecase/fetch-orders";
+import FetchAOrder from "../usecase/fetch-a-order";
+import ProductCheckout from "../usecase/product-checkout";
+import CancelOrder from "../usecase/cancel-order";
 
 
 
@@ -50,7 +58,7 @@ const repository = new userRepository()
 
 export const login_signup = async (req: Request, res: Response) => {
     const data = {
-        phone: req.body.phone
+        phone: req.body?.phone
     }
     const dependencies = {
         repository,
@@ -74,7 +82,7 @@ export const login_signup = async (req: Request, res: Response) => {
 export const verifyOtp = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        otp: req.body.otp
+        otp: req.body?.otp
     }
     const dependencies = {
         createToken: createToken,
@@ -113,7 +121,7 @@ export const getCartItems = async (req: Request, res: Response) => {
 export const addToCart = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        productId: req.body.productId,
+        productId: req.body?.productId,
     }
     const dependencies = {
         getProduct: productPublisher.getProduct,
@@ -134,10 +142,11 @@ export const addToCart = async (req: Request, res: Response) => {
 export const updateCart = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        productId: req.body.productId,
-        count: req.body.count
+        productId: req.body?.productId,
+        count: req.body?.count
     }
     const dependencies = {
+        getProduct: productPublisher.getProduct,
         repository,
     }
 
@@ -155,7 +164,7 @@ export const updateCart = async (req: Request, res: Response) => {
 export const removeFromCart = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        productId: req.body.productId,
+        productId: req.body?.productId,
     }
     const dependencies = {
         repository,
@@ -174,7 +183,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 export const addToWishlist = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        productId: req.body.productId,
+        productId: req.body?.productId,
     }
     const dependencies = {
         getProduct: productPublisher.getProduct,
@@ -244,12 +253,11 @@ export const getProducts = async (req: Request, res: Response) => {
 
 
 
-
-// fetch a product
+/** fetch a product */
 export const fetchProduct = async (req: Request, res: Response) => {
 
     const data = {
-        productID: req.params.productId
+        productId: req.params.productId
     }
     const dependencies = {
         getProduct: productPublisher.getProduct
@@ -263,20 +271,41 @@ export const fetchProduct = async (req: Request, res: Response) => {
 
 
 
+// fetch all categories
+export const getCategories = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        fetchCategories: productPublisher.getCategories
+    }
+
+    const interactor = new FetchAllCategories(dependencies)
+    const output = await interactor.execute()
+    responseHandler(req, res, output)
+}
+
+
+
+
+
 // rate a product  -- pending
 export const rateProduct = async (req: Request, res: Response) => {
 
     const data = {
-        productID: req.body.productId
+        productId: req.body?.productId,
+        rating: req.body?.rating,
+        comment: req.body?.comment,
+        phone: req.body?.phone
     }
 
     const dependencies = {
-        // getAllProducts: productPublisher.getProduct
+        repository,
+        rateProduct: productPublisher.rateProduct,
+        fetchOrder: orderPublisher.fetchAOrder
     }
 
-    // const interactor = new GetAllProducts(dependencies)
-    // const output = await interactor.execute()
-    // res.status(output.status).json(output.response)
+    const interactor = new ProductRating(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
 }
 
 
@@ -348,6 +377,23 @@ export const updateAddress = async (req: Request, res: Response) => {
 
 
 
+/** fetch all address */
+export const getAlladdress = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+    }
+    const dependencies = {
+        repository,
+    }
+
+    const interactor = new FetchAllAddress(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+
 // delete a address
 export const deleteAddress = async (req: Request, res: Response) => {
     const data = {
@@ -369,12 +415,17 @@ export const deleteAddress = async (req: Request, res: Response) => {
 // cart checkout
 export const cartCheckout = async (req: Request, res: Response) => {
     const data = {
-        phone: req.body.phone,
-        addressId: req.body.addressId
+        phone: req.body?.phone,
+        addressId: req.body?.addressId,
+        cod: req.body?.cod
     }
     const dependencies = {
         repository,
-        checkoutCart : productPublisher.checkoutCart
+
+        getProductsById: productPublisher.getProductsById,
+
+        checkoutCart: productPublisher.checkoutCart,
+        createOrder: orderPublisher.checkoutCart,
     }
 
     const interactor = new CartCheckout(dependencies)
@@ -387,15 +438,75 @@ export const cartCheckout = async (req: Request, res: Response) => {
 
 // Product checkout
 export const productCheckout = async (req: Request, res: Response) => {
-    // const data = {
-    //     phone: req.body.phone,
-    //     addressId: req.body.addressId
-    // }
-    // const dependencies = {
-    //     repository,
-    // }
+    const data = {
+        phone: req.body?.phone,
+        addressId: req.body?.addressId,
+        productId: req.body?.productId,
+        quantity: req.body?.quantity,
+        cod: req.body?.cod
+    }
+    const dependencies = {
+        repository,
+        updateStock: productPublisher.checkoutCart,
+        fetchProductWithId: productPublisher.getProduct
+    }
 
-    // const interactor = new DeleteAddress(dependencies)
-    // const output = await interactor.execute(data)
-    // responseHandler(req, res, output)
+    const interactor = new ProductCheckout(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+
+/** Fetch all user orders */
+export const fetchAllOrders = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+    }
+    const dependencies = {
+        repository,
+        getProductsById: productPublisher.getProductsById,
+        fetchUserOrders: orderPublisher.fetchOrders
+    }
+
+    const interactor = new FetchOrders(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+/** Fetch all user orders */
+export const fetchAOrder = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+        orderId: req.body.orderId
+    }
+    const dependencies = {
+        repository,
+        fetchProduct: productPublisher.getProduct,
+        fetchOrder: orderPublisher.fetchOrder
+    }
+
+    const interactor = new FetchAOrder(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+/** Fetch all user orders */
+export const cancelOrder = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+        orderId: req.body.orderId
+    }
+    const dependencies = {
+        repository,
+        cancelOrder: orderPublisher.cancelOrder
+    }
+
+    const interactor = new CancelOrder(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
 }

@@ -11,20 +11,22 @@ export const createProduct = async (data: any): Promise<any> => {
 
 
 //fetch product with id 
-export const getProduct = async (id: string) => {
+export const getProduct = async (id: string): Promise<any> => {
 
-    // const response = await vendorConsumer.getProduct(id)
-    // return response
+    const response = await vendorConsumer.getProduct(id)
+    return response
 }
 
 
 
 // update a product
-export const updateProduct = async (data) => {
+export const updateProduct = async (data: any): Promise<any> => {
 
-    // const response = await vendorConsumer.updateProduct(data)
-    // return response
+    const response = await vendorConsumer.updateProduct(data)
+    return response
 }
+
+
 
 
 // fetch all post
