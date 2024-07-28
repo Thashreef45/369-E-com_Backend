@@ -1,6 +1,9 @@
 import express from "express";
 import * as controller from './controller'
+
+//middleware
 import middleware from './middleware/middleware' //
+import otpMiddleware from "./middleware/otp-middleware";
 
 
 const userRouter = express()
@@ -9,7 +12,7 @@ const userRouter = express()
 userRouter.post('/login',controller.login_signup)
 
 
-userRouter.post('/otp',middleware,controller.verifyOtp)
+userRouter.post('/otp',otpMiddleware,controller.verifyOtp)
 
 
 userRouter.get('/cart',middleware,controller.getCartItems)
@@ -24,7 +27,6 @@ userRouter.patch('/cart',middleware,controller.updateCart)
 
 //delete item from cart
 userRouter.delete('/cart',middleware,controller.removeFromCart)
-
 
 
 // add to wishlist
@@ -42,7 +44,6 @@ userRouter.delete('/wishlist',middleware,controller.removeFromWishlist)
 
 
 
-
 // get all products / filtering by queries
 userRouter.get('/products',controller.getProducts)
 
@@ -57,10 +58,12 @@ userRouter.get('/product/:productId',controller.fetchProduct)
 userRouter.post('/address',middleware,controller.addAddress)
 
 
-//fetch all address
+//fetch all address 
+userRouter.get('/address',middleware,controller.getAlladdress)
+
 
 //fetch a address
-userRouter.get('/address/:addressId',middleware,controller.getAddress)
+// userRouter.get('/address/:addressId',middleware,controller.getAddress)
 
 
 
@@ -69,16 +72,15 @@ userRouter.patch('/address',middleware,controller.updateAddress)
 
 
 
-// -----------------------------------------------------
-
-
-
-
 //remove address
 userRouter.delete('/address',middleware,controller.deleteAddress)
 
 
 
+//fetch all categories
+userRouter.get('/category',controller.getCategories) 
+
+// -----------------------------------------------------
 
 
 
@@ -86,31 +88,51 @@ userRouter.delete('/address',middleware,controller.deleteAddress)
 
 
 
+
 // rate a product 
-userRouter.post('/rate',middleware,controller.rateProduct)
+userRouter.post('/rate',middleware,controller.rateProduct);
 
 
 
 
 //Product checkout
-userRouter.post('/checkout',middleware,controller.productCheckout)
-
+userRouter.post('/checkout',middleware,controller.productCheckout) //pending work*****
 
 
 
 // Cart checkout
-userRouter.post('/cart/checkout',middleware,controller.cartCheckout)
-
+userRouter.post('/cart/checkout',middleware,controller.cartCheckout) //pending work******
 
 
 
 // verify payement
-userRouter.post('/payment',controller.rateProduct)
+userRouter.post('/payment',controller.rateProduct)  //pending work
+
+
+
+// userRouter.use(express.text())
+// userRouter.post('/test',(req:any,res:any)=>{
+
+
+//     console.log(req.body,'Recieved here -- plain/text')
+//     res.end()
+// })
+
+
+
+/**fetch user orders */
+userRouter.get('/orders',controller.fetchAllOrders)
+
+
+
+/** Fetch user order with orderId */
+userRouter.get('/order',controller.fetchAOrder)
 
 
 
 
-
+/** Fetch user order with orderId */
+userRouter.delete('/order',controller.cancelOrder)
 
 
 

@@ -1,4 +1,4 @@
-import * as eventPublisher from '../../../../../product/app/handler/event-handlers/admin'
+import * as eventPublisher from '../../../../../product/app/handler/event-handlers/admin-B2C'
 
 
 // publisher for creating a category
@@ -62,10 +62,20 @@ export const getProduct = async (productId: string) => {
 
 // update product 
 export const updateProduct = async (data: {
-    productId: string, name: string, description: string, price: number, images: string[],
-    thumbnail: string, stock: number, categoryId: string, subCategoryId: string
+    productId: string ,name: string ,description: string ,actualPrice: number
+    price: number ,offer: boolean ,images: string[],thumbnail: string
+    stock: number ,categoryId: string ,subCategoryId: string ,ownerId : string
 }) => {
     const response = await eventPublisher.updateProduct(data)
+    return response
+}
+
+
+
+/** Fetch all admin products */ 
+export const fetchAminProducts = async () => {
+
+    const response = await eventPublisher.fetchAllAdminProducts()
     return response
 }
 

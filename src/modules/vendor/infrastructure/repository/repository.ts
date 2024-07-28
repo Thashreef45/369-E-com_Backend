@@ -14,11 +14,15 @@ class Repository implements IRepository {
         try {
 
             const vendor = await vendorModel.create({
-                name:data.name,
-                email:data.email,
-                phone:data.phone,
-                password : data.password,
-                otp : data.otp
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                password: data.password,
+
+                otp: {
+                    number: data.otp,
+                    verified: false
+                }
             })
 
             return vendor
@@ -55,6 +59,27 @@ class Repository implements IRepository {
             return vendor
         } catch (error) {
             throw new Error("Error fetching vendor")
+        }
+    }
+
+
+    async verifyOtp(email: string) {
+        
+        try {
+            return await vendorModel.updateOne(
+                { email },
+                {
+                    $set: {
+                        otp: {
+                            verified: true
+                        }
+                    }
+                })
+
+        } catch (error) {
+
+            console.log(error)
+            throw new Error("Internal error")
         }
     }
 

@@ -2,7 +2,7 @@ import * as vendorConsumer from '../../../../../product/app/handler/event-handle
 
 
 // create product 
-export const createProduct = async (data) => {
+export const createProduct = async (data : any) => {
 
     const response = await vendorConsumer.createProduct(data)
     return response
@@ -19,7 +19,7 @@ export const getProduct = async (id:string) => {
 
 
 // update a product
-export const updateProduct = async (data) => {
+export const updateProduct = async (data :any) => {
 
     const response = await vendorConsumer.updateProduct(data)
     return response
@@ -27,7 +27,7 @@ export const updateProduct = async (data) => {
 
 
 //remove product -- (remvoe post/inactivate)
-export const removeProduct = async (data) => {
+export const removeProduct = async (data : any) => {
 
     const response = await vendorConsumer.removeProduct(data)
     return response
@@ -36,7 +36,7 @@ export const removeProduct = async (data) => {
 
 
 // fetch all post
-export const fetchAllPost = async (data:{userId:string,query?:boolean|undefined}) => {
+export const fetchAllPost = async (data:{ownerId:string,query?:boolean|undefined}) => {
 
     const response = await vendorConsumer.fetchAllPosts(data)
     return response
@@ -45,7 +45,7 @@ export const fetchAllPost = async (data:{userId:string,query?:boolean|undefined}
 
 
 // acitivate post
-export const activatePost = async (data:{userId:string,productId:string}) => {
+export const activatePost = async (data:{ownerId:string,productId:string}) => {
 
     const response = await vendorConsumer.activatePost(data)
     return response

@@ -19,12 +19,12 @@ router.patch('/product',controller.updateProduct)
 
 
 // remove product
-router.delete('/product',controller.getUserPosts)
+router.delete('/product',controller.removeProduct)
 
 
 
 // fetch user posts
-router.get('/posts',controller.getUserPosts)
+router.get('/posts',controller.getVenodrPosts)
 
 
 

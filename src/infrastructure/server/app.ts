@@ -5,7 +5,9 @@ import env from '../environment'
 import dBConnection from '../database/mongoose/setup'
 
 import userRouter from '../../modules/user/app/handler/route'
-import adminRouter from '../../modules/admin/app/handler/route'
+import userRouterB2B from '../../modules/user/app/handler/routes-B2B';
+
+import adminRouter from '../../modules/admin/app/handler/route-B2C'
 // import { errorMiddleware } from './error.js';
 
 import nocache from 'nocache';
@@ -40,8 +42,12 @@ class ExpressServer {
     }
 
     private initializeRoutes() {
-        this.app.use('/user', userRouter);
-        this.app.use('/admin',adminRouter);
+        this.app.use('/user/e-com', userRouter);
+        this.app.use('/user/marketplace', userRouterB2B);
+
+        this.app.use('/admin/e-com',adminRouter);
+        // this.app.use('/admin/marketplace',adminRouter);
+
         // this.app.use('/vendor', userRouter);
 
         this.app.use("/health", (req, res) => res.json("Health check"));
@@ -51,7 +57,6 @@ class ExpressServer {
     private initializeCORS() {
         this.app.use(cors());
     }
-
 
 
     public start(callback: () => void) {

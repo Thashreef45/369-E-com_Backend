@@ -28,6 +28,7 @@ class DeleteAddress {
         }
         
 
+        // check address exist or not
         const isExist = this.checkAddress(user.address, data.addressId)
         if (!isExist) return {
             response: { message: 'Address not found' },
@@ -45,6 +46,7 @@ class DeleteAddress {
     }
 
 
+    // method to check address exist or not
     private checkAddress(address: { _id: string }[], id: string) {
         for (let i = 0; i < address.length; i++) {
             if (address[i]._id == id) return true
