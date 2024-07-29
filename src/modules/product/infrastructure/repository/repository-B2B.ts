@@ -8,7 +8,7 @@ import categoryModel from "../database/B2B/category-model"; // category model
 class MarketPlaceRepository implements IRepository {
 
     // onwork *2
-    async createCategory(data: { name: string, description: string }) {
+    async createCategory(data: { name: string, description: string }): Promise<any> {
         try {
 
             const newCategory = await categoryModel.create({
@@ -23,7 +23,7 @@ class MarketPlaceRepository implements IRepository {
         }
     }
 
-    async findCategory(id: string) {
+    async findCategory(id: string): Promise<any> {
         const category = await categoryModel.findOne({ _id: id })
         return category
     }
@@ -35,7 +35,7 @@ class MarketPlaceRepository implements IRepository {
 
     // on work *1
     // create a new product | post
-    async createProduct(data: any) {
+    async createProduct(data: any): Promise<any> {
         try {
 
             const newProduct = await productModel.create({
@@ -58,8 +58,8 @@ class MarketPlaceRepository implements IRepository {
 
 
     // on work *3
-    // fetch a product active its with id 
-    async findProduct(id: string) {
+    /** Fetch a product active its with id  */
+    async findProduct(id: string): Promise<any> {
         try {
             const product = await productModel.findOne({ _id: id, active: true })
             return product
@@ -73,7 +73,7 @@ class MarketPlaceRepository implements IRepository {
     // on work *4
     async updateProduct(name: string, description: string,
         price: number, thumbnail: string, images: string[],
-        categoryId: string, productId: string) {
+        categoryId: string, productId: string): Promise<any> {
 
         try {
             const updated = productModel.updateOne(
@@ -100,7 +100,7 @@ class MarketPlaceRepository implements IRepository {
 
     // on work *5
     // remove product || update as active=false
-    async removeProduct(productId: string) {
+    async removeProduct(productId: string): Promise<any> {
 
         try {
             const updated = productModel.updateOne(
@@ -118,7 +118,7 @@ class MarketPlaceRepository implements IRepository {
 
 
     //fetching user all posts
-    async fetchOwnerAllPosts(ownerId: string) {
+    async fetchOwnerAllPosts(ownerId: string): Promise<any> {
         try {
             const posts = await productModel.find({ ownerId: ownerId })
         } catch (error) {
@@ -129,7 +129,7 @@ class MarketPlaceRepository implements IRepository {
 
 
     //fetching user filtered (active : true/false) posts 
-    async fetchOwnerPosts(ownerId: string, active: boolean) {
+    async fetchOwnerPosts(ownerId: string, active: boolean): Promise<any> {
         try {
             const posts = await productModel.find({ ownerId: ownerId, active: active })
         } catch (error) {
@@ -139,7 +139,7 @@ class MarketPlaceRepository implements IRepository {
 
 
     //activate product
-    async activateProduct(productId: string) {
+    async activateProduct(productId: string): Promise<any> {
         try {
             const update = await productModel.updateOne(
                 { _id: productId },
@@ -167,7 +167,77 @@ class MarketPlaceRepository implements IRepository {
             throw new Error('Erro fetching Categories')
         }
     }
+
+
+    async fetchAllproducts(query: Query): Promise<any> {
+
+        const { queryObj, sortOption, skip, limitNum } = createQuery(query)
+        const projection = { ownerId: 0, active: 0 , images:0}
+
+        const products = await productModel.find(queryObj, projection)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limitNum);
+
+        return products
+    }
 }
 
 
 export default MarketPlaceRepository
+
+
+/** Function makes seach query filters to mongo query */
+const createQuery = (data: Query): any => {
+    const { limit, category, page_no, query, lowest_price, highest_price, sort } = data;
+
+    // Build the query object
+    let queryObj: any = {};
+    if (category) queryObj.categoryId = category;
+    if (query) queryObj.name = { $regex: query, $options: 'i' };
+    if (lowest_price || highest_price) queryObj.price = {};
+    if (lowest_price) queryObj.price.$gte = Number(lowest_price);
+    if (highest_price) queryObj.price.$lte = Number(highest_price);
+
+
+    // Pagination
+    const limitNum = Number(limit) || 10;
+    const pageNum = Number(page_no) || 1;
+    const skip = (pageNum - 1) * limitNum;
+
+
+    // Sorting
+    let sortOption: any = {};
+    if (sort) {
+        switch (sort) {
+            case 'price-low':
+                sortOption.price = 1;
+                break;
+            case 'price-high':
+                sortOption.price = -1;
+                break;
+            case 'latest':
+                sortOption.createdAt = -1;
+                break;
+            default:
+                sortOption = {}; // Default sorting (if any) can be set here
+                break;
+        }
+    }
+
+
+    return {
+        queryObj, sortOption, skip, limitNum
+    }
+}
+
+
+interface Query {
+    limit?: number;
+    category?: string;
+    page_no?: number;
+    query?: string;
+    lowest_price?: number;
+    highest_price?: number;
+    sort?: 'price-low' | 'price-high' | 'latest';
+}

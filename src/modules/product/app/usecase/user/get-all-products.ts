@@ -84,7 +84,6 @@ class GetAllProducts {
             }
         }
 
-        //Ending
 
         // demo of `req.query` object
         // {
@@ -107,11 +106,6 @@ interface Dependencies {
     repository: IRepository
 }
 
-
-///------------------------------------veruthe---------------------------------
-// if (query.limit || query.category || query.page_no || query.query ||
-//     query.lowest_price || query.highest_price || query.rating || query.sort
-// ) console.log("hi")
 
 
 

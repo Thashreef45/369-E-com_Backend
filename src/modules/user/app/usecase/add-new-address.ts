@@ -30,6 +30,14 @@ class AddNewAddress {
             }
 
 
+            //check address limit
+            const addresLimit = this.checkAddressLimit(user.address)
+            if (!addresLimit) return {
+                response: { message: "Address limit exceeded" },
+                status: StatusCode.BAD_REQUEST
+            }
+
+
 
             const response = await this.repository.addNewAddress(data.phone, data.address)
             return {
@@ -86,6 +94,14 @@ class AddNewAddress {
             status: StatusCode.OK,
             success: true
         }
+    }
+
+
+    /** Method to check that is there 5 active add */
+    private checkAddressLimit(address: { active: boolean }[]): boolean {
+
+        const activeAddressesCount = address.filter(address => address.active).length
+        return activeAddressesCount < 5;
     }
 
 }

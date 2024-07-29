@@ -11,6 +11,8 @@ const vendorSchema = new Schema({
 
     email: String,
 
+    whatsapp : String,
+
     active: {
         type: Boolean,
         default: false

@@ -20,33 +20,21 @@ class FetchAllAddress {
 
 
         // filter address
-        const addressList = this.filterAddress(user.address)
+        const addressList = this.AddressMapper(user.address)
         return {
-            response: { message: "Success",data : addressList },
+            response: { message: "Success", data: addressList },
             status: StatusCode.OK
         }
     }
 
 
-    /** Filter address */
-    filterAddress(address: Address[]) {
-        if(!address.length) return []
+    /**Method filters address */
+    AddressMapper(address: Address[]) {
+        if (!address.length) return []
 
-        let array: Address[] | any[] = []
-
-        for (let i = 0; i < address.length; i++) {
-            if (address[i].active) {
-                let obj = {
-                    name: address[i].name,
-                    address: address[i].address,
-                    phone: address[i].phone,
-                    pin: address[i].pin,
-                }
-
-                array.push(obj)
-            }
-        }
-        return array
+        return address
+            .filter(address => address.active)
+            .map(({ name, address, phone, pin }) => ({ name, address, phone, pin })) 
     }
 
 }
@@ -59,7 +47,7 @@ interface Input {
 }
 
 interface Output {
-    response: { message: string ,data?:Address[] },
+    response: { message: string, data?: Address[] },
     status: StatusCode
 }
 
@@ -72,5 +60,5 @@ interface Address {
     address: string,
     phone: string,
     pin: string,
-    active ?: boolean
+    active?: boolean
 }

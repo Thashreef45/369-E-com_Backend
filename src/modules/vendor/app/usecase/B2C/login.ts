@@ -5,8 +5,8 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class Login {
 
     private repository: IRepository
-    private createToken
-    private verifyPassword
+    private createToken : any
+    private verifyPassword : any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository

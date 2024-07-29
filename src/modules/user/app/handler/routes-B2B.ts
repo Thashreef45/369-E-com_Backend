@@ -10,8 +10,7 @@ const B2BRouter = express()
 
 B2BRouter.get('/categories',controller.fetchAllCategories)
 
-
-B2BRouter.get('/products',controller.getProducts)
+B2BRouter.get('/products',controller.getProducts) //pending
 
 B2BRouter.get('/product/:productId',controller.fetchProduct)
 

@@ -1,34 +1,43 @@
 import productRepository from "../../../infrastructure/repository/repository-B2B"
 
 
+//event publishers
+import * as adminPublisher from '../../handler/publishers/admin-publisher'
+import * as vendorPublisher from '../../handler/publishers/vendor-publisher'
+
 //user case
 import FetchAllCategories from "../../usecase/user/B2B-fetch-categories"
+import FetchAllProducts from "../../usecase/user/B2B-fetch-products"
+import FetchAProduct from "../../usecase/user/B2B-get-a-product"
 
 
 
 const repository = new productRepository()
 
-// get products by ids
-export const getProducts = async (data: string[]): Promise<any> => {
-    data = data // ----
+
+//fetch all proudcts
+export const getProducts = async (query: any): Promise<any> => {
+    const data = { ...query }
     const dependencies = {
         repository: repository
     }
-    // const interactor = new GetProducts(dependencies)
-    // const output = await interactor.execute(data)
-    // return output
+    const interactor = new FetchAllProducts(dependencies)
+    const output = await interactor.execute(data)
+    return output
 }
 
 
 // get a product by id
 export const getProduct = async (productId: string): Promise<any> => {
-    const data = { id: productId }
+    const data = { productId }
     const dependencies = {
-        repository: repository
+        repository: repository,
+        fetchVendorWithId: vendorPublisher.fetchVendor,
+        fetchAdminWithId: adminPublisher.FetchAdmin
     }
-    // const interactor = new GetAProduct(dependencies)
-    // const output = await interactor.execute(data)
-    // return output
+    const interactor = new FetchAProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
 }
 
 

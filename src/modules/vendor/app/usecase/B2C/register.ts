@@ -5,10 +5,10 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class Register {
 
     private repository: IRepository
-    private createTempToken
-    private hashPassword
-    private generateOtp
-    private sendOtpToEmail
+    private createTempToken :any
+    private hashPassword :any
+    private generateOtp : any
+    private sendOtpToEmail :any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -21,7 +21,7 @@ class Register {
 
 
         //check input credentials
-        if (!data.name || !data.email || !data.password || !data.phone || !data.about) return {
+        if (!data.name || !data.email || !data.password || !data.phone || !data.about || data.whatsapp) return {
             response: { message: "Credentials missing" },
             status: StatusCode.BAD_REQUEST,
         }
@@ -58,7 +58,7 @@ class Register {
             data.password = password
 
 
-            
+
             //update user data
             const create = await this.repository.registratioin({ ...data, otp: otp })
 
@@ -99,6 +99,7 @@ interface Input {
     email: string
     about: string
     password: string,
+    whatsapp: string
 }
 
 
@@ -111,7 +112,7 @@ interface Output {
 interface Dependencies {
     repository: IRepository
     createTempToken(phone: string): string
-    hashPassword(password:string) : Promise<string>
+    hashPassword(password: string): Promise<string>
     generateOtp(): string
     sendOtpToEmail(otp: string, email: string): void
 }
