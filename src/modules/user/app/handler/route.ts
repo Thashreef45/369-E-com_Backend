@@ -78,7 +78,7 @@ userRouter.delete('/address',middleware,controller.deleteAddress)
 
 
 //fetch all categories
-userRouter.get('/category',controller.getCategories) 
+userRouter.get('/categories',controller.getCategories) 
 
 // -----------------------------------------------------
 

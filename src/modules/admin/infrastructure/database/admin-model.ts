@@ -7,6 +7,9 @@ const adminSchema = new Schema ({
     },
     password : String,
 
+    whatsapp : String,
+    phone : String,
+
     otp : String
 
 },{ timestamps: true })

@@ -14,7 +14,7 @@ class Login {
 
 
 
-    async exectue(data: Input): Promise<Output> {
+    async execute(data: Input): Promise<Output> {
         
 
         //check input credentials

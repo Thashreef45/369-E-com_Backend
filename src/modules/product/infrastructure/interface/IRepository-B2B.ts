@@ -5,7 +5,7 @@ interface IRepository {
 
     createCategory(data: { name: string, description: string }): Promise<any>
 
-    findCategory(id: string): any
+    findCategory(id: string): Promise<any>
 
 
     /** Fetch all categories */
@@ -22,26 +22,38 @@ interface IRepository {
         thumbnail: String,
         categoryId: String,
         userId: string
-    ): any
+    ): Promise<any>
 
 
-    findProduct(id: string): any
+    /** Fetch a product active its with id  */
+    findProduct(id: string): Promise<any>
 
     updateProduct(name: string, description: string,
         price: number, thumbnail: string, images: string[],
         categoryId: string, productId: string
-    ): any
+    ): Promise<any>
 
 
-    removeProduct(productId: string): any
+    removeProduct(productId: string): Promise<any>
 
 
-    fetchOwnerAllPosts(ownerId: string): any
+    fetchOwnerAllPosts(ownerId: string): Promise<any>
 
 
-    fetchOwnerPosts(ownerId: string, active: boolean): any
+    fetchOwnerPosts(ownerId: string, active: boolean): Promise<any>
 
-    activateProduct(productId: string): any
+
+    activateProduct(productId: string): Promise<any>
+
+    fetchAllproducts(query: {
+        limit?: number;
+        category?: string;
+        page_no?: number;
+        query?: string;
+        lowest_price?: number;
+        highest_price?: number;
+        sort?: 'price-low' | 'price-high' | 'latest';
+    }): Promise<any>
 
 
 

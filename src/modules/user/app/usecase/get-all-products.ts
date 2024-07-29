@@ -3,18 +3,18 @@ import IRepository from '../../infrastructure/interface/IRepository'
 
 class GetAllProducts {
 
-    private getAllProducts
+    private getAllProducts: any
 
     constructor(dependencies: Dependencies) {
         this.getAllProducts = dependencies.getAllProducts
     }
 
-    async execute(query:any) : Promise<Output>  {
+    async execute(query: any): Promise<Output> {
 
 
         // fetch products
         const products = await this.getAllProducts(query)
-        const resData  = this.ResponseMapper(products)
+        const resData = this.ResponseMapper(products)
 
         // response
         return {
@@ -26,21 +26,19 @@ class GetAllProducts {
 
     ResponseMapper(data: Products[]): ResponseMapperOutput[] {
 
-        // let obj:ResponseMapperOutput | any = {}
         const arr: ResponseMapperOutput[] = []
-
 
         for (let i = 0; i < data.length; i++) {
             arr.push({
-                _id : data[i]._id,
+                _id: data[i]._id,
                 name: data[i].name,
-                description : data[i].description,
-                price : data[i].price,
-                actualPrice : data[i].actualPrice,
-                offer : data[i].offer,
-                thumbnail : data[i].thumbnail,
-                stock : data[i].stock,
-                averageRating : data[i].averageRating
+                description: data[i].description,
+                price: data[i].price,
+                actualPrice: data[i].actualPrice,
+                offer: data[i].offer,
+                thumbnail: data[i].thumbnail,
+                stock: data[i].stock,
+                averageRating: data[i].averageRating
             })
         }
 
@@ -52,26 +50,24 @@ export default GetAllProducts
 
 
 interface Dependencies {
-    getAllProducts(query:any): Promise<any> //todo:implementations of interface
+    getAllProducts(query: any): Promise<any> //todo:implementations of interface
 }
 
 
 interface Output {
-    response : {message:string , data ?:any},
-    status : StatusCode
+    response: { message: string, data?: ResponseMapperOutput[] },
+    status: StatusCode
 }
 
 
 
 interface ResponseMapperOutput {
-    _id : string
+    _id: string
     name: string
     description: string
 
     price: string
-
     actualPrice: string
-
     offer: boolean
 
     thumbnail: string
@@ -81,22 +77,17 @@ interface ResponseMapperOutput {
 }
 
 interface Products {
-    _id : string
+    _id: string
     name: string
     description: string
-
     price: string
-
     actualPrice: string
-
     offer: boolean
-
     images: string[]
     thumbnail: string
     stock: number
     categoryId: string
     subcategoryId: string
-
     rating: {
         one: number
         two: number
@@ -104,7 +95,6 @@ interface Products {
         four: number
         five: number
     },
-
     averageRating: number
 }
 

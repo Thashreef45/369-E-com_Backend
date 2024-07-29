@@ -8,6 +8,28 @@ class AdminRepository implements IRepository {
         return data
     }
 
+
+    async findById(id: string) : Promise<any> {
+        const data = await adminModel.findOne({_id:id})
+    }
+
+
+    async updateProfile(data: {
+        email: string, whatsapp: string, phone: string
+    }) : Promise<any> {
+        const updated = await adminModel.updateOne(
+            {email:data.email},
+            {
+                $set : {
+                    whatsapp : data.whatsapp,
+                    phone : data.phone
+                }
+            }
+        )
+
+        return updated
+    }
+
 }
 
 

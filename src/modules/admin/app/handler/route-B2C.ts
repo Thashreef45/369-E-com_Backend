@@ -1,12 +1,14 @@
 import express from "express";
 import * as controller from './controller-B2C'
-import middleware from './middleware/verity-token' 
+import middleware from './middleware/verity-token'
 
 
 const router = express()
 
 //login
 router.post('/login', controller.login)
+
+router.post('/profile',controller.updateProfile)
 
 
 //create category 
@@ -68,7 +70,7 @@ router.get('/orders', controller.fetchOrders)  /// on work
 // router.get('/order', controller)  // have to implement
 
 
-router.patch('/order',controller.updateOrderStatus) /// on work 
+router.patch('/order', controller.updateOrderStatus) /// on work 
 
 
 

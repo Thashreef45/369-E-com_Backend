@@ -19,6 +19,8 @@ import { hashPassword, verifyPassword } from '../../infrastructure/services/hash
 
 //usecase
 import Login from "../usecase/B2C/login"
+import UpdateProfile from "../usecase/B2C/update-profile"
+
 import CreateCategory from "../usecase/B2C/create-category"
 import CreateSubCategory from "../usecase/B2C/create-subcategory"
 import CreateProduct from "../usecase/B2C/create-product"
@@ -26,6 +28,7 @@ import FetchAllCategory from "../usecase/B2C/fetch-all-category"
 import GetAllProducts from "../usecase/B2C/get-all-products"
 import GetProduct from "../usecase/B2C/get-a-product"
 import UpdateProduct from "../usecase/B2C/update-a-product"
+
 
     //Membership
 import CreateMembership from "../usecase/B2C/create-membership"
@@ -41,7 +44,6 @@ import FetchOrders from "../usecase/B2C/fetch-orders"
 const repository = new AdminRepository()
 
 
-
 //login
 export const login = async (req: Request, res: Response) => {
     const data = {
@@ -55,7 +57,24 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const interactor = new Login(dependencies)
-    const output = await interactor.exectue(data)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+//login
+export const updateProfile = async (req: Request, res: Response) => {
+    const data = {
+        email: req.body?.email,
+        whatsapp : req.body?.whatsapp,
+        phone :  req.body?.phone
+    }
+    const dependencies = {
+        repository,
+    }
+
+    const interactor = new UpdateProfile(dependencies)
+    const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
 

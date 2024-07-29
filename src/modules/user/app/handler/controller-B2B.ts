@@ -1,23 +1,32 @@
 import { Request, Response } from "express"
 
 
+// product publisher
 import * as productPublisher from '../handler/communication/publisher/B2B-product-publisher'
-import FetchCategories from "../usecase/B2B-fetch-categories"
+
+//response handler
 import responseHandler from "./response-handler"
+
+//usecase
+import FetchCategories from "../usecase/B2B-fetch-categories"
+import FetchAProduct from "../usecase/B2B-get-product"
+import FetchAllProducts from "../usecase/B2B-fetch-products"
 
 
 
 // fetch all products || filter by queries
 export const getProducts = async (req: Request, res: Response) => {
 
-    // const query = req.query
-    // const dependencies = {
-    //     getAllProducts: productPublisher.getProducts
-    // }
+    const query = req.query
+    const dependencies = {
+        getAllProducts: productPublisher.getProducts
+    }
 
-    // const interactor = new GetAllProducts(dependencies)
-    // const output = await interactor.execute(query)
-    // responseHandler(req, res, output)
+    const interactor = new FetchAllProducts(dependencies)
+    const output = await interactor.execute(query)
+    responseHandler(req, res, output)
+
+
 }
 
 
@@ -33,9 +42,9 @@ export const fetchProduct = async (req: Request, res: Response) => {
         getProduct: productPublisher.getProduct
     }
 
-    // const interactor = new GetProduct(dependencies)
-    // const output = await interactor.execute(data)
-    // responseHandler(req, res, output)
+    const interactor = new FetchAProduct(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
 }
 
 

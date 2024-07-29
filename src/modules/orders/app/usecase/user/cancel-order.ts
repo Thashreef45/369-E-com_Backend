@@ -36,7 +36,7 @@ class CancelOrder {
                 status: StatusCode.BAD_REQUEST
             }
 
-            
+
             // check order status - delivered ?
             if (order?.status?.delivered?.status) return {
                 response: { message: "Cannot cancel a delivered order" },
@@ -54,7 +54,7 @@ class CancelOrder {
 
         } catch (error) {
             return {
-                response: { message: "Error canceling order" },
+                response: { message: "Error cancelling order" },
                 status: StatusCode.INTERNAL_ERROR
             }
         }

@@ -1,7 +1,7 @@
 
 interface IRepository {
     registratioin (data: {name: string,phone: string,
-        email: string,about: string,password: string,otp : string}
+        email: string,about: string,password: string,otp : string , whatsapp:string}
     ) : any
 
     verifyOtp(email: string) : any

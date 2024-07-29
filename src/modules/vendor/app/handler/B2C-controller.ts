@@ -48,7 +48,8 @@ export const register = async (req: Request, res: Response) => {
         phone: req.body?.phone,
         email: req.body?.email,
         about: req.body?.about,
-        password: req.body?.password
+        password: req.body?.password,
+        whatsapp : req.body?.whatsapp
     }
 
     const interactor = new Register(dependencies)

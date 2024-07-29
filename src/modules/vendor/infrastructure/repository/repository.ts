@@ -9,7 +9,7 @@ class Repository implements IRepository {
     // registering a new vendor
     async registratioin(data: {
         name: string, phone: string, email: string,
-        about: string, password: string, otp: string
+        about: string, password: string, otp: string,whatsapp:string
     }) {
         try {
 
@@ -18,7 +18,8 @@ class Repository implements IRepository {
                 email: data.email,
                 phone: data.phone,
                 password: data.password,
-
+                whatsapp : data.whatsapp,
+                
                 otp: {
                     number: data.otp,
                     verified: false
