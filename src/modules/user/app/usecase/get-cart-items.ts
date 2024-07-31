@@ -1,5 +1,5 @@
 import IRepository from '../../infrastructure/interface/IRepository'
-import StatusCode from '../../infrastructure/config/staus-code'
+import StatusCode from '../../infrastructure/config/status-code'
 
 class GetCartItems {
 
@@ -69,7 +69,7 @@ class GetCartItems {
     private attachCartQuantiy(data: Product[], cartData: { productId: string, quantity: number, categoryId: string, subcategoryId: string }[]) {
 
 
-        let arr: Product | any = []
+        let arr: Product[]  = []
 
         for (let i = 0; i < cartData.length; i++) {
             

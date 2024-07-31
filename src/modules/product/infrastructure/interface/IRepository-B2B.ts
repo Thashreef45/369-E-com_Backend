@@ -12,6 +12,10 @@ interface IRepository {
     fetchAllCategories(): Promise<any>
 
 
+    /** Find category with its name */
+    findCategoryByName(name: string): Promise<any>
+
+
 
     //------------------------------------- product -------------------------------------
 
@@ -25,8 +29,11 @@ interface IRepository {
     ): Promise<any>
 
 
-    /** Fetch a product active its with id  */
+    /** Fetch a active product  its with id  */
     findProduct(id: string): Promise<any>
+
+    /** Fetch a product,with id */
+    fetchProuct(id: string): Promise<any>
 
     updateProduct(name: string, description: string,
         price: number, thumbnail: string, images: string[],

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import env from '../../../infrastructure/config/environment';
-import StatusCode from '../../../infrastructure/config/staus-code';
+import StatusCode from '../../../infrastructure/config/status-code';
 
 const otpMiddleware = (req: Request, res: Response, next: NextFunction) => {
 

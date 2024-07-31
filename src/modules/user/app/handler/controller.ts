@@ -16,7 +16,7 @@ import userRepository from '../../infrastructure/repository/user-repository'
 
 //services
 import generateOtp from '../../infrastructure/services/generate-otp'
-import { createToken, createTempToken } from '../../infrastructure/services/generateToken'
+import { createAccessToken  ,createRefreshToken, createTempToken } from '../../infrastructure/services/generateToken'
 
 //usecase
 import Login_Signup from '../usecase/login-signup'
@@ -85,7 +85,9 @@ export const verifyOtp = async (req: Request, res: Response) => {
         otp: req.body?.otp
     }
     const dependencies = {
-        createToken: createToken,
+        
+        createAccessToken,
+        createRefreshToken,
         repository
     }
 

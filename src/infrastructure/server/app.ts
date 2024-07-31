@@ -8,7 +8,6 @@ import userRouter from '../../modules/user/app/handler/route'
 import userRouterB2B from '../../modules/user/app/handler/routes-B2B';
 
 import adminRouter from '../../modules/admin/app/handler/route-B2C'
-// import { errorMiddleware } from './error.js';
 
 import nocache from 'nocache';
 

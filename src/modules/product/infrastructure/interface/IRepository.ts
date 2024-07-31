@@ -35,7 +35,18 @@ interface IRepository {
     /** products fetching by array of product id */
     getProducts(data: string[]): any
 
-    getAllProducts(): any
+    /** Method fetches all products based on query filtration and sorting options */
+    getAllProducts(query: {
+        limit?: number;
+        category?: string;
+        sub_category?: string;
+        page_no?: number;
+        query?: string;
+        lowest_price?: number;
+        highest_price?: number;
+        rating?: number;
+        sort?: string;
+    }): Promise<any>
 
     updateProduct(data: {
         productId: string, name: string, description: string,
@@ -55,7 +66,7 @@ interface IRepository {
     checkOutCart(data: { productId: string, quantity: number }[]): Promise<any>
 
 
-    fetchAdminProducts():Promise<any>
+    fetchAdminProducts(): Promise<any>
 }
 
 export default IRepository
