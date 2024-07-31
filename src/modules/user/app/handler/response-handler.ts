@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import StatusCode from "../../infrastructure/config/staus-code"
+import StatusCode from "../../infrastructure/config/status-code"
 
 
 
@@ -7,16 +7,10 @@ import StatusCode from "../../infrastructure/config/staus-code"
 const responseHandler = (req: Request, res: Response, data: Data) => {
 
 
-    //check for token and refreshToken
-    if (req.body?.token) {
-
-        //attaching token and refreshToken
-        data.response = {
-            ...data.response,
-            token: req.body.token,
-            refreshToken: req.body.refreshToken
-        }
-
+    if (req.body.accessToken && req.body.refreshToken) {
+        // Attach the tokens to the response data
+        data.response.accessToken = req.body.accessToken;
+        data.response.refreshToken = req.body.refreshToken;
     }
 
 
@@ -27,7 +21,7 @@ const responseHandler = (req: Request, res: Response, data: Data) => {
 
 
 interface Data {
-    response: { message: string, token?: string, refreshToken?: string },
+    response: { message: string, accessToken?: string, refreshToken?: string },
     status: StatusCode
 }
 

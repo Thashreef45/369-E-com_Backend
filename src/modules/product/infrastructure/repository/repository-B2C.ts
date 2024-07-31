@@ -113,8 +113,18 @@ class productRepository implements IRepository {
 
 
     // fetch every products
-    async getAllProducts() {
-        return await productModel.find({}, { feedbacks: 0 })
+    async getAllProducts(query: Query) {
+
+        const { queryObj, sortOption, skip, limitNum } = createQuery(query)
+        const projection = { feedbacks: 0, ownership: 0 }
+
+        const products = await productModel.find(queryObj, projection)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limitNum);
+
+        return products;
+        // return await productModel.find({}, { feedbacks: 0 })
     }
 
 
@@ -239,7 +249,7 @@ class productRepository implements IRepository {
                     'ownership.isAdmin': true
                 },
                 {
-                    feedbacks : 0 , images : 0,ownership:0,
+                    feedbacks: 0, images: 0, ownership: 0,
                 }
             )
 
@@ -255,6 +265,77 @@ class productRepository implements IRepository {
 
 
 export default productRepository
+
+
+
+
+
+
+/** function creates search,filtration and sorting query */
+const createQuery = (query: Query) => {
+    const queryObj: any = {};
+    const sortOption: any = {};
+    const limitNum = query.limit || 10;
+    const skip = query.page_no ? (query.page_no - 1) * limitNum : 0
+
+    if (query.category) {
+        queryObj.categoryId = query.category
+    }
+
+    if (query.sub_category) {
+        queryObj.subcategoryId = query.sub_category
+    }
+
+    if (query.query) {
+        queryObj.$or = [
+            { name: { $regex: query.query, $options: 'i' } },
+            { description: { $regex: query.query, $options: 'i' } }
+        ];
+    }
+
+    if (query.lowest_price || query.highest_price) {
+        queryObj.price = {};
+        if (query.lowest_price) {
+            queryObj.price.$gte = query.lowest_price;
+        }
+        if (query.highest_price) {
+            queryObj.price.$lte = query.highest_price;
+        }
+    }
+
+    if (query.rating) {
+        queryObj.averageRating = { $gte: query.rating };
+    }
+
+    switch (query.sort) {
+        case 'price-low':
+            sortOption.price = 1;
+            break;
+        case 'price-high':
+            sortOption.price = -1;
+            break;
+        case 'latest':
+        default:
+            sortOption.createdAt = -1;
+            break;
+    }
+
+    return { queryObj, sortOption, skip, limitNum };
+}
+
+
+
+interface Query {
+    limit?: number;
+    category?: string;
+    sub_category?: string;
+    page_no?: number;
+    query?: string;
+    lowest_price?: number;
+    highest_price?: number;
+    rating?: number;
+    sort?: string;
+}
 
 
 

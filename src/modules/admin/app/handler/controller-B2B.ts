@@ -12,10 +12,33 @@ import CreateProduct from "../usecase/B2B/create-product";
 import UpdateProduct from "../usecase/B2B/update-product";
 import RemoveProduct from "../usecase/B2B/remove-product";
 import ActivatePost from "../usecase/B2B/activate-product";
+import CreateCategory from "../usecase/B2B/create-category";
+import FetchAdminProducts from "../usecase/B2B/fetch-admin-products";
+import FetchAProduct from "../usecase/B2B/fetch-a-product";
 
 
 
 const repository = new AdminRepository()
+
+
+/** Create new category -- post */
+export const createCategory = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        createCategory: productPublisher.createNewCategory,
+        repository
+    }
+
+    const data = {
+        name: req.body?.name,
+        description: req.body?.description
+    }
+
+    const interactor = new CreateCategory(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
 
 
 // create new product -- post
@@ -62,19 +85,61 @@ export const deactivateProduct = async (req: Request, res: Response) => {
 
 
 
-/** Activate user product || post */
-export const activatePost = async(req : Request, res : Response) => {
+/** Activate product || post */
+export const activatePost = async (req: Request, res: Response) => {
     const dependencies = {
-        activatePost : productPublisher.acitvateProduct,
+        activatePost: productPublisher.acitvateProduct,
         repository
     }
 
     const data = {
-        email : req.body.email,
-        productId : req.body.productId
+        email: req.body.email,
+        productId: req.body.productId
     }
 
     const interactor = new ActivatePost(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+
+}
+
+
+
+
+/** Fetch all products */
+export const fetchProducts = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        fetchProducts:productPublisher.fetchAdminProducts,
+        repository
+    }
+
+    const data = {
+        email: req.body.email,
+    }
+
+    const interactor = new FetchAdminProducts(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+
+}
+
+
+
+/** Fetch a product */
+export const fetchAProduct = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        fetchAProduct:productPublisher.fetchAProduct,
+        repository
+    }
+
+    const data = {
+        email: req.body?.email,
+        productId : req.params?.productId
+    }
+
+    const interactor = new FetchAProduct(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 

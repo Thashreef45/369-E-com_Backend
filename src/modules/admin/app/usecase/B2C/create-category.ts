@@ -13,9 +13,9 @@ class CreateCategory {
 
         // check credentials
         const credentials = this.credentialCheck(data)
-        if(!credentials.success) return{
-            response : credentials.response,
-            status : credentials.status
+        if (!credentials.success) return {
+            response: credentials.response,
+            status: credentials.status
         }
 
 
@@ -37,7 +37,7 @@ class CreateCategory {
             }
         }
 
-        
+
     }
 
 
@@ -53,8 +53,22 @@ class CreateCategory {
         }
 
         //check credentials type
-        if(typeof data.name !='string' || typeof data.description !='string') return {
+        if (typeof data.name != 'string' || typeof data.description != 'string') return {
             response: { message: "Credentials types not matching" },
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        // description lenght check
+        if (data.description.trim().length > 250 || data.description.trim().length < 50) return {
+            response: { message: "Description length should be between 50 and 250 characters" },
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        // name lenght check
+        if (data.name.trim().length > 10 || data.name.trim().length < 3) return {
+            response: { message: "Name length should be between 3 and 10 characters" },
             status: StatusCode.BAD_REQUEST,
             success: false
         }

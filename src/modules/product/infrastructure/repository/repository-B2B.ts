@@ -7,7 +7,6 @@ import categoryModel from "../database/B2B/category-model"; // category model
 
 class MarketPlaceRepository implements IRepository {
 
-    // onwork *2
     async createCategory(data: { name: string, description: string }): Promise<any> {
         try {
 
@@ -24,13 +23,33 @@ class MarketPlaceRepository implements IRepository {
     }
 
     async findCategory(id: string): Promise<any> {
-        const category = await categoryModel.findOne({ _id: id })
-        return category
+        try {
+            const category = await categoryModel.findOne({ _id: id })
+            return category
+
+        } catch (error) {
+            throw new Error("Error fetching category")
+        }
+    }
+
+
+    /** Find category with its name */
+    async findCategoryByName(name: string): Promise<any> {
+        try {
+            const category = await categoryModel.findOne({ name })
+            return category
+
+        } catch (error) {
+            throw new Error("Error fetching category")
+        }
     }
 
     // async fetchCategories () {
 
     // }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // on work *1
@@ -62,6 +81,17 @@ class MarketPlaceRepository implements IRepository {
     async findProduct(id: string): Promise<any> {
         try {
             const product = await productModel.findOne({ _id: id, active: true })
+            return product
+        } catch (error) {
+            throw new Error("Error finding product")
+        }
+    }
+
+
+     /** Fetch a product with its id  */
+    async fetchProuct(id: string): Promise<any> {
+        try {
+            const product = await productModel.findOne({ _id: id})
             return product
         } catch (error) {
             throw new Error("Error finding product")
@@ -172,7 +202,7 @@ class MarketPlaceRepository implements IRepository {
     async fetchAllproducts(query: Query): Promise<any> {
 
         const { queryObj, sortOption, skip, limitNum } = createQuery(query)
-        const projection = { ownerId: 0, active: 0 , images:0}
+        const projection = { ownerId: 0, active: 0, images: 0 }
 
         const products = await productModel.find(queryObj, projection)
             .sort(sortOption)

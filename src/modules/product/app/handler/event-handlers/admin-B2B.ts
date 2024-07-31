@@ -1,16 +1,38 @@
 import MarketPlaceRepository from "../../../infrastructure/repository/repository-B2B"
-import ActivatePost from "../../usecase/admin/B2B/activate-post"
 
 
 //usecase
+import CreateCategory from "../../usecase/admin/B2B/create-category"
 import CreateProduct from "../../usecase/admin/B2B/create-product"
+
 import RemoveProduct from "../../usecase/admin/B2B/remove-product"
 import UpdateProduct from "../../usecase/admin/B2B/update-product"
+import ActivatePost from "../../usecase/admin/B2B/activate-post"
+
+import FetchAdminProducts from "../../usecase/admin/B2B/fetch-admin-products"
+import FetchAProduct from "../../usecase/admin/B2B/fetch-a-product"
 
 
 
 // B2B Repository instance
 const repository = new MarketPlaceRepository()
+
+
+/** Create new category */
+export const createCategory = async (data: { name: string, description: string, }) => {
+
+    const dependencies = {
+        repository: repository
+    }
+    const params = {
+        name : data.name,
+        description : data.description
+    }
+
+    const interactor = new CreateCategory(dependencies)
+    const output = await interactor.execute(params)
+    return output
+}
 
 
 
@@ -60,7 +82,6 @@ export const removeProduct = async (data: { ownerId: string, productId: string }
 
 
 export const activatePost = async (data: { ownerId: string, productId: string }) => {
-
     const params = {
         ownerId: data.ownerId,
         productId: data.productId
@@ -75,17 +96,34 @@ export const activatePost = async (data: { ownerId: string, productId: string })
 }
 
 
-// export const fetchAllPosts = async (data:{userId:string,query?:boolean|undefined}) => {
 
-//     const params = { 
-//         userId : data.userId,
-//         query : data.query
-//     }
-//     const dependencies = {
-//         repository: repository
-//     }
+/** Fetch admin products */
+export const fetchAdminproducts = async (ownerId:string) => {
+    const params = { 
+        ownerId
+    }
+    const dependencies = {
+        repository: repository
+    }
 
-//     const interactor = new FetchAllPosts(dependencies)
-//     const output = await interactor.execute(params)
-//     return output
-// }
+    const interactor = new FetchAdminProducts(dependencies)
+    const output = await interactor.execute(params)
+    return output
+}
+
+
+
+
+/** Fetch a product with productId */
+export const fetchAProduct = async (productId:string) => {
+    const params = { 
+        productId
+    }
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new FetchAProduct(dependencies)
+    const output = await interactor.execute(params)
+    return output
+}

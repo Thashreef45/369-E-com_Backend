@@ -1,14 +1,17 @@
 import IRepository from '../../infrastructure/interface/IRepository'
-import StatusCode from '../../infrastructure/config/staus-code'
+import StatusCode from '../../infrastructure/config/status-code'
 
 class verifyOtp {
 
     private repository: IRepository
-    private createToken
+    private createAccessToken: (phone: string) => string
+    private createRefreshToken: (phone: string) => string
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
-        this.createToken = dependencies.createToken
+
+        this.createAccessToken = dependencies.createAccessToken
+        this.createRefreshToken = dependencies.createRefreshToken
     }
 
     async execute(data: Input): Promise<Output> {
@@ -17,6 +20,10 @@ class verifyOtp {
         //check input credentials
         if (!data.otp || !data.phone) return {
             response: { message: "Credentials missing" },
+            status: StatusCode.BAD_REQUEST
+        }
+        if (typeof data.otp != 'string' || typeof data.phone != 'string') return {
+            response: { message: "Credentials type not matching" },
             status: StatusCode.BAD_REQUEST
         }
 
@@ -39,22 +46,20 @@ class verifyOtp {
                 status: StatusCode.UNAUTHORIZED
             }
 
-            // todo
-            // const token = generateToken()
-            // const refreshToken = generateRefreshToken()
 
-            const token = this.createToken(data.phone)
+            const accessToken = this.createAccessToken(data.phone)
+            const refreshToken = this.createRefreshToken(data.phone)
 
-            
+
             //demo function 
             //const updated = await remove_otp_from_db(data.phone)
-            
+
 
             //response message with token
             return {
-                response: { message: "Success", token: token,
-                    // refreshToken : ""
-                 },
+                response: {
+                    message: "Success", accessToken, refreshToken,
+                },
                 status: StatusCode.OK
             }
 
@@ -77,12 +82,17 @@ interface Input {
 
 interface Dependencies {
     repository: IRepository
-    createToken(phone: string): any
+    createAccessToken(phone: string): string
+    createRefreshToken(phone: string): string
 }
 
 
 interface Output {
-    response: { message: string, token?: string },
+    response: {
+        message: string,
+        accessToken?: string,
+        refreshToken?: string
+    },
     status: StatusCode
 }
 

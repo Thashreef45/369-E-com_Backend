@@ -21,16 +21,32 @@ const createTempToken = (phone : string) : string => {
 
 
 //Generate token for 3 day
-const createToken = (phone : string) : string => {
+// const createToken = (phone : string) : string => {
     
-    const token = generateToken(phone,'3d',env.JWT_SIGNATURE)
+//     const token = generateToken(phone,'3d',env.JWT_SIGNATURE)
+//     return token
+// }
+
+
+// accessToken
+const createAccessToken = (phone : string) : string => {
+    
+    const token = generateToken(phone,'10m',env.JWT_SIGNATURE)
+    return token
+}
+
+// refreshToken
+const createRefreshToken = (phone : string) : string => {
+
+    const token = generateToken(phone,'15d',env.REFRESH_JWT_SIGNATURE)
     return token
 }
 
 
 
-
 export {
-    createToken,
+    // createToken,
     createTempToken,
+    createRefreshToken,
+    createAccessToken,
 } 
