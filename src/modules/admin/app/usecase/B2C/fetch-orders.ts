@@ -30,13 +30,14 @@ class FetchOrders {
 
 
             //fetch admin products
-            const adminProducts = await this.fetchAdminProducts()
+            const adminProducts = await this.fetchAdminProducts({})
+            // fetchAdminProducts
 
 
             //create array of product ids
             const productIds = this.createProductIds(adminProducts)
             // fetch  orders
-            const orders = this.fetchOrdersWithIds(productIds, data.query)
+            const orders = this.fetchOrdersWithIds(productIds, data.status)
 
 
 
@@ -71,15 +72,15 @@ class FetchOrders {
 
     /** Method for checking input credentials */
     private checkInputCredentials(data: Input): { message: string, status: StatusCode, success: boolean } {
-        if (!data.query) return {
-            message: "Query is missing",
+        if (!data.status) return {
+            message: "Status is missing",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
 
-        //checking query - valid or not
-        if (data.query !== 'initiated' && data.query !== 'shipped'
-            && data.query !== 'outForDelivery' && data.query !== 'cancelled' && data.query !== 'delivered'
+        //checking status - valid or not
+        if (data.status !== 'initiated' && data.status !== 'shipped'
+            && data.status !== 'outForDelivery' && data.status !== 'cancelled' && data.status !== 'delivered'
         ) {
             return {
                 message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
@@ -133,7 +134,7 @@ export default FetchOrders
 
 interface Input {
     email: string
-    query: string
+    status: string
 }
 
 
@@ -144,10 +145,9 @@ interface Output {
 
 interface Dependencies {
     repository: IRepository
-    fetchAdminProducts(): Promise<any>
-    fetchOrdersWithIds(productIds: string[], query: string): Promise<any>
+    fetchAdminProducts({}): Promise<any>
+    fetchOrdersWithIds(productIds: string[], status: string): Promise<any>
 }
-
 
 
 interface Proudct {

@@ -42,7 +42,7 @@ class AddNewAddress {
             const response = await this.repository.addNewAddress(data.phone, data.address)
             return {
                 response: { message: "Success" },
-                status: StatusCode.OK
+                status: StatusCode.CREATED
             }
 
         } catch (error) {

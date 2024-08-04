@@ -40,7 +40,7 @@ class FetchAOrder {
         }
 
 
-        const resData = await this.orderMapper(order,user.address)
+        const resData = await this.orderMapper(order, user.address)
         return {
             response: { message: "Success", data: resData },
             status: StatusCode.OK
@@ -67,7 +67,7 @@ class FetchAOrder {
             price: data.price,
             quantity: data.quantity,
             status: data.status,
-            address : orderAddress[0]
+            address: orderAddress[0]
         }
     }
 }
@@ -95,13 +95,18 @@ interface Dependencies {
 
 
 interface Order {
-    _id: string,
+    _id: string
+    checkoutId: string
     productId: string,
     quantity: number,
-    price: number, // current price of a product
-    status: string
-    userId: string,
-    addressId : string
+    price: number,
+
+    cod: boolean,
+
+    status: OrderStatus
+
+    userId: string
+    addressId: string
 }
 
 
@@ -113,15 +118,24 @@ interface MappedData {
     thumbnail: string
     price: number
     quantity: number
-    status: string
+    status: OrderStatus
     address: Address
 }
 
 
 interface Address {
-    _id : string
+    _id: string
     name: String,
     address: String,
     phone: String,
     pin: String,
+}
+
+interface OrderStatus {
+    pending: boolean,
+    initiated: { status: boolean, time: Date },
+    shipped: { status: boolean, time: Date },
+    outForDelivery: { status: boolean, time: Date },
+    delivered: { status: boolean, time: Date },
+    cancelled: { status: boolean, time: Date },
 }

@@ -64,6 +64,7 @@ class verifyOtp {
             }
 
         } catch (error) {
+
             return {
                 response: { message: "Internal error" },
                 status: StatusCode.INTERNAL_ERROR
@@ -80,13 +81,6 @@ interface Input {
     otp: string,
 }
 
-interface Dependencies {
-    repository: IRepository
-    createAccessToken(phone: string): string
-    createRefreshToken(phone: string): string
-}
-
-
 interface Output {
     response: {
         message: string,
@@ -95,4 +89,13 @@ interface Output {
     },
     status: StatusCode
 }
+
+interface Dependencies {
+    repository: IRepository
+    createAccessToken(phone: string): string
+    createRefreshToken(phone: string): string
+}
+
+
+
 

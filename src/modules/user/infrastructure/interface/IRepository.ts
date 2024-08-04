@@ -1,37 +1,41 @@
 interface IRepository {
 
-    findByPhone(phone: string): any
+    findByPhone(phone: string): Promise<any>
 
-    createUser(phone: string, otp: string): any
-    updateOtp(phone: string, otp: string): any
+    /** Fetch user by userId */
+    findById(userId: string): Promise<any>
 
-    addToCart(phone: string, productId: string): any
-    updateCartProductCount(phone: string, productId: string, count: number): any
-    removeFromCart(phone: string, productId: string): any
 
-    addToWishlist(phone: string, productId: string): any
-    removeFromWishlist(phone: string, productId: string): any
+    createUser(phone: string, otp: string): Promise<any>
+    updateOtp(phone: string, otp: string): Promise<any>
 
-    addNewAddress(phone: string, address: { name: string, phone: string, address: string, pin: string }): any
-    removeAddress(phone: string, addressId: string): any
-    updateAddress(phone: string, addressId: string, address: { name: string, phone: string, address: string, pin: string }): any
+    addToCart(phone: string, productId: string): Promise<any>
+    updateCartProductCount(phone: string, productId: string, count: number): Promise<any>
+    removeFromCart(phone: string, productId: string): Promise<any>
+
+    addToWishlist(phone: string, productId: string): Promise<any>
+    removeFromWishlist(phone: string, productId: string): Promise<any>
+
+    addNewAddress(phone: string, address: { name: string, phone: string, address: string, pin: string }): Promise<any>
+    removeAddress(phone: string, addressId: string): Promise<any>
+    updateAddress(phone: string, addressId: string, address: { name: string, phone: string, address: string, pin: string }): Promise<any>
 
 
     /** create new membership (admin role)*/
     createMembership(data: {
         name: string, description: string, price: number, features: string[], thumbanail: string
-    }): any
+    }): Promise<any>
 
 
-    findMembershipByName(name: string): any
+    findMembershipByName(name: string): Promise<any>
 
-    findMembershipById(id: string): any
+    findMembershipById(id: string): Promise<any>
 
 
     updateMembership(data: {
         membershipId: string, name: string, description: string,
         price: number, features: string[], thumbanail: string
-    }): any
+    }): Promise<any>
 
 
 }

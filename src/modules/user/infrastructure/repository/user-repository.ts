@@ -9,6 +9,12 @@ class UserRepository implements IRepository {
         return data
     }
 
+    /** Fetch user by userId */
+    async findById(userId: string): Promise<any> {
+        const data = await userModel.findOne({ _id: userId })
+        return data
+    }
+
 
     async createUser(phone: string, otp: string) {
         try {

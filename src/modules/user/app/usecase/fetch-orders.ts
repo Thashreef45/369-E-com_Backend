@@ -5,8 +5,8 @@ import IRepository from "../../infrastructure/interface/IRepository"
 class FetchOrders {
 
     private repository: IRepository
-    private getProductsById: any
-    private fetchUserOrders: any
+    private getProductsById: (productIds: string[]) => Promise<any>
+    private fetchUserOrders: (userId: string) => Promise<any>
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -26,7 +26,7 @@ class FetchOrders {
                 status: StatusCode.NOT_FOUND
             }
 
-            const orders = this.fetchUserOrders(user._id)
+            const orders = await this.fetchUserOrders(user._id)
             if (!orders.length) return {
                 response: { message: "No orders found" },
                 status: StatusCode.OK
@@ -53,45 +53,40 @@ class FetchOrders {
 
 
     /** Method will map orders and attach it with product thumbnail */
-    private async OrderMapping(orders: {
-        _id: string,
-        productId: string,
-        quantity: number,
-        price: number,
-        status: string
-        // status: ['initiated', 'shipped', 'out for delivery', 'delivered', 'cancelled'] -->* enum on db
-    }[], userId: string): Promise<MappedData[]> {
-
+    private async OrderMapping(orders: Order[], userId: string): Promise<MappedData[]> {
 
         //create array product ids
         const productIds = this.createProductIds(orders)
         const products: { _id: string, thumbnail: string, name: string }[] = await this.getProductsById(productIds)
 
 
+        // Array declaration
+        const arr: MappedData[] = [];
 
-        //array declaration
-        const arr: MappedData[] = []
+        // Create a Map for quick lookup of products by their _id --- Declaration
+        const productMap = new Map<string, { name: string; thumbnail: string }>();
 
-        for (let i = 0; i < orders.length; i++) {
 
-            for (let j = 0; j < products.length; j++) {
+        // Populate the productMap with product data
+        for (const product of products) {
+            productMap.set(String(product._id), { name: product.name, thumbnail: product.thumbnail });
+        }
 
-                if (String(orders[i].productId) == String(products[j]._id)) {
-                    arr.push({
-                        _id: orders[i]._id, // string
-
-                        name: products[j].name, //string
-                        thumbnail: products[j].thumbnail, //string
-                        price: orders[i].price, //number
-                        quantity: orders[i].quantity, //number
-                        status: orders[i].status, //string
-
-                    })
-                }
+        for (const order of orders) {
+            const product = productMap.get(String(order.productId));
+            if (product) {
+                arr.push({
+                    _id: order._id, // string
+                    name: product.name, // string
+                    thumbnail: product.thumbnail, // string
+                    price: order.price, // number
+                    quantity: order.quantity, // number
+                    status: order.status, // OrderStatus - (interface)
+                });
             }
         }
 
-        return arr
+        return arr;
 
     }
 
@@ -122,6 +117,16 @@ interface Dependencies {
     fetchUserOrders(userId: string): Promise<any>
 }
 
+interface Order {
+    _id: string,
+    productId: string,
+    quantity: number,
+    price: number,
+    status: OrderStatus
+    addressId: string
+}
+
+
 
 interface MappedData {
     _id: string
@@ -129,5 +134,14 @@ interface MappedData {
     thumbnail: string
     price: number
     quantity: number
-    status: string
+    status: OrderStatus
+}
+
+interface OrderStatus {
+    pending: boolean,
+    initiated: { status: boolean, time: Date },
+    shipped: { status: boolean, time: Date },
+    outForDelivery: { status: boolean, time: Date },
+    delivered: { status: boolean, time: Date },
+    cancelled: { status: boolean, time: Date },
 }

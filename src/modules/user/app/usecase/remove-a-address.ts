@@ -9,7 +9,7 @@ class DeleteAddress {
         this.repository = dependencies.repository
     }
 
-    async execute(data: Input) {
+    async execute(data: Input): Promise<Output> {
 
         //check input credentials
         if (data.addressId) return {
@@ -18,30 +18,38 @@ class DeleteAddress {
         }
 
 
-        // check user exist or not
-        const user = await this.repository.findByPhone(data.phone)
-        if (!user) {
-            return {
-                response: { message: 'User not found' },
+        try {
+            // check user exist or not
+            const user = await this.repository.findByPhone(data.phone)
+            if (!user) {
+                return {
+                    response: { message: 'User not found' },
+                    status: StatusCode.NOT_FOUND
+                }
+            }
+
+
+            // check address exist or not
+            const isExist = this.checkAddress(user.address, data.addressId)
+            if (!isExist) return {
+                response: { message: 'Address not found' },
                 status: StatusCode.NOT_FOUND
             }
-        }
-        
-
-        // check address exist or not
-        const isExist = this.checkAddress(user.address, data.addressId)
-        if (!isExist) return {
-            response: { message: 'Address not found' },
-            status: StatusCode.NOT_FOUND
-        }
 
 
-        const response = await this.repository.removeAddress(data.phone, data.addressId)
+            const response = await this.repository.removeAddress(data.phone, data.addressId)
 
-        // response,
-        return {
-            response: { message: "Success" },
-            status: StatusCode.OK
+            // response,
+            return {
+                response: { message: "Success" },
+                status: StatusCode.OK
+            }
+        } catch (error) {
+            
+            return {
+                response: { message: "Error removing address" },
+                status: StatusCode.INTERNAL_ERROR
+            }
         }
     }
 
@@ -61,6 +69,11 @@ export default DeleteAddress
 interface Input {
     phone: string,
     addressId: string,
+}
+
+interface Output {
+    response: { message: string },
+    status: StatusCode
 }
 
 interface Dependencies {

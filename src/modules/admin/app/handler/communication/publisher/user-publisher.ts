@@ -16,16 +16,25 @@ export const createMembership = async (data: {
 }
 
 
-export const updateMembership = async(data:{
+export const updateMembership = async (data: {
     membershipId: string,
     name: string,
     description: string,
     price: number,
     features: string[],
     thumbanail: string,
-}) => {
+}) : Promise<any> => {
 
     const response = await eventPublisher.updateMembership(data)
+    return response
+}
+
+
+
+
+export const fetchUserById = async (userId: string): Promise<any> => {
+
+    const response = await eventPublisher.fetchUser(userId)
     return response
 }
 

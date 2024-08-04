@@ -1,23 +1,44 @@
 // --------------------------   VENDOR CONSUMER     -------------------------------
 
-import FetchUserByPhone from "../../../usecase/fetch-user-by-phone"
 import userRepository from '../../../../infrastructure/repository/user-repository'
 
+//usecase
+import FetchUserByPhone from "../../../usecase/fetch-user-by-phone"
+import FetchUserById from "../../../usecase/fetch-user-by-id"
+
+
+//Repository instance
 const repository = new userRepository()
 
 
 
-export const fetchUserByPhone = async(phone:string) => {
+export const fetchUserByPhone = async (phone: string) => {
 
-            // fetching posts on active - true/false
+    // fetching posts on active - true/false
     const dependencies = {
-        repository : repository
+        repository: repository
     }
     const data = {
-        phone : phone
+        phone: phone
     }
     const interactor = new FetchUserByPhone(dependencies)
-    const output  =  await interactor.execute(data)
+    const output = await interactor.execute(data)
+    return output
+
+}
+
+/** Fetch User by Id */
+export const fetchUserById = async (userId: string) => {
+
+    // fetching posts on active - true/false
+    const dependencies = {
+        repository: repository
+    }
+    const data = {
+        userId
+    }
+    const interactor = new FetchUserById(dependencies)
+    const output = await interactor.execute(data)
     return output
 
 }

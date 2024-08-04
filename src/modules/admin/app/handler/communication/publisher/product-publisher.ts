@@ -46,15 +46,15 @@ export const createNewProduct = async (
 
 
 
-// fetch all products
-export const getProducts = async (query: any) => {
+/** Fetch admin products with optional query,categoryId,subCategoryId */
+export const getProducts = async (query: any): Promise<any> => {
     const response = await eventPublisher.getAllProducts(query)
     return response
 }
 
 
 // fetch a product
-export const getProduct = async (productId: string) => {
+export const getProduct = async (productId: string): Promise<any> => {
     const response = await eventPublisher.getAProduct(productId)
     return response
 }
@@ -62,20 +62,11 @@ export const getProduct = async (productId: string) => {
 
 // update product 
 export const updateProduct = async (data: {
-    productId: string ,name: string ,description: string ,actualPrice: number
-    price: number ,offer: boolean ,images: string[],thumbnail: string
-    stock: number ,categoryId: string ,subCategoryId: string ,ownerId : string
-}) => {
+    productId: string, name: string, description: string, actualPrice: number
+    price: number, offer: boolean, images: string[], thumbnail: string
+    stock: number, categoryId: string, subCategoryId: string, ownerId: string
+}): Promise<any> => {
     const response = await eventPublisher.updateProduct(data)
-    return response
-}
-
-
-
-/** Fetch all admin products */ 
-export const fetchAminProducts = async () => {
-
-    const response = await eventPublisher.fetchAllAdminProducts()
     return response
 }
 

@@ -126,7 +126,7 @@ userRouter.get('/orders',controller.fetchAllOrders)
 
 
 /** Fetch user order with orderId */
-userRouter.get('/order',controller.fetchAOrder)
+userRouter.get('/order/:orderId',controller.fetchAOrder)
 
 
 

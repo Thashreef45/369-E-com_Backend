@@ -6,10 +6,11 @@ import MarketPlaceRepository from "../../../infrastructure/repository/repository
 //usecase
 import CreateProduct from "../../usecase/vendor/B2B/create-product"
 import GetAProduct from "../../usecase/vendor/B2B/fetch-a-product"
-import FetchAllPosts from "../../usecase/vendor/B2B/fetch-user-posts"
+// import FetchAllPosts from "../../usecase/vendor/B2B/fetch-user-posts"
 import RemoveProduct from "../../usecase/vendor/B2B/remove-product"
 import UpdateProduct from "../../usecase/vendor/B2B/update-product"
 import ActivatePost from "../../usecase/vendor/B2B/activate-post"
+import FetchAllProducts from "../../usecase/vendor/B2B/fetch-all-products"
 
 
 // B2B Repository instance
@@ -84,7 +85,7 @@ export const fetchAllPosts = async (data:{ownerId:string,query?:boolean|undefine
         repository: repository
     }
 
-    const interactor = new FetchAllPosts(dependencies)
+    const interactor = new FetchAllProducts(dependencies)
     const output = await interactor.execute(params)
     return output
 }

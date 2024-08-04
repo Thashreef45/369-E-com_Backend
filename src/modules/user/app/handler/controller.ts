@@ -482,7 +482,7 @@ export const fetchAllOrders = async (req: Request, res: Response) => {
 export const fetchAOrder = async (req: Request, res: Response) => {
     const data = {
         phone: req.body.phone,
-        orderId: req.body.orderId
+        orderId: req.params.orderId
     }
     const dependencies = {
         repository,

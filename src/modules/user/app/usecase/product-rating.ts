@@ -37,7 +37,7 @@ class ProductRating {
 
 
             //check  user purchased the product or not
-            const order = this.fetchOrder({ userId: user._id, productId: data.productId })
+            const order = await this.fetchOrder({ userId: user._id, productId: data.productId })
             if (!order) return {
                 response: { message: "You can only rate products you have purchased." },
                 status: StatusCode.FORBIDDEN
@@ -132,7 +132,7 @@ interface Output {
 interface Dependencies {
     rateProduct(data: { userId: string, productId: string }): Promise<Output>
 
-    fetchOrder (data: { userId: string, productId: string; }) : Promise<any>
+    fetchOrder(data: { userId: string, productId: string; }): Promise<any>
 
     repository: IRepository
 }

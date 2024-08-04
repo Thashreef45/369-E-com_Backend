@@ -36,6 +36,7 @@ import UpdateMembership from "../usecase/B2C/update-membership"
 
     //Order Management
 import FetchOrders from "../usecase/B2C/fetch-orders"
+import FetchAOrder from "../usecase/B2C/fetch-a-order"
 
 
 
@@ -67,7 +68,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     const data = {
         email: req.body?.email,
         whatsapp : req.body?.whatsapp,
-        phone :  req.body?.phone
+        phone :  req.body?.phone // from  middleware
     }
     const dependencies = {
         repository,
@@ -164,7 +165,7 @@ export const createProduct = async (req: Request, res: Response) => {
 
 
 
-// fetch all products || filtered by queries
+// fetch all products || filtered by queries {query,category}
 export const getAllProducts = async (req: Request, res: Response) => {
     const query = req.query
 
@@ -268,16 +269,36 @@ export const updateMembership = async (req: Request, res: Response) => {
 export const fetchOrders = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        fetchAdminProducts : productPublisher.fetchAminProducts,
+        fetchAdminProducts : productPublisher.getProducts,
         fetchOrdersWithIds : orderPublisher.fetchOrdersWithIds
     }
 
     const data = { 
         email : req.body?.email,
-        query : req.body?.query
+        status : req.query?.status as string
     }
 
     const interactor = new FetchOrders(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+/** Fetch a order with ownerId and status */
+export const fetchAOrder = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        fetchOrder : orderPublisher.fetchOrder,
+        fetchProduct : productPublisher.getProduct,
+        fetchUser : userPublisher.fetchUserById
+    }
+
+    const data = {
+        email : req.body?.email,
+        orderId : req.params.orderId
+    }
+
+    const interactor = new FetchAOrder(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }

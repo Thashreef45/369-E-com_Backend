@@ -9,7 +9,7 @@ import FetchAllCategory from '../../usecase/admin/B2C/fetch-all-categories'
 import GetAllProducts from '../../usecase/admin/B2C/get-all-products'
 import GetAProduct from '../../usecase/admin/B2C/get-a-product'
 import UpdateProduct from '../../usecase/admin/B2C/update-a-product'
-import FetchAdminProducts from '../../usecase/admin/B2C/fetch-admin-products'
+// import FetchAdminProducts from '../../usecase/admin/B2C/fetch-admin-products'
 
 // repository instance
 const productRepository = new repository()
@@ -49,6 +49,7 @@ export const createSubCategory = async (data: { categoryId: string, name: string
 }
 
 
+
 // fetch all categories along with sub-category
 export const fetchAllCategory = async () => {
     const dependencies = {
@@ -76,7 +77,7 @@ export const createProduct = async (data:any) => {
 }
 
 
-// get all products || filter by query
+// get all admin products || filter by query
 export const getAllProducts = async (query:any) => {
     const dependencies = {
         repository: productRepository
@@ -124,15 +125,3 @@ export const updateProduct = async (data:{
     return output
 }
 
-
-/** Fetch all admin products */
-export const fetchAllAdminProducts = async () => {
-
-    const dependencies = {
-        repository: productRepository
-    }
-
-    const interactor = new FetchAdminProducts(dependencies)
-    const output = await interactor.execute()
-    return output
-}

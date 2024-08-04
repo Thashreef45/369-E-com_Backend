@@ -8,6 +8,8 @@ const router = express()
 //login
 router.post('/login', controller.login)
 
+
+// update profile
 router.post('/profile',controller.updateProfile)
 
 
@@ -60,17 +62,18 @@ router.post('/membership', controller.createMembership)
 // edit membership
 router.patch('/membership', controller.updateMembership)
 
+///////////////////////////////////////////////////////
 
 
 
-/// WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWww
-router.get('/orders', controller.fetchOrders)  /// on work 
+
+router.get('/orders', controller.fetchOrders)
 
 
-// router.get('/order', controller)  // have to implement
+router.get('/order/:orderId', controller.fetchAOrder) 
 
 
-router.patch('/order', controller.updateOrderStatus) /// on work 
+router.patch('/order', controller.updateOrderStatus) /// on work *<
 
 
 

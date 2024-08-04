@@ -24,7 +24,7 @@ class GetAllProducts {
     }
 
 
-    ResponseMapper(data: Products[]): ResponseMapperOutput[] {
+    private ResponseMapper(data: Products[]): ResponseMapperOutput[] {
 
         const arr: ResponseMapperOutput[] = []
 

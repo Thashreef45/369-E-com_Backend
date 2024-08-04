@@ -96,7 +96,7 @@ class UpdateAddress {
 
 
         if (address.address.length > 250) return {
-            message: "Address length should be less than 300 characters",
+            message: "Address length should be less than 250 characters",
             status: StatusCode.BAD_REQUEST,
             success: false
         }

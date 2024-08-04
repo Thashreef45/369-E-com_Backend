@@ -7,15 +7,9 @@ const orderSchema = new Schema({
     productId: String,
     quantity: Number,
     price: Number,
-    // status : {
-        //     type: String,
-        //     enum: ['pending','initiated', 'shipped', 'out for delivery', 'delivered','cancelled'],
-        //     // default: 'pending'
-    // },
-        
         
     cod : Boolean,
-    status: { 
+    status: {
         pending: Boolean,
         initiated: {
             status: { type: Boolean, default: false },
