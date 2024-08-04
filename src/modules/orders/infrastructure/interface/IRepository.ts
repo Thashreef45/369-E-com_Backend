@@ -24,11 +24,22 @@ interface IRepository {
 
 
     /** Fetch orders with product ids and orders status */
-    fetchOrdersWithProductIds(data:{productIds:string[],query:string}): Promise<any>
+    fetchOrdersWithProductIds(data:{productIds:string[],status:string}): Promise<any> //have to change query to status
 
 
     /** Cancel order */
     cancelOrder(orderId:string): Promise<any>
+
+
+    /** Update order status shipped (params- *orderId)*/
+    updateOrderShipped(orderId:string):Promise<any>
+
+    /** Update order status outForDelivery (params- *orderId)*/
+    updateOrderOutForDelivery(orderId:string):Promise<any>
+    
+    /** Update order status delivered (params- *orderId)*/
+    updateOrderDelivered(orderId:string):Promise<any>
+
 
 }
 

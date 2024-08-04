@@ -3,6 +3,8 @@ import { Request, Response } from "express"
 // publisher
 import * as notificationPublisher from './communication/publisher/notification-publisher'
 import * as productPublisher from "./communication/publisher/B2C-product-publisher"
+import * as orderPublisher from './communication/publisher/order-publisher'
+import * as userPublisher from './communication/publisher/user-publisher'
 
 
 
@@ -23,6 +25,12 @@ import Login from "../usecase/B2C/login"
 import GetProduct from "../usecase/B2C/fetch-a-product"
 import UpdateProduct from "../usecase/B2C/update-product"
 import ResendOtp from "../usecase/B2C/resend-otp"
+
+import FetchAllProducts from "../usecase/B2C/fetch-all-products"
+
+import FetchOrders from "../usecase/B2C/fetch-all-orders"
+import FetchAOrder from "../usecase/B2C/fetch-a-order"
+import UpdateOrder from "../usecase/B2C/update-order"
 
 
 
@@ -163,5 +171,83 @@ export const updateProduct = async (req: Request, res: Response) => {
     const interactor = new UpdateProduct(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
+}
 
+
+
+// fetch all product
+export const fetchAllProducts = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        getAllProducts: productPublisher.getAllProducts
+    }
+
+    const data = {
+        email : req.body?.email,
+        query :req.query,
+    }
+
+    const interactor = new FetchAllProducts(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+/** Fetch all order with ownerId and status */
+export const getAllOrders = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        getOwnerProducts : productPublisher.getAllProducts,
+        fetchOrdersWithIds : orderPublisher.fetchOrdersWithIds
+    }
+
+    const data = {
+        email : req.body?.email,
+        status :req.query?.status as string
+    }
+
+    const interactor = new FetchOrders(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+/** Fetch a order with ownerId */
+export const fetchAOrder = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        fetchOrder : orderPublisher.fetchOrder,
+        fetchProduct : productPublisher.getProduct,
+        fetchUser : userPublisher.fetchUserById
+    }
+
+    const data = {
+        email : req.body?.email,
+        orderId : req.params.orderId
+    }
+
+    const interactor = new FetchAOrder(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+/** Update order status by orderId*/
+export const updateOrder = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        updateOrder : orderPublisher.updateOrderStatus,
+    }
+
+    const data = {
+        email : req.body?.email,
+        orderId : req.params.orderId
+    }
+
+    const interactor = new UpdateOrder(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
 }

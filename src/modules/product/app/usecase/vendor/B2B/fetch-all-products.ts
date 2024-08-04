@@ -3,7 +3,7 @@ import IRepository from "../../../../infrastructure/interface/IRepository-B2B"
 
 
 
-class FetchAllPosts {
+class FetchAllProducts {
 
     private repository: IRepository
     constructor(dependencies: Dependencies) {
@@ -45,7 +45,7 @@ class FetchAllPosts {
     }
 }
 
-export default FetchAllPosts
+export default FetchAllProducts
 
 
 interface Input {

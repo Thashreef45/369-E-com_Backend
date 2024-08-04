@@ -9,8 +9,8 @@ class Repository implements IRepository {
     // registering a new vendor
     async registratioin(data: {
         name: string, phone: string, email: string,
-        about: string, password: string, otp: string,whatsapp:string
-    }) {
+        about: string, password: string, otp: string, whatsapp: string
+    }): Promise<any> {
         try {
 
             const vendor = await vendorModel.create({
@@ -18,8 +18,8 @@ class Repository implements IRepository {
                 email: data.email,
                 phone: data.phone,
                 password: data.password,
-                whatsapp : data.whatsapp,
-                
+                whatsapp: data.whatsapp,
+
                 otp: {
                     number: data.otp,
                     verified: false
@@ -35,7 +35,7 @@ class Repository implements IRepository {
 
 
 
-    async fetchVendorWithId(id: string) {
+    async fetchVendorWithId(id: string): Promise<any> {
         try {
             const vendor = await vendorModel.findOne({ _id: id })
             return vendor
@@ -45,16 +45,7 @@ class Repository implements IRepository {
     }
 
 
-    async fetchVendorWithEmail(email: string) {
-        try {
-            const vendor = await vendorModel.findOne({ email })
-            return vendor
-        } catch (error) {
-            throw new Error("Error fetching vendor")
-        }
-    }
-
-    async fetchVendorWithPhone(email: string) {
+    async fetchVendorWithEmail(email: string): Promise<any> {
         try {
             const vendor = await vendorModel.findOne({ email })
             return vendor
@@ -64,8 +55,18 @@ class Repository implements IRepository {
     }
 
 
-    async verifyOtp(email: string) {
-        
+    async fetchVendorWithPhone(email: string): Promise<any> {
+        try {
+            const vendor = await vendorModel.findOne({ email })
+            return vendor
+        } catch (error) {
+            throw new Error("Error fetching vendor")
+        }
+    }
+
+
+    async verifyOtp(email: string): Promise<any> {
+
         try {
             return await vendorModel.updateOne(
                 { email },
@@ -79,11 +80,42 @@ class Repository implements IRepository {
 
         } catch (error) {
 
-            console.log(error)
+            // console.log(error)
             throw new Error("Internal error")
         }
     }
 
+
+    /**Fetch approval pending vendors */
+    async fetchPendingApprovals(): Promise<any> {
+        try {
+            const vendors = await vendorModel.find({ active: false })
+            return vendors
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+
+
+    /** Activate vendor account -* admin role */
+    async activateVendor(vendorId: string): Promise<any> {
+        try {
+            const updated = await vendorModel.updateOne(
+                {_id:vendorId},
+                {
+                    $set : {
+                        active : true 
+                    }
+                }
+            )
+
+            return updated
+            
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
 
 
 

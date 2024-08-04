@@ -242,17 +242,38 @@ class productRepository implements IRepository {
         return updated
     }
 
-    async fetchAdminProducts(): Promise<any> {
+
+
+    /** Fetch admin products with optional query category,query */
+    async fetchAdminProducts(query: { category?: string, query?: string; }): Promise<any> {
+
+        const { queryObj } = createAdminQuery(query)
+
         try {
             const products = await productModel.find(
                 {
-                    'ownership.isAdmin': true
+                    ...queryObj, 'ownership.isAdmin': true
                 },
-                {
-                    feedbacks: 0, images: 0, ownership: 0,
-                }
+                { feedbacks: 0, images: 0, ownership: 0 }
             )
+            return products
+        } catch (error) {
+            throw new Error('Error product fetching')
+        }
+    }
 
+
+    /** Fetch owner products with ownerId (*vendor or any) optional query category,query */
+    async fetchOwnerProducts(data:{ownerId:string,query:any}): Promise<any> {
+        const { queryObj } = createAdminQuery(data.query)
+
+        try {
+            const products = await productModel.find(
+                {
+                    ...queryObj, 'ownership.ownerId': data.ownerId
+                },
+                { feedbacks: 0, images: 0, ownership: 0 }
+            )
             return products
         } catch (error) {
             throw new Error('Error product fetching')
@@ -324,7 +345,6 @@ const createQuery = (query: Query) => {
 }
 
 
-
 interface Query {
     limit?: number;
     category?: string;
@@ -336,6 +356,28 @@ interface Query {
     rating?: number;
     sort?: string;
 }
+
+const createAdminQuery = (query: { category?: string, query?: string, subCategory?: string }) => {
+
+    if(typeof query != 'object') return {}
+
+    let queryObj:
+        { name?: { $regex: string; $options: string }, categoryId?: string, subcategoryId?: string } = {};
+
+    if (query.category) {
+        queryObj.categoryId = query.category;
+    }
+
+    if (query.subCategory) {
+        queryObj.subcategoryId = query.subCategory;
+    }
+
+    if (query.query) {
+        queryObj.name = { $regex: query.query, $options: 'i' };
+    }
+
+    return { queryObj };
+};
 
 
 

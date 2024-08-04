@@ -4,16 +4,16 @@ interface IRepository {
     createSubCategory(
         id: string,
         subcategory: { name: string, description: string }
-    ): any
+    ): Promise<any>
 
-    createCategory(name: string, description: string): any
+    createCategory(name: string, description: string): Promise<any>
 
-    getCategory(name: string): any
-    getCategoryById(id: string): any
+    getCategory(name: string): Promise<any>
+    getCategoryById(id: string): Promise<any>
 
 
     //fetch all categories
-    fetchAllCategories(): any
+    fetchAllCategories(): Promise<any>
 
 
 
@@ -26,14 +26,16 @@ interface IRepository {
         name: string, description: string, price: number, images: string[],
         thumbnail: string, stock: number, categoryId: string, subCategoryId: string,
         ownerId: string, isAdmin: boolean
-    ): any
+    ): Promise<any>
 
 
-    getProduct(id: string): any
-    getProductByName(name: string): any
+    /** Fetch a product by productId */
+    getProduct(id: string): Promise<any>
+
+    getProductByName(name: string): Promise<any>
 
     /** products fetching by array of product id */
-    getProducts(data: string[]): any
+    getProducts(data: string[]): Promise<any>
 
     /** Method fetches all products based on query filtration and sorting options */
     getAllProducts(query: {
@@ -52,7 +54,7 @@ interface IRepository {
         productId: string, name: string, description: string,
         price: number, actualPrice: number, offer: boolean, images: string[],
         thumbnail: string, stock: number, categoryId: string, subCategoryId: string
-    }): any
+    }): Promise<any>
 
 
     /** product rating only */
@@ -66,7 +68,11 @@ interface IRepository {
     checkOutCart(data: { productId: string, quantity: number }[]): Promise<any>
 
 
-    fetchAdminProducts(): Promise<any>
+    fetchAdminProducts(query:any): Promise<any>
+
+
+    fetchOwnerProducts(data:{ownerId:string,query:any}): Promise<any>
+
 }
 
 export default IRepository

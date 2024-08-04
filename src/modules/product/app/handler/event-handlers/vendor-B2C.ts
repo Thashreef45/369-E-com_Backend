@@ -7,6 +7,7 @@ import ProductRepository from "../../../infrastructure/repository/repository-B2C
 import GetAProduct from "../../usecase/vendor/B2C/fetch-a-product"
 import CreateProduct from "../../usecase/vendor/B2C/create-product"
 import UpdateProduct from "../../usecase/vendor/B2C/update-product"
+import FetchAllProducts from "../../usecase/vendor/B2C/fetch-all-products"
 
 
 
@@ -37,7 +38,7 @@ export const createProduct = async (data: any) => {
 
 // fetch a product
 export const getProduct = async (id: string) => {
-    const data = { id }
+    const data = { id } //**
 
     const dependencies = {
         repository: repository
@@ -60,6 +61,21 @@ export const updateProduct = async (data:any) => {
     }
 
     const interactor = new UpdateProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
+
+
+/** Fetch all owner products */
+export const fetchAllproducts = async (data:{ ownerId: string, query: any }) => {
+
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new FetchAllProducts(dependencies)
     const output = await interactor.execute(data)
     return output
 }

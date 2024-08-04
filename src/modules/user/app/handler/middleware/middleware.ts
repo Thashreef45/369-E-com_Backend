@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import env from '../../../infrastructure/config/environment';
 import StatusCode from '../../../infrastructure/config/status-code'
 
-import { createAccessToken,createRefreshToken } from '../../../infrastructure/services/generateToken';
+import { createAccessToken, createRefreshToken } from '../../../infrastructure/services/generateToken';
 
 const middleware = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -18,7 +18,7 @@ const middleware = async (req: Request, res: Response, next: NextFunction) => {
 
     token = token.split(' ')[1];
 
-    jwt.verify(token, env.JWT_SIGNATURE, async (err, decoded) => {
+    jwt.verify(token, env.JWT_SIGNATURE, async (err: any, decoded: any) => {
         if (err) {
             if (err.name === 'TokenExpiredError') {
 
@@ -75,7 +75,7 @@ const validateRefreshToken = async (refreshToken: string): Promise<ValidateRefre
 
     return new Promise((resolve) => {
 
-        jwt.verify(token, env.REFRESH_JWT_SIGNATURE, (err, decoded) => {
+        jwt.verify(token, env.REFRESH_JWT_SIGNATURE, (err: any, decoded: any) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
                     resolve({

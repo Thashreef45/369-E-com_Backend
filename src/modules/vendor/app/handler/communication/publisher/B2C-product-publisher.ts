@@ -1,19 +1,19 @@
-import * as vendorConsumer from '../../../../../product/app/handler/event-handlers/vendor-B2C'
+import * as productConsumer from '../../../../../product/app/handler/event-handlers/vendor-B2C'
 
 
 // create product 
 export const createProduct = async (data: any): Promise<any> => {
 
-    const response = await vendorConsumer.createProduct(data)
+    const response = await productConsumer.createProduct(data)
     return response
 
 }
 
 
-//fetch product with id 
+/** fetch product with id  */
 export const getProduct = async (id: string): Promise<any> => {
 
-    const response = await vendorConsumer.getProduct(id)
+    const response = await productConsumer.getProduct(id)
     return response
 }
 
@@ -22,7 +22,7 @@ export const getProduct = async (id: string): Promise<any> => {
 // update a product
 export const updateProduct = async (data: any): Promise<any> => {
 
-    const response = await vendorConsumer.updateProduct(data)
+    const response = await productConsumer.updateProduct(data)
     return response
 }
 
@@ -30,10 +30,10 @@ export const updateProduct = async (data: any): Promise<any> => {
 
 
 // fetch all post
-export const fetchAllPost = async (data: { userId: string, query?: boolean | undefined }) => {
+export const getAllProducts = async (data: { ownerId: string, query: any }) => {
 
-    // const response = await vendorConsumer.fetchAllPosts(data)
-    // return response
+    const response = await productConsumer.fetchAllproducts(data)
+    return response
 }
 
 

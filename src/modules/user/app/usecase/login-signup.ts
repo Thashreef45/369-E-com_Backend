@@ -51,7 +51,7 @@ class Login_Signup {
                 this.sendOtp(data.phone, otp)
 
                 return {
-                    response: { message: 'Login success', token: token },
+                    response: { message: 'Success', token: token },
                     status: StatusCode.OK
                 }
             }

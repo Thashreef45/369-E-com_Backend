@@ -11,12 +11,8 @@ class FetchOrders {
     async execute(data: Input): Promise<Output> {
 
 
-        const orders = this.repository.fetchOrdersWithProductIds(data)
+        const orders = this.repository.fetchOrdersWithProductIds(data) //temporarily passing as 
         return orders
-        return {
-            response: { message: "Success", data: orders },
-            status: StatusCode.OK
-        }
     }
 }
 
@@ -25,7 +21,7 @@ export default FetchOrders
 
 interface Input {
     productIds: string[]
-    query: string
+    status: string
 }
 
 interface Output {

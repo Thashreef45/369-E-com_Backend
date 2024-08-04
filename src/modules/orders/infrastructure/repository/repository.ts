@@ -50,13 +50,6 @@ class Repository implements IRepository {
 
 
 
-    // fetch order
-
-
-    //update order
-
-
-
     fetchADeliveredOrder(data: { userId: string, productId: string }): Promise<any> {
         const order = orderModel.findOne(
             {
@@ -67,7 +60,6 @@ class Repository implements IRepository {
         )
         return order
     }
-
 
 
 
@@ -86,20 +78,30 @@ class Repository implements IRepository {
     /** Fetch order by orderId */
     fetchOrder(data: { orderId: string }): Promise<any> {
 
-        const order = orderModel.findOne({ _id: data.orderId, 'status.pending': false })
-        return order
+        try {
+            const order = orderModel.findOne({ _id: data.orderId, 'status.pending': false })
+            return order
+        } catch (error) {
+            throw new Error('Error fetching orders')
+        }
 
     }
 
 
     /** Fetch orders with product ids and orders status */
-    fetchOrdersWithProductIds(data: { productIds: string[], query: string }): Promise<any> {
-        const status = `status.${data.query}.status`
-        const orders = orderModel.find(
-            { productId: { $in: data.productIds }, [status]: true },
-        )
+    fetchOrdersWithProductIds(data: { productIds: string[], status: string }): Promise<any> {
 
-        return orders
+        try {
+            const status = `status.${data.status}.status` // creating status 
+
+            const orders = orderModel.find(
+                { productId: { $in: data.productIds }, [status]: true },
+            )
+            return orders
+        } catch (error) {
+            throw new Error('Error fetching pending orders')
+        }
+
     }
 
 
@@ -113,6 +115,46 @@ class Repository implements IRepository {
                 $set: {
                     'status.cancelled.status': true,
                     'status.cancelled.time': new Date()
+                }
+            }
+        )
+    }
+
+
+    /** Update order status shipped (params- *orderId)*/
+    async updateOrderShipped(orderId:string):Promise<any> {
+        const updated = await orderModel.updateOne(
+            {_id:orderId},
+            {
+                $set : {
+                    'status.shipped.status' : true,
+                    'status.shipped.time' : Date.now()
+                }
+            }
+        )
+    }
+
+    /** Update order status outForDelivery (params- *orderId)*/
+    async updateOrderOutForDelivery(orderId:string):Promise<any>{
+        const updated = await orderModel.updateOne(
+            {_id:orderId},
+            {
+                $set : {
+                    'status.outForDelivery.status' : true,
+                    'status.outForDelivery.time' : Date.now()
+                }
+            }
+        )
+    } 
+    
+    /** Update order status delivered (params- *orderId)*/
+    async updateOrderDelivered(orderId:string):Promise<any>{
+        const updated = await orderModel.updateOne(
+            {_id:orderId},
+            {
+                $set : {
+                    'status.delivered.status' : true,
+                    'status.delivered.time' : Date.now()
                 }
             }
         )
