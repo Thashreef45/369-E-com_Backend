@@ -17,7 +17,7 @@ export const fetchOrder = async (orderId: string): Promise<any> => {
 }
 
 
-/** fetch order with orderId */
+/** update order status with orderId and product ownerId */
 export const updateOrderStatus = async (data: { ownerId: string, orderId: string }): Promise<any> => {
 
     const output = await orderConsumer.updateOrderStatus(data)

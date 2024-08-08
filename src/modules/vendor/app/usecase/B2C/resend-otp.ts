@@ -6,8 +6,9 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class ResendOtp {
 
     private repository: IRepository
-    private generateOtp
-    private sendOtp
+    private generateOtp : any
+    private sendOtp : any
+    private createOtpToken : any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -24,7 +25,7 @@ class ResendOtp {
 
         try {
 
-            
+
             // fetch vendor
             const vendor = await this.repository.fetchVendorWithEmail(data.email)
             if (!vendor) return {
@@ -43,10 +44,16 @@ class ResendOtp {
             this.sendOtp(otp, data.email)
 
 
+            // reset previous otp
+            const updated = await this.repository.updateNewOTP({ otp, email: data.email })
+
+            //create token
+            const token  = this.createOtpToken(data.email)
             return {
-                response: { message: "Success" },
+                response: { message: "Success",token },
                 status: StatusCode.OK
             }
+
         } catch (error) {
 
             return {
@@ -73,5 +80,6 @@ interface Output {
 interface Dependencies {
     repository: IRepository
     generateOtp(): string
-    sendOtp(otp: string, email: string)
+    sendOtp(otp: string, email: string) : any
+    createOtpToken(email:string) : string
 }

@@ -5,12 +5,12 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class FetchOrders {
 
 
-    private repository: IRepository
+    // private repository: IRepository
     private fetchAdminProducts: any
     private fetchOrdersWithIds: any
 
     constructor(dependencies: Dependencies) {
-        this.repository = dependencies.repository
+        // this.repository = dependencies.repository
         this.fetchAdminProducts = dependencies.fetchAdminProducts
         this.fetchOrdersWithIds = dependencies.fetchOrdersWithIds
     }
@@ -31,13 +31,20 @@ class FetchOrders {
 
             //fetch admin products
             const adminProducts = await this.fetchAdminProducts({})
-            // fetchAdminProducts
+
 
 
             //create array of product ids
             const productIds = this.createProductIds(adminProducts)
+
+
+            //params for fetching orders
+            const params = {
+                productIds, status: data.status ,startDate: data.startDate,
+                endDate: data.endDate, page_no: data.page_no, limit: data.limit
+            }
             // fetch  orders
-            const orders = this.fetchOrdersWithIds(productIds, data.status)
+            const orders = await this.fetchOrdersWithIds(params)
 
 
 
@@ -78,16 +85,17 @@ class FetchOrders {
             success: false
         }
 
+        //check status valid or not
+        const validStatuses = ['initiated', 'shipped', 'outForDelivery', 'cancelled', 'delivered']
+
+
         //checking status - valid or not
-        if (data.status !== 'initiated' && data.status !== 'shipped'
-            && data.status !== 'outForDelivery' && data.status !== 'cancelled' && data.status !== 'delivered'
-        ) {
-            return {
-                message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
-                status: StatusCode.BAD_REQUEST,
-                success: false
-            }
+        if (!validStatuses.includes(data.status)) return {
+            message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
+            status: StatusCode.BAD_REQUEST,
+            success: false
         }
+        
 
         return {
             message: "",
@@ -135,18 +143,30 @@ export default FetchOrders
 interface Input {
     email: string
     status: string
-}
 
+    startDate?: string;
+    endDate?: string;
+    page_no?: number;
+    limit?: number;
+}
 
 interface Output {
     response: { message: string, data?: OrderMapperOutput[] },
     status: StatusCode
 }
 
+
 interface Dependencies {
     repository: IRepository
-    fetchAdminProducts({}): Promise<any>
-    fetchOrdersWithIds(productIds: string[], status: string): Promise<any>
+    fetchAdminProducts({ }): Promise<any>
+
+    fetchOrdersWithIds(data:
+        {
+            productIds: string[], status: string, startDate?: string,
+            endDate?: string, page_no?: number, limit?: number;
+        }
+    ): Promise<Order[]>
+
 }
 
 
@@ -194,7 +214,6 @@ interface Order {
     }
     userId: string
     addressId: string
-
 }
 
 

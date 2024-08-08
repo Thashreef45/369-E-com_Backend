@@ -33,6 +33,20 @@ class Repository implements IRepository {
         }
     }
 
+    async updateNewOTP(data: { otp: string, email: string }): Promise<any> {
+
+        try {
+            const update = await vendorModel.updateOne(
+                { email: data.email },
+                {
+                    $set: { 'otp.number': data.otp }
+                }
+            )
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
 
 
     async fetchVendorWithId(id: string): Promise<any> {
@@ -102,16 +116,16 @@ class Repository implements IRepository {
     async activateVendor(vendorId: string): Promise<any> {
         try {
             const updated = await vendorModel.updateOne(
-                {_id:vendorId},
+                { _id: vendorId },
                 {
-                    $set : {
-                        active : true 
+                    $set: {
+                        active: true
                     }
                 }
             )
 
             return updated
-            
+
         } catch (error) {
             throw new Error(error)
         }
