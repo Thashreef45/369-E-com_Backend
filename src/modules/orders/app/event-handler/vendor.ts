@@ -17,7 +17,7 @@ const repository = new Repository()
 
 /** Fetch orders with product ids with matching status*/
 export const fetchOrdersWithIds = async(data: { productIds: string[], status: string }): Promise<any> => {
-    const dependencies = {
+    const dependencies = { //**((((())))) */ query
         repository
     }
     

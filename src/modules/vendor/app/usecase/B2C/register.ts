@@ -5,14 +5,14 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class Register {
 
     private repository: IRepository
-    private createTempToken :any
+    private createOtpToken :any
     private hashPassword :any
     private generateOtp : any
     private sendOtpToEmail :any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
-        this.createTempToken = dependencies.createTempToken
+        this.createOtpToken = dependencies.createOtpToken
         this.generateOtp = dependencies.generateOtp
         this.sendOtpToEmail = dependencies.sendOtpToEmail
     }
@@ -68,7 +68,7 @@ class Register {
 
 
 
-            const token = this.createTempToken(data.email)
+            const token = this.createOtpToken(data.email)
             //succesfull return 
             return {
                 response: { message: "Success", token: token },
@@ -111,7 +111,7 @@ interface Output {
 
 interface Dependencies {
     repository: IRepository
-    createTempToken(phone: string): string
+    createOtpToken(phone: string): string
     hashPassword(password: string): Promise<string>
     generateOtp(): string
     sendOtpToEmail(otp: string, email: string): void

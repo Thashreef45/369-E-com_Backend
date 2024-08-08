@@ -11,7 +11,7 @@ import * as userPublisher from './communication/publisher/user-publisher'
 //dependencies
 import Repository from "../../infrastructure/repository/repository"
 
-import { createTempToken, createToken } from "../../infrastructure/services/generateToken"
+import { createOtpToken, createToken } from "../../infrastructure/services/generateToken"
 import generateOtp from "../../infrastructure/services/generate-otp"
 import hashPassword from "../../infrastructure/services/hash-password"
 import verifyHash from "../../infrastructure/services/verify-hash"
@@ -31,6 +31,7 @@ import FetchAllProducts from "../usecase/B2C/fetch-all-products"
 import FetchOrders from "../usecase/B2C/fetch-all-orders"
 import FetchAOrder from "../usecase/B2C/fetch-a-order"
 import UpdateOrder from "../usecase/B2C/update-order"
+import FetchSales from "../usecase/B2C/fetch-sales"
 
 
 
@@ -45,7 +46,7 @@ export const register = async (req: Request, res: Response) => {
 
     const dependencies = {
         repository: repository,
-        createTempToken,
+        createOtpToken,
         hashPassword: hashPassword,
         generateOtp,
         sendOtpToEmail: notificationPublisher.sendOtpToEmail,
@@ -57,7 +58,7 @@ export const register = async (req: Request, res: Response) => {
         email: req.body?.email,
         about: req.body?.about,
         password: req.body?.password,
-        whatsapp : req.body?.whatsapp
+        whatsapp: req.body?.whatsapp
     }
 
     const interactor = new Register(dependencies)
@@ -91,11 +92,11 @@ export const resendOtp = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
         generateOtp,
-        sendOtp : notificationPublisher.sendOtpToEmail
-        // createToken,
+        sendOtp: notificationPublisher.sendOtpToEmail,
+        createOtpToken
     }
     const data = {
-        email : req.body?.email
+        email: req.body?.email
     }
 
     const interactor = new ResendOtp(dependencies)
@@ -183,8 +184,8 @@ export const fetchAllProducts = async (req: Request, res: Response) => {
     }
 
     const data = {
-        email : req.body?.email,
-        query :req.query,
+        email: req.body?.email,
+        query: req.query,
     }
 
     const interactor = new FetchAllProducts(dependencies)
@@ -198,13 +199,14 @@ export const fetchAllProducts = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        getOwnerProducts : productPublisher.getAllProducts,
-        fetchOrdersWithIds : orderPublisher.fetchOrdersWithIds
+        getOwnerProducts: productPublisher.getAllProducts,
+        fetchOrdersWithIds: orderPublisher.fetchOrdersWithIds
     }
 
     const data = {
-        email : req.body?.email,
-        status :req.query?.status as string
+        email: req.body?.email,
+        status: req.query?.status as string
+        // startDate , endDate
     }
 
     const interactor = new FetchOrders(dependencies)
@@ -218,14 +220,14 @@ export const getAllOrders = async (req: Request, res: Response) => {
 export const fetchAOrder = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        fetchOrder : orderPublisher.fetchOrder,
-        fetchProduct : productPublisher.getProduct,
-        fetchUser : userPublisher.fetchUserById
+        fetchOrder: orderPublisher.fetchOrder,
+        fetchProduct: productPublisher.getProduct,
+        fetchUser: userPublisher.fetchUserById
     }
 
     const data = {
-        email : req.body?.email,
-        orderId : req.params.orderId
+        email: req.body?.email,
+        orderId: req.params.orderId
     }
 
     const interactor = new FetchAOrder(dependencies)
@@ -239,15 +241,46 @@ export const fetchAOrder = async (req: Request, res: Response) => {
 export const updateOrder = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        updateOrder : orderPublisher.updateOrderStatus,
+        updateOrder: orderPublisher.updateOrderStatus,
+    }
+
+    const data = {
+        email: req.body?.email,
+        orderId: req.params.orderId
+    }
+
+    const interactor = new UpdateOrder(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+
+
+/** sales -----***any  */
+export const hey = async (req: Request, res: Response) => {
+    const dependencies = {
+        repository,
+        getOwnerProducts: productPublisher.getAllProducts,
+        fetchOrdersWithIds: orderPublisher.fetchOrdersWithIds
     }
 
     const data = {
         email : req.body?.email,
-        orderId : req.params.orderId
+        startDate : req.query?.startDate as string,
+        endDate : req.query?.endDate as string
     }
 
-    const interactor = new UpdateOrder(dependencies)
+    // const data = {
+
+    //     start: "", // date
+    //     end: "",// date
+    //     email: req.body?.email,
+    //     // orderId : req.params.orderId
+    //     // query : req.query  /// { * : '',&:""} * many*any
+    // }
+
+    const interactor = new FetchSales(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }

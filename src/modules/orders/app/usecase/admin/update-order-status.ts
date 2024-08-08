@@ -60,14 +60,12 @@ class UpdateOrderStatus {
                 }
             }
 
-
             // update order status 
             const updated = await this.updateStatusHelper(status, order._id)
             if (!updated) return {
                 response: { message: "Error updating order" },
                 status: StatusCode.INTERNAL_ERROR
             }
-            
 
             return {
                 response: { message: "Success" },

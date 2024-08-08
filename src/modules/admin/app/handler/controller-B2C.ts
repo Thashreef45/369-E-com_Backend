@@ -30,13 +30,14 @@ import GetProduct from "../usecase/B2C/get-a-product"
 import UpdateProduct from "../usecase/B2C/update-a-product"
 
 
-    //Membership
+//Membership
 import CreateMembership from "../usecase/B2C/create-membership"
 import UpdateMembership from "../usecase/B2C/update-membership"
 
-    //Order Management
+//Order Management
 import FetchOrders from "../usecase/B2C/fetch-orders"
 import FetchAOrder from "../usecase/B2C/fetch-a-order"
+import UpdateOrder from "../usecase/B2C/update-order"
 
 
 
@@ -67,8 +68,8 @@ export const login = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
     const data = {
         email: req.body?.email,
-        whatsapp : req.body?.whatsapp,
-        phone :  req.body?.phone // from  middleware
+        whatsapp: req.body?.whatsapp,
+        phone: req.body?.phone // from  middleware
     }
     const dependencies = {
         repository,
@@ -265,17 +266,24 @@ export const updateMembership = async (req: Request, res: Response) => {
 
 
 
-// fetch orders
+/** Fetch orders by queries -- {status,data,page_no,limit} */
 export const fetchOrders = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        fetchAdminProducts : productPublisher.getProducts,
-        fetchOrdersWithIds : orderPublisher.fetchOrdersWithIds
+        fetchAdminProducts: productPublisher.getProducts,
+        fetchOrdersWithIds: orderPublisher.fetchOrdersWithIds
     }
 
-    const data = { 
-        email : req.body?.email,
-        status : req.query?.status as string
+    const data = {
+        email: req.body?.email,
+        status: req.query?.status as string,
+    
+        startDate: req.query?.startDate as string,
+        endDate: req.query?.endDate as string,
+        
+        page_no: parseInt(req.query?.page_no as string, 10),
+        limit: parseInt(req.query?.limit as string, 10)
+
     }
 
     const interactor = new FetchOrders(dependencies)
@@ -284,18 +292,20 @@ export const fetchOrders = async (req: Request, res: Response) => {
 }
 
 
+
+
 /** Fetch a order with ownerId and status */
 export const fetchAOrder = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
-        fetchOrder : orderPublisher.fetchOrder,
-        fetchProduct : productPublisher.getProduct,
-        fetchUser : userPublisher.fetchUserById
+        fetchOrder: orderPublisher.fetchOrder,
+        fetchProduct: productPublisher.getProduct,
+        fetchUser: userPublisher.fetchUserById
     }
 
     const data = {
-        email : req.body?.email,
-        orderId : req.params.orderId
+        email: req.body?.email,
+        orderId: req.params.orderId
     }
 
     const interactor = new FetchAOrder(dependencies)
@@ -306,15 +316,21 @@ export const fetchAOrder = async (req: Request, res: Response) => {
 
 
 
+/** Update order status */
 export const updateOrderStatus = async (req: Request, res: Response) => {
-    // const dependencies = {
-    //     repository,
-    // }
-    // const data = { ...req.body }
+    const dependencies = {
+        repository,
+        updateOrder: orderPublisher.updateOrderStatus,
+    }
 
-    // const interactor = new UpdateMembership(dependencies)
-    // const output = await interactor.execute(data)
-    // res.status(output.status).json(output.response)
+    const data = {
+        email: req.body?.email,
+        orderId: req.params.orderId
+    }
+
+    const interactor = new UpdateOrder(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
 }
 
 

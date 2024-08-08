@@ -1,26 +1,28 @@
-import {sign,verify} from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 import env from '../config/environment'
 
 
 // Common function to generate token
-const generateToken = (email :string, time:string) => {
-    
-    const payload = { email : email,role : "vendor" }
+const generateToken = (email: string, SIGNATURE : string, time: string) => {
 
-    return sign(payload,env.JWT_SIGNATURE,{expiresIn:time})
+    const payload = { email: email, role: "vendor" }
+
+    // return sign(payload, env.JWT_SIGNATURE, { expiresIn: time })
+    return sign(payload, SIGNATURE, { expiresIn: time })
+
 }
 
 
 // Generate token for 5 minute
-const createTempToken = (email : string) : string => {
-    const token = generateToken(email,'5m')
+const createOtpToken = (email: string): string => {
+    const token = generateToken(email,env.JWT_OTP_SIGNATURE, '5m')
     return token
 }
 
 
-//Generate token for 12 hour
-const createToken = (email : string) : string => {
-    const token = generateToken(email,'14h')
+//Generate token for 14 hour
+const createToken = (email: string): string => {
+    const token = generateToken(email,env.JWT_SIGNATURE, '14h')
     return token
 }
 
@@ -29,5 +31,5 @@ const createToken = (email : string) : string => {
 
 export {
     createToken,
-    createTempToken,
+    createOtpToken,
 } 

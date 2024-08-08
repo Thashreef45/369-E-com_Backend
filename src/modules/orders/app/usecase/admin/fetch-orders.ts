@@ -11,7 +11,7 @@ class FetchOrders {
     async execute(data: Input): Promise<Output> {
 
 
-        const orders = this.repository.fetchOrdersWithProductIds(data) //temporarily passing as 
+        const orders = this.repository.fetchOrdersWithProductIds(data)
         return orders
     }
 }
@@ -22,6 +22,12 @@ export default FetchOrders
 interface Input {
     productIds: string[]
     status: string
+    
+    /********* */
+    startDate?: string;
+    endDate?: string;
+    page_no?: number;
+    limit?: number;
 }
 
 interface Output {

@@ -81,16 +81,16 @@ class FetchOrders {
             success: false
         }
 
-        //checking status - valid or not
-        if (data.status !== 'initiated' && data.status !== 'shipped'
-            && data.status !== 'outForDelivery' && data.status !== 'cancelled' && data.status !== 'delivered'
-        ) {
-            return {
-                message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
-                status: StatusCode.BAD_REQUEST,
-                success: false
-            }
+
+        //check status valid or not
+        const validStatuses = ['initiated', 'shipped', 'outForDelivery', 'cancelled', 'delivered']
+
+        if (!validStatuses.includes(data.status)) return {
+            message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
+            status: StatusCode.BAD_REQUEST,
+            success: false
         }
+
 
         return {
             message: "",

@@ -24,7 +24,9 @@ interface IRepository {
 
 
     /** Fetch orders with product ids and orders status */
-    fetchOrdersWithProductIds(data:{productIds:string[],status:string}): Promise<any> //have to change query to status
+    fetchOrdersWithProductIds(data:
+         { productIds: string[], status: string, startDate?: string, endDate?: string, page_no?: number, limit?: number }
+    ): Promise<any>
 
 
     /** Cancel order */

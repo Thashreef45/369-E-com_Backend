@@ -8,6 +8,8 @@ interface IRepository {
 
     verifyOtp(email: string): Promise<any>
 
+    updateNewOTP(data:{otp:string,email:string}) : Promise<any>
+
     fetchVendorWithId(id: string): Promise<any>
     fetchVendorWithEmail(email: string): Promise<any>
     fetchVendorWithPhone(email: string): Promise<any>

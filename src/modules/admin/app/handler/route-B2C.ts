@@ -70,32 +70,16 @@ router.patch('/membership', controller.updateMembership)
 router.get('/orders', controller.fetchOrders)
 
 
+
 router.get('/order/:orderId', controller.fetchAOrder) 
 
 
-router.patch('/order', controller.updateOrderStatus) /// on work *<
+
+router.patch('/order', controller.updateOrderStatus)//done
 
 
 
-// router.get('/users',controller.fetchUsers)
-
-
-//pending
-
-
-//fetch a product
-
-
-
-
-
-
-//todo - -- pendings 
-
-
-//get a product
-
-//update a product
+// router.get('/users',controller.fetchUsers) *not importants
 
 
 

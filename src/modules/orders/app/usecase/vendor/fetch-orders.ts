@@ -25,7 +25,14 @@ export default FetchOrders
 interface Input {
     productIds: string[]
     status: string
+    
+    /********* */
+    startDate?: string;
+    endDate?: string;
+    page_no?: number;
+    limit?: number;
 }
+
 
 interface Dependencies {
     repository: IRepository
