@@ -28,7 +28,6 @@ class FetchOrders {
 
         try {
 
-
             //fetch admin products
             const adminProducts = await this.fetchAdminProducts({})
 
@@ -40,7 +39,7 @@ class FetchOrders {
 
             //params for fetching orders
             const params = {
-                productIds, status: data.status ,startDate: data.startDate,
+                productIds, status: data.status, startDate: data.startDate,
                 endDate: data.endDate, page_no: data.page_no, limit: data.limit
             }
             // fetch  orders
@@ -50,12 +49,11 @@ class FetchOrders {
 
             const resData = this.OrderMapper(orders, adminProducts)
 
-
-
             return {
                 response: { message: "Success", data: resData },
                 status: StatusCode.OK
             }
+
         } catch (error) {
 
             return {
@@ -72,7 +70,7 @@ class FetchOrders {
 
 
     /** Method for createing array of product ids */
-    private createProductIds(data: { _id: string }[]) {
+    private createProductIds(data: { _id: string }[]): string[] {
         return data.map(x => x._id)
     }
 
@@ -87,15 +85,36 @@ class FetchOrders {
 
         //check status valid or not
         const validStatuses = ['initiated', 'shipped', 'outForDelivery', 'cancelled', 'delivered']
-
-
         //checking status - valid or not
         if (!validStatuses.includes(data.status)) return {
             message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
             status: StatusCode.BAD_REQUEST,
             success: false
         }
-        
+
+        //validate Date
+        const validDates = this.ValidateDate(data)
+        if (!validDates.success) return {
+            message: validDates.message,
+            status: validDates.status,
+            success: validDates.success
+        }
+
+
+        //check limit 
+        if (data.limit && isNaN(data.limit)) return {
+            message: "Invalid limit value. It must be a number.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        //check page_no
+        if (data.page_no && isNaN(data.page_no)) return {
+            message: "Invalid page_number. It must be a number.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
 
         return {
             message: "",
@@ -103,6 +122,51 @@ class FetchOrders {
             success: true
         }
     }
+
+
+
+    /** Method validates the dates */
+    private ValidateDate(data: { startDate?: string, endDate?: string }): { message: string, status: StatusCode, success: boolean } {
+
+        if (data.startDate || data.endDate) {
+            let startDate: any, endDate: any;
+
+            if (data.startDate) {
+                startDate = new Date(data.startDate as string)
+                if (isNaN(startDate.getTime())) return {
+                    message: "Invalid start date format",
+                    status: StatusCode.BAD_REQUEST,
+                    success: false
+                };
+            }
+
+            if (data.endDate) {
+                endDate = new Date(data.endDate as string)
+                if (isNaN(endDate.getTime())) return {
+                    message: "Invalid end date format",
+                    status: StatusCode.BAD_REQUEST,
+                    success: false
+                };
+            }
+
+            // Optional: Check if startDate > endDate
+            if (startDate && endDate && startDate > endDate) return {
+                message: "Start date cannot be after end date",
+                status: StatusCode.BAD_REQUEST,
+                success: false
+            };
+
+            // Proceed with further logic using valid startDate and endDate
+        }
+
+        // default
+        return {
+            message: "",
+            status: StatusCode.OK,
+            success: true
+        }
+    }
+
 
 
     /** Method for mapping order data and attaching product data */
@@ -131,7 +195,6 @@ class FetchOrders {
                 total: orders[i].price * orders[i].quantity
             })
         }
-
         return arr
     }
 }
@@ -158,7 +221,8 @@ interface Output {
 
 interface Dependencies {
     repository: IRepository
-    fetchAdminProducts({ }): Promise<any>
+
+    fetchAdminProducts({}): Promise<any>
 
     fetchOrdersWithIds(data:
         {

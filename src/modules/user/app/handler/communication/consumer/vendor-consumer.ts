@@ -40,5 +40,5 @@ export const fetchUserById = async (userId: string) => {
     const interactor = new FetchUserById(dependencies)
     const output = await interactor.execute(data)
     return output
-
+    
 }

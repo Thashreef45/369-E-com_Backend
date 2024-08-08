@@ -7,19 +7,19 @@ import StatusCode from "../../../infrastructure/config/staus-code"
 class CheckoutUserCart {
 
     private repository: IRepository
-    
+
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
     }
 
     async execute(data: Input[]): Promise<Output> {
 
-        
-        
+
+
         try {
-            
+
             const productIds = this.createIdArray(data)
-            const products = this.repository.getProducts(productIds)
+            const products = await this.repository.getProducts(productIds)
 
 
             //check that every product is in stock
@@ -27,7 +27,7 @@ class CheckoutUserCart {
             if (!isInStock) return {
                 response: { message: "Product is not stock" },
                 status: StatusCode.BAD_REQUEST,
-                success : false
+                success: false
             }
 
 
@@ -36,15 +36,15 @@ class CheckoutUserCart {
             return {
                 response: { message: "Success" },
                 status: StatusCode.OK,
-                success : true
+                success: true
             }
 
         } catch (error) {
 
             return {
-                response : { message : "Error fetching product details"},
-                status : StatusCode.INTERNAL_ERROR,
-                success : false
+                response: { message: "Error fetching product details" },
+                status: StatusCode.INTERNAL_ERROR,
+                success: false
             }
         }
     }
@@ -82,7 +82,7 @@ interface Input {
 interface Output {
     response: { message: string },
     status: StatusCode
-    success : boolean
+    success: boolean
 }
 
 interface Dependencies {

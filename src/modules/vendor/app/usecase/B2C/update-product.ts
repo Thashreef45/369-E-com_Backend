@@ -36,17 +36,6 @@ class UpdateProduct {
                 status: StatusCode.NOT_FOUND
             }
 
-
-
-            // check pricing , offer and conflicts
-            const checkPricing = this.checkPrice(data.actualPrice, data.price, data.offer)
-            if (!checkPricing.success) return {
-                response: { message: checkPricing.message },
-                status: checkPricing.status
-            }
-
-
-
             // create new product
             const updated: Output = await this.updateProduct({ ...data, ownerId: vendor._id })
             return {
@@ -67,7 +56,7 @@ class UpdateProduct {
 
 
     // method for input credential checking 
-    credentialCheck(data: Input): { success: boolean, message: string, status: StatusCode } {
+    private credentialCheck(data: Input): { success: boolean, message: string, status: StatusCode } {
         // check input credentials
         if (!data.productId || !data.name || !data.price || !data.stock
             || !data.description || !data.images || !data.thumbnail ||
@@ -88,8 +77,10 @@ class UpdateProduct {
             typeof data.price !== 'number' ||
             typeof data.categoryId !== 'string' ||
             typeof data.subCategoryId !== 'string' ||
+
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image !== 'string') ||
+
             typeof data.offer !== 'boolean'
         ) return {
             message: "Credentials type not matching",
@@ -104,6 +95,44 @@ class UpdateProduct {
             success: false
         }
 
+        //check name length
+        if (data.name.length > 10 || data.name.length < 3) return {
+            message: "Name length should between 3 to 10 ",
+            status: StatusCode.BAD_REQUEST, success: false
+        }
+
+        //check description
+        if (data.description.length > 250 || data.description.length < 50) return {
+            message: "Description length should be between 50 and 250 characters",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        //check images 
+        if (data.images.length > 5) return {
+            message: "You can upload a maximum of 5 images.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        //check pricing
+        if (data.price < 1) return {
+            message: "Price should be at least one",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        // check pricing , offer and conflicts
+        const checkPricing = this.checkPrice(data.actualPrice, data.price, data.offer)
+        if (!checkPricing.success) return {
+            message: checkPricing.message,
+            status: checkPricing.status,
+            success: false
+        }
+
+
         // success full
         return { success: true, message: "", status: StatusCode.OK, }
     }
@@ -111,7 +140,7 @@ class UpdateProduct {
 
 
     /** check price and actual price with offer */
-    checkPrice(actualPrice: number, price: number, offer: boolean)
+    private checkPrice(actualPrice: number, price: number, offer: boolean)
         : { message: string, status: StatusCode, success: boolean } {
 
 

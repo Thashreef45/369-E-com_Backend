@@ -205,8 +205,13 @@ export const getAllOrders = async (req: Request, res: Response) => {
 
     const data = {
         email: req.body?.email,
-        status: req.query?.status as string
-        // startDate , endDate
+        status: req.query?.status as string,
+    
+        startDate: req.query?.startDate as string,
+        endDate: req.query?.endDate as string,
+        
+        page_no: parseInt(req.query?.page_no as string, 10),
+        limit: parseInt(req.query?.limit as string, 10)
     }
 
     const interactor = new FetchOrders(dependencies)

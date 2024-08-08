@@ -3,7 +3,7 @@ import IRepository from '../../../infrastructure/interface/IRepository'
 
 class AddProduct {
 
-    private createProduct
+    private createProduct: (data: Input & {ownerId:string}) => Promise<Output>
     private repository: IRepository
 
     constructor(dependencies: Dependencies) {
@@ -95,6 +95,13 @@ class AddProduct {
             success: false
         }
 
+        //check images 
+        if (data.images.length > 5) return {
+            message: "You can upload a maximum of 5 images.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
 
         //check pricing
         if (data.price < 1) return {
@@ -132,6 +139,6 @@ interface Output {
 }
 
 interface Dependencies {
-    createProduct(data: Input): any
+    createProduct(data: Input & {ownerId:string}): Promise<Output>
     repository: IRepository
 }

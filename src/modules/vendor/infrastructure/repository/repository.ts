@@ -33,6 +33,8 @@ class Repository implements IRepository {
         }
     }
 
+
+
     async updateNewOTP(data: { otp: string, email: string }): Promise<any> {
 
         try {
@@ -43,7 +45,7 @@ class Repository implements IRepository {
                 }
             )
         } catch (error) {
-            throw new Error(error)
+            throw new Error("Error updatin otp")
         }
     }
 
@@ -106,7 +108,7 @@ class Repository implements IRepository {
             const vendors = await vendorModel.find({ active: false })
             return vendors
         } catch (error) {
-            throw new Error(error)
+            throw new Error("Error fetching vendors")
         }
     }
 
@@ -127,7 +129,7 @@ class Repository implements IRepository {
             return updated
 
         } catch (error) {
-            throw new Error(error)
+            throw new Error("Error updating vendor")
         }
     }
 
