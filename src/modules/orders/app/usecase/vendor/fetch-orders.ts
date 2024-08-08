@@ -1,4 +1,3 @@
-import StatusCode from "../../../infrastructure/config/staus-code"
 import IRepository from "../../../infrastructure/interface/IRepository"
 
 
@@ -13,7 +12,7 @@ class FetchOrders {
 
     async execute(data: Input): Promise<any> {
 
-        const orders = this.repository.fetchOrdersWithProductIds(data)
+        const orders = await this.repository.fetchOrdersWithProductIds(data)
         return orders
 
     }
@@ -26,7 +25,6 @@ interface Input {
     productIds: string[]
     status: string
     
-    /********* */
     startDate?: string;
     endDate?: string;
     page_no?: number;

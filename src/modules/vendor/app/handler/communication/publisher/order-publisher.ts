@@ -1,7 +1,13 @@
 import * as orderConsumer from '../../../../../orders/app/event-handler/vendor'
 
+
 /** fetch orders with productIds,with order status */
-export const fetchOrdersWithIds = async (data: { productIds: string[], status: string }): Promise<any> => {
+export const fetchOrdersWithIds = async (data:
+    {
+        productIds: string[], status: string, startDate?: string,
+        endDate?: string, page_no?: number, limit?: number;
+    }
+): Promise<any> => {
 
     const output = await orderConsumer.fetchOrdersWithIds(data)
     return output

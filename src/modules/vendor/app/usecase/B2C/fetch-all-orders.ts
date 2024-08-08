@@ -7,7 +7,10 @@ class FetchOrders {
 
     private repository: IRepository
     private getOwnerProducts: (data: { ownerId: string, query: any }) => Promise<Proudct[]>
-    private fetchOrdersWithIds: (data: { productIds: string[], status: string }) => Promise<Order[]>
+    private fetchOrdersWithIds: (data: {
+        productIds: string[], status: string, startDate?: string,
+        endDate?: string, page_no?: number, limit?: number;
+    }) => Promise<Order[]>
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -81,17 +84,83 @@ class FetchOrders {
             success: false
         }
 
-
         //check status valid or not
         const validStatuses = ['initiated', 'shipped', 'outForDelivery', 'cancelled', 'delivered']
-
+        //checking status - valid or not
         if (!validStatuses.includes(data.status)) return {
             message: 'Invalid order status provided. Valid statuses are: initiated, shipped, out for delivery, cancelled and delivered',
             status: StatusCode.BAD_REQUEST,
             success: false
         }
 
+        //validate Date
+        const validDates = this.ValidateDate(data)
+        if (!validDates.success) return {
+            message: validDates.message,
+            status: validDates.status,
+            success: validDates.success
+        }
 
+
+        //check limit 
+        if (data.limit && isNaN(data.limit)) return {
+            message: "Invalid limit value. It must be a number.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        //check page_no
+        if (data.page_no && isNaN(data.page_no)) return {
+            message: "Invalid page_number. It must be a number.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        return {
+            message: "",
+            status: StatusCode.OK,
+            success: true
+        }
+    }
+
+
+
+    /** Method validates the dates */
+    private ValidateDate(data: { startDate?: string, endDate?: string }): { message: string, status: StatusCode, success: boolean } {
+
+        if (data.startDate || data.endDate) {
+            let startDate: any, endDate: any;
+
+            if (data.startDate) {
+                startDate = new Date(data.startDate as string)
+                if (isNaN(startDate.getTime())) return {
+                    message: "Invalid start date format",
+                    status: StatusCode.BAD_REQUEST,
+                    success: false
+                };
+            }
+
+            if (data.endDate) {
+                endDate = new Date(data.endDate as string)
+                if (isNaN(endDate.getTime())) return {
+                    message: "Invalid end date format",
+                    status: StatusCode.BAD_REQUEST,
+                    success: false
+                };
+            }
+
+            // Optional: Check if startDate > endDate
+            if (startDate && endDate && startDate > endDate) return {
+                message: "Start date cannot be after end date",
+                status: StatusCode.BAD_REQUEST,
+                success: false
+            };
+
+            // Proceed with further logic using valid startDate and endDate
+        }
+
+        // default
         return {
             message: "",
             status: StatusCode.OK,
@@ -138,6 +207,11 @@ export default FetchOrders
 interface Input {
     email: string
     status: string
+
+    startDate?: string;
+    endDate?: string;
+    page_no?: number;
+    limit?: number;
 }
 
 
@@ -151,7 +225,12 @@ interface Dependencies {
 
     getOwnerProducts(data: { ownerId: string, query: any }): Promise<Proudct[]>
 
-    fetchOrdersWithIds(data: { productIds: string[], status: string }): Promise<Order[]>
+    fetchOrdersWithIds(data:
+        {
+            productIds: string[], status: string, startDate?: string,
+            endDate?: string, page_no?: number, limit?: number;
+        }
+    ): Promise<Order[]>
 }
 
 

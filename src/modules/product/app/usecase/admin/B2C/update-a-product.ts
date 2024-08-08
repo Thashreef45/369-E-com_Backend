@@ -31,7 +31,7 @@ class UpdateProduct {
 
 
             //check category
-            const isCatgoryExist = this.repository.getCategoryById(data.categoryId)
+            const isCatgoryExist = await this.repository.getCategoryById(data.categoryId)
             if (!isCatgoryExist) return {
                 response: { message: "Category not exist" },
                 status: StatusCode.NOT_FOUND

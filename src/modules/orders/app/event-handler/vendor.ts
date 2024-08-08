@@ -16,11 +16,16 @@ const repository = new Repository()
 
 
 /** Fetch orders with product ids with matching status*/
-export const fetchOrdersWithIds = async(data: { productIds: string[], status: string }): Promise<any> => {
-    const dependencies = { //**((((())))) */ query
+export const fetchOrdersWithIds = async (data:
+    {
+        productIds: string[], status: string, startDate?: string,
+        endDate?: string, page_no?: number, limit?: number;
+    }
+): Promise<any> => {
+    const dependencies = {
         repository
     }
-    
+
     const interactor = new FetchOrders(dependencies)
     const output = await interactor.execute(data)
     return output
@@ -29,12 +34,12 @@ export const fetchOrdersWithIds = async(data: { productIds: string[], status: st
 
 
 /** Fetch a order with orderId*/
-export const fetchAOrder = async(orderId:string): Promise<any> => {
+export const fetchAOrder = async (orderId: string): Promise<any> => {
     const dependencies = {
         repository
     }
-    const data = {orderId}
-    
+    const data = { orderId }
+
     const interactor = new FetchAOrder(dependencies)
     const output = await interactor.execute(data)
     return output
@@ -43,13 +48,13 @@ export const fetchAOrder = async(orderId:string): Promise<any> => {
 
 
 /** Update order status orderId*/
-export const updateOrderStatus = async(data: { ownerId: string, orderId: string }): Promise<any> => {
+export const updateOrderStatus = async (data: { ownerId: string, orderId: string }): Promise<any> => {
     const dependencies = {
         repository,
-        fetchProduct : productPublisher.fetchProduct
+        fetchProduct: productPublisher.fetchProduct
     }
     // const data = **{}
-    
+
     const interactor = new UpdateOrderStatus(dependencies)
     const output = await interactor.execute(data)
     return output

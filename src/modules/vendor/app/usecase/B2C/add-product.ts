@@ -6,7 +6,7 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class CreateProduct {
 
     private repository: IRepository
-    private createProduct
+    private createProduct : any
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -75,8 +75,10 @@ class CreateProduct {
             typeof data.price !== 'number' ||
             typeof data.categoryId !== 'string' ||
             typeof data.subCategoryId !== 'string' ||
+
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image !== 'string') 
+
         ) return {
             message: "Credentials type not matching",
             status: StatusCode.BAD_REQUEST,
@@ -85,6 +87,35 @@ class CreateProduct {
 
         if(data.stock < 25) return {
             message: "Stock should be more than 25",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+        
+
+        //check name length
+        if (data.name.length > 10 || data.name.length < 3) return {
+            message: "Name length should between 3 to 10 ",
+            status: StatusCode.BAD_REQUEST, success: false
+        }
+
+        //check description
+        if (data.description.length > 250 || data.description.length < 50) return {
+            message: "Description length should be between 50 and 250 characters",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        //check images 
+        if (data.images.length > 5) return {
+            message: "You can upload a maximum of 5 images.",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        //check pricing
+        if (data.price < 1) return {
+            message: "Price should be at least one",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
@@ -124,5 +155,4 @@ interface Dependencies {
 
     repository: IRepository
     createProduct(data: Input & { ownerId: string, isAdmin: boolean }): Promise<Output>
-    // createToken(email: string): string
 }
