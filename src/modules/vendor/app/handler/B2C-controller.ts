@@ -160,14 +160,14 @@ export const getProduct = async (req: Request, res: Response) => {
 
 }
 
-// Edit a product
+/** Edit a product */
 export const updateProduct = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
         updateProduct: productPublisher.updateProduct
     }
 
-    const data = { ...req.body } // --- 
+    const data = { ...req.body }
 
     const interactor = new UpdateProduct(dependencies)
     const output = await interactor.execute(data)

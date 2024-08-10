@@ -284,7 +284,6 @@ export const fetchOrders = async (req: Request, res: Response) => {
         
         page_no: parseInt(req.query?.page_no as string, 10),
         limit: parseInt(req.query?.limit as string, 10)
-
     }
 
     const interactor = new FetchOrders(dependencies)

@@ -7,7 +7,7 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 class UpdateProduct {
 
     private repository: IRepository
-    private updateProduct
+    private updateProduct: (data: Input & { ownerId: string}) => Promise<Output>
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
@@ -42,6 +42,7 @@ class UpdateProduct {
                 response: updated.response,
                 status: updated.status
             }
+            
 
         } catch (error) {
 
@@ -200,6 +201,6 @@ interface Output {
 interface Dependencies {
 
     repository: IRepository
-    updateProduct(data: Input & { ownerId: string, isAdmin: boolean }): Promise<Output>
+    updateProduct(data: Input & { ownerId: string}): Promise<Output>
     // createToken(email: string): string
 }

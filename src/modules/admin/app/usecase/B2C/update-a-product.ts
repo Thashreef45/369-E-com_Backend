@@ -5,7 +5,7 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 
 class UpdateProduct {
 
-    private updateProduct
+    private updateProduct :(data:Input & {ownerId:string}) => Promise<Output>
     private repository: IRepository
 
     constructor(dependencies: Dependencies) {
@@ -42,7 +42,7 @@ class UpdateProduct {
 
 
         //update product
-        const updated: Output = await this.updateProduct({...data,ownerId:admin._id})
+        const updated = await this.updateProduct({...data,ownerId:admin?._id})
         return {
             response: updated.response,
             status: updated.status
@@ -161,6 +161,6 @@ interface Output {
 
 
 interface Dependencies {
-    updateProduct(data: any): any
+    updateProduct(data:Input & {ownerId:string}): Promise<Output>
     repository: IRepository
 }
