@@ -265,6 +265,7 @@ class productRepository implements IRepository {
 
     /** Fetch owner products with ownerId (*vendor or any) optional query category,query */
     async fetchOwnerProducts(data:{ownerId:string,query:any}): Promise<any> {
+        
         const { queryObj } = createAdminQuery(data.query)
 
         try {

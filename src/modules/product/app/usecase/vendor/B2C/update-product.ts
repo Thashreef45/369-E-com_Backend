@@ -32,7 +32,7 @@ class UpdateProduct {
 
 
             //check category
-            const isCatgoryExist = this.repository.getCategoryById(data.categoryId)
+            const isCatgoryExist = await this.repository.getCategoryById(data.categoryId)
             if (!isCatgoryExist) return {
                 response: { message: "Category not exist" },
                 status: StatusCode.NOT_FOUND
@@ -56,7 +56,7 @@ class UpdateProduct {
 
 
         } catch (error) {
-            
+
             return {
                 response: { message: 'Error updating product' },
                 status: StatusCode.INTERNAL_ERROR
@@ -79,7 +79,7 @@ interface Input {
     description: string
     actualPrice: number
     price: number
-    offer: boolean 
+    offer: boolean
     images: string[]
     thumbnail: string
     stock: number
@@ -87,6 +87,8 @@ interface Input {
     subCategoryId: string
     ownerId: string,
 }
+
+
 
 interface Output {
     response: { message: string }

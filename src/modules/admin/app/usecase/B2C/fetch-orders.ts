@@ -47,7 +47,7 @@ class FetchOrders {
 
 
 
-            const resData = this.OrderMapper(orders, adminProducts)
+            const resData = this.#OrderMapper(orders, adminProducts)
 
             return {
                 response: { message: "Success", data: resData },
@@ -77,6 +77,8 @@ class FetchOrders {
 
     /** Method for checking input credentials */
     private checkInputCredentials(data: Input): { message: string, status: StatusCode, success: boolean } {
+
+        // check status
         if (!data.status) return {
             message: "Status is missing",
             status: StatusCode.BAD_REQUEST,
@@ -149,7 +151,7 @@ class FetchOrders {
                 };
             }
 
-            // Optional: Check if startDate > endDate
+            // Check if startDate > endDate
             if (startDate && endDate && startDate > endDate) return {
                 message: "Start date cannot be after end date",
                 status: StatusCode.BAD_REQUEST,
@@ -170,7 +172,7 @@ class FetchOrders {
 
 
     /** Method for mapping order data and attaching product data */
-    OrderMapper(orders: Order[], products: Proudct[]): OrderMapperOutput[] {
+    #OrderMapper(orders: Order[], products: Proudct[]): OrderMapperOutput[] {
 
         // create a object , key = id of products (for quick acccess)
         const productObj: { [key: string]: Proudct } = {};
@@ -266,6 +268,7 @@ interface Order {
     quantity: number
     price: number
     cod: boolean
+
     status: {
         pending: boolean
 
@@ -276,6 +279,7 @@ interface Order {
 
         cancelled: { status: boolean, time: Date }
     }
+
     userId: string
     addressId: string
 }
