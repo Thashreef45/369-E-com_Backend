@@ -11,6 +11,7 @@ import ActivatePost from "../../usecase/admin/B2B/activate-post"
 
 import FetchAdminProducts from "../../usecase/admin/B2B/fetch-admin-products"
 import FetchAProduct from "../../usecase/admin/B2B/fetch-a-product"
+import CreateSubCategory from "../../usecase/admin/B2B/create-sub-category"
 
 
 
@@ -25,14 +26,39 @@ export const createCategory = async (data: { name: string, description: string, 
         repository: repository
     }
     const params = {
-        name : data.name,
-        description : data.description
+        name: data.name,
+        description: data.description
     }
 
     const interactor = new CreateCategory(dependencies)
     const output = await interactor.execute(params)
     return output
 }
+
+//////////////////////////////////////////////////////////////////////////
+/** Create new sub-category */
+export const createSubCategory = async (data:
+    { categoryId: string, name: string, description: string, }
+) => {
+
+    const dependencies = {
+        repository: repository
+    }
+    const params = {
+        categoryId : data.categoryId,
+        name: data.name,
+        description: data.description
+    }
+
+    const interactor = new CreateSubCategory(dependencies)
+    const output = await interactor.execute(params)
+    return output
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
 
 
 
@@ -98,8 +124,8 @@ export const activatePost = async (data: { ownerId: string, productId: string })
 
 
 /** Fetch admin products */
-export const fetchAdminproducts = async (ownerId:string) => {
-    const params = { 
+export const fetchAdminproducts = async (ownerId: string) => {
+    const params = {
         ownerId
     }
     const dependencies = {
@@ -115,8 +141,8 @@ export const fetchAdminproducts = async (ownerId:string) => {
 
 
 /** Fetch a product with productId */
-export const fetchAProduct = async (productId:string) => {
-    const params = { 
+export const fetchAProduct = async (productId: string) => {
+    const params = {
         productId
     }
     const dependencies = {

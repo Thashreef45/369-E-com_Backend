@@ -98,9 +98,35 @@ class productRepository implements IRepository {
     }
 
 
+    /** fetch a single product by id  without feedbacks*/
+    async fetchProduct(id: string) {
+        return await productModel.findOne({ _id: id },{ feedbacks: 0 })
+    }
+
+
     // fetch a single product by name
     async getProductByName(name: string) {
         return await productModel.findOne({ name })
+    }
+
+
+    /** Fetch product feedbacks , with page_no and limit */
+    async getFeedbacks(data: { productId: string, page_no?: number, limit?: number }): Promise<any> {
+        // const skip = (page_no - 1) * limit;
+        const { limit, skip } = fetchFeedbackHelper(data.page_no, data.limit)
+
+        try {
+            const product = await productModel.findOne(
+                { _id: data.productId },
+                { feedbacks: { $slice: [skip, limit] } } // Fetch only the specified slice of feedbacks
+            );
+
+            const feedbacks = product?.feedbacks || [];
+            return feedbacks
+
+        } catch (error) {
+            throw new Error("Error fetching feedbacks")
+        }
     }
 
 
@@ -264,8 +290,8 @@ class productRepository implements IRepository {
 
 
     /** Fetch owner products with ownerId (*vendor or any) optional query category,query */
-    async fetchOwnerProducts(data:{ownerId:string,query:any}): Promise<any> {
-        
+    async fetchOwnerProducts(data: { ownerId: string, query: any }): Promise<any> {
+
         const { queryObj } = createAdminQuery(data.query)
 
         try {
@@ -360,7 +386,7 @@ interface Query {
 
 const createAdminQuery = (query: { category?: string, query?: string, subCategory?: string }) => {
 
-    if(typeof query != 'object') return {}
+    if (typeof query != 'object') return {}
 
     let queryObj:
         { name?: { $regex: string; $options: string }, categoryId?: string, subcategoryId?: string } = {};
@@ -379,6 +405,22 @@ const createAdminQuery = (query: { category?: string, query?: string, subCategor
 
     return { queryObj };
 };
+
+
+
+const fetchFeedbackHelper = (page_no?: number, limit?: number) => {
+    // Set default values if page_no or limit are undefined or less than 1
+    const effectivePageNo = page_no && page_no > 0 ? page_no : 1;
+    const effectiveLimit = limit && limit > 0 ? limit : 10;
+
+    // Calculate the number of documents to skip
+    const skip = (effectivePageNo - 1) * effectiveLimit;
+
+    return {
+        skip,
+        limit: effectiveLimit
+    };
+}
 
 
 

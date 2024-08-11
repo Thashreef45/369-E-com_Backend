@@ -32,10 +32,20 @@ interface IRepository {
     /** Fetch a product by productId */
     getProduct(id: string): Promise<any>
 
+    
+    /** fetch a single product by id  without feedbacks*/
+    fetchProduct(id: string): Promise<any>
+
+
     getProductByName(name: string): Promise<any>
 
     /** products fetching by array of product id */
     getProducts(data: string[]): Promise<any>
+
+
+    /** Fetch product feedbacks , with page_no and limit */
+    getFeedbacks(data: { productId: string, page_no?: number, limit?: number }): Promise<any>
+
 
     /** Method fetches all products based on query filtration and sorting options */
     getAllProducts(query: {
@@ -68,10 +78,10 @@ interface IRepository {
     checkOutCart(data: { productId: string, quantity: number }[]): Promise<any>
 
 
-    fetchAdminProducts(query:any): Promise<any>
+    fetchAdminProducts(query: any): Promise<any>
 
 
-    fetchOwnerProducts(data:{ownerId:string,query:any}): Promise<any>
+    fetchOwnerProducts(data: { ownerId: string, query: any }): Promise<any>
 
 }
 

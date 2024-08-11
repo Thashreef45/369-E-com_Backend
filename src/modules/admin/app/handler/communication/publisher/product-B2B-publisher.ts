@@ -13,6 +13,19 @@ export const createNewCategory = async (data: {
 
 
 
+/** create new sub-category */
+export const createSubCategory = async (data: {
+    categoryId: string
+    name: string,
+    description: string,
+}): Promise<any> => {
+
+    const response = await eventPublisher.createSubCategory(data)
+    return response
+}
+
+
+
 
 export const createNewProduct = async (data: {
     name: string,
@@ -74,7 +87,7 @@ export const acitvateProduct = async (data: {
 
 
 /**Fetch admin products */
-export const fetchAdminProducts = async (ownerId:string): Promise<any> => {
+export const fetchAdminProducts = async (ownerId: string): Promise<any> => {
 
     const response = await eventPublisher.fetchAdminproducts(ownerId)
     return response
@@ -84,7 +97,7 @@ export const fetchAdminProducts = async (ownerId:string): Promise<any> => {
 
 
 /**Fetch admin products */
-export const fetchAProduct = async (productId:string): Promise<any> => {
+export const fetchAProduct = async (productId: string): Promise<any> => {
 
     const response = await eventPublisher.fetchAProduct(productId)
     return response

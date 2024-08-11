@@ -2,17 +2,18 @@
 import repository from '../../../infrastructure/repository/repository-B2C'
 
 //usecase
-import GetProducts from "../../usecase/user/get-products"
-import GetAllProducts from '../../usecase/user/get-all-products'
-import GetAProduct from '../../usecase/user/get-a-product'
-import CheckoutUserCart from '../../usecase/user/checkout-cart'
-import FetchAllCategories from '../../usecase/user/fetch-all-categories'
-import RateProduct from '../../usecase/user/rate-product'
+import GetProducts from "../../usecase/user/B2C/get-products"
+import GetAllProducts from '../../usecase/user/B2C/get-all-products'
+import GetAProduct from '../../usecase/user/B2C/get-a-product'
+import CheckoutUserCart from '../../usecase/user/B2C/checkout-cart'
+import FetchAllCategories from '../../usecase/user/B2C/fetch-all-categories'
+import RateProduct from '../../usecase/user/B2C/rate-product'
+import FetchFeedbacks from '../../usecase/user/B2C/fetch-feedbacks'
 
 const productRepository = new repository()
 
 
-// get products by ids
+// get products by ids          --**cartdata/wishlist
 export const getProducts = async (data: string[]): Promise<any> => {
     data = data // ----
     const dependencies = {
@@ -31,6 +32,17 @@ export const getProduct = async (productId: string): Promise<any> => {
         repository: productRepository
     }
     const interactor = new GetAProduct(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
+// get product feedbacks
+export const getProductFeedbacks = async (data: { productId: string, page_no?: number, limit?: number }): Promise<any> => {
+    const dependencies = {
+        repository: productRepository
+    }
+    const interactor = new FetchFeedbacks(dependencies)
     const output = await interactor.execute(data)
     return output
 }

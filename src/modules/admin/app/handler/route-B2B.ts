@@ -9,6 +9,13 @@ const router = express()
 
 router.post('/category',controller.createCategory)
 
+// router.patch('/category',controller.createCategory)
+
+
+router.post('/sub-category',controller.createSubCategory)
+
+// router.patch('/sub-category',controller.createSubCategory)
+
 router.post('/product',controller.createProduct)
 
 router.patch('/product',controller.updateProduct)

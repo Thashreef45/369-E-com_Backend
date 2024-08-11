@@ -17,8 +17,29 @@ class MarketPlaceRepository implements IRepository {
             await newCategory.save()
             return newCategory
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error creating category")
+        }
+    }
+
+
+    async createSubCategory(data:
+        { categoryId: string; name: string; description: string; }
+    ): Promise<any> {
+        try {
+            const created = await categoryModel.updateOne(
+                { _id: data.categoryId },
+                {
+                    $push: {
+                        subcategories: {
+                            name: data.name,
+                            description: data.description
+                        }
+                    }
+                }
+            )
+        } catch (error) {
+            throw new Error("Error creating sub-category")
         }
     }
 
@@ -27,7 +48,7 @@ class MarketPlaceRepository implements IRepository {
             const category = await categoryModel.findOne({ _id: id })
             return category
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error fetching category")
         }
     }
@@ -39,14 +60,32 @@ class MarketPlaceRepository implements IRepository {
             const category = await categoryModel.findOne({ name })
             return category
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error fetching category")
         }
     }
 
-    // async fetchCategories () {
+    /** Fetch Category by subcategory name  */
+    async findCategoryBySubCategoryId(subCategoryId: string): Promise<any> {
+        try {
+            const category = await categoryModel.findOne(
+                { 'subcategories._id': subCategoryId }
+            )
+            return category
+        } catch (error: any) {
+            throw new Error("Error fetching category")
+        }
+    }
 
-    // }
+
+    async fetchAllCategories(): Promise<any> {
+        try {
+            const data = categoryModel.find()
+            return data
+        } catch (error: any) {
+            throw new Error('Error fetching Categories')
+        }
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +109,7 @@ class MarketPlaceRepository implements IRepository {
 
             return newProduct
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error creating product")
         }
     }
@@ -82,18 +121,18 @@ class MarketPlaceRepository implements IRepository {
         try {
             const product = await productModel.findOne({ _id: id, active: true })
             return product
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error finding product")
         }
     }
 
 
-     /** Fetch a product with its id  */
+    /** Fetch a product with its id  */
     async fetchProuct(id: string): Promise<any> {
         try {
-            const product = await productModel.findOne({ _id: id})
+            const product = await productModel.findOne({ _id: id })
             return product
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error finding product")
         }
     }
@@ -120,7 +159,7 @@ class MarketPlaceRepository implements IRepository {
                 }
             )
             return updated
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error updating product")
         }
 
@@ -140,7 +179,7 @@ class MarketPlaceRepository implements IRepository {
                 }
             )
             return updated
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error updating product")
         }
 
@@ -151,7 +190,7 @@ class MarketPlaceRepository implements IRepository {
     async fetchOwnerAllPosts(ownerId: string): Promise<any> {
         try {
             const posts = await productModel.find({ ownerId: ownerId })
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error fetching product")
         }
     }
@@ -162,7 +201,7 @@ class MarketPlaceRepository implements IRepository {
     async fetchOwnerPosts(ownerId: string, active: boolean): Promise<any> {
         try {
             const posts = await productModel.find({ ownerId: ownerId, active: active })
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error fetching product")
         }
     }
@@ -179,22 +218,8 @@ class MarketPlaceRepository implements IRepository {
             )
 
             return update
-        } catch (error) {
+        } catch (error: any) {
             throw new Error("Error updating product")
-        }
-    }
-
-    // async fetchProducts () {
-
-    // }
-
-
-    async fetchAllCategories(): Promise<any> {
-        try {
-            const data = categoryModel.find()
-            return data
-        } catch (error) {
-            throw new Error('Erro fetching Categories')
         }
     }
 

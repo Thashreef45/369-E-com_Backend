@@ -29,7 +29,7 @@ class CreateSubCategory {
 
             const created = await this.repository.createSubCategory(data)
             return {
-                response: { message: "Success", data: created },
+                response: { message: "Success"},
                 status: StatusCode.CREATED
             }
 

@@ -15,6 +15,7 @@ import ActivatePost from "../usecase/B2B/activate-product";
 import CreateCategory from "../usecase/B2B/create-category";
 import FetchAdminProducts from "../usecase/B2B/fetch-admin-products";
 import FetchAProduct from "../usecase/B2B/fetch-a-product";
+import CreateSubCategory from "../usecase/B2B/create-sub-category";
 
 
 
@@ -35,6 +36,26 @@ export const createCategory = async (req: Request, res: Response) => {
     }
 
     const interactor = new CreateCategory(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+/** Create new sub-category  */
+export const createSubCategory = async (req: Request, res: Response) => {
+
+    const dependencies = {
+        createSubCategory: productPublisher.createSubCategory,
+        repository
+    }
+
+    const data = {
+        categoryId : req.body.categoryId,
+        name: req.body?.name,
+        description: req.body?.description
+    }
+
+    const interactor = new CreateSubCategory(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }

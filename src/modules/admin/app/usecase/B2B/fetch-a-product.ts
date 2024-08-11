@@ -14,6 +14,13 @@ class FetchAProduct {
 
 
         try {
+
+            if (!data.productId) return {
+                response: { message: "Credentials missing" },
+                status: StatusCode.BAD_REQUEST
+            }
+            
+
             const product = await this.fetchAProduct(data.productId)
             if (!product) return {
                 response: { message: 'Product not found' },

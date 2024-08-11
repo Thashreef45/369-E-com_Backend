@@ -23,7 +23,7 @@ class UserRepository implements IRepository {
                 otp: otp
             })
             await newUser.save()
-        } catch (error) {
+        } catch (error: any) {
             // have to throw error
 
         }
@@ -32,12 +32,16 @@ class UserRepository implements IRepository {
     }
 
     async updateOtp(phone: string, otp: string) {
-        const result = await userModel.updateOne({ phone: phone }, {
-            $set: {
-                otp: otp
-            }
-        })
-
+        try {
+            const result = await userModel.updateOne({ phone: phone }, {
+                $set: {
+                    otp: otp
+                }
+            })
+            return result
+        } catch (error: any) {
+            throw new Error("Error updating otp")
+        }
         // todo : handling issuse on data fetching,
         // if(!result.matchedaddToCartCount){
         //     return { status:404 }
@@ -107,7 +111,7 @@ class UserRepository implements IRepository {
                 }
             )
             console.log(updated, 'here is your updated data')
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error removing product from wishlist')
         }
     }
@@ -129,7 +133,7 @@ class UserRepository implements IRepository {
                     }
                 }
             )
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error creating address')
         }
     }
@@ -150,7 +154,7 @@ class UserRepository implements IRepository {
                 }
             )
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error updating address')
         }
     }
@@ -170,7 +174,7 @@ class UserRepository implements IRepository {
                 }
             )
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error removing address')
         }
     }
@@ -198,7 +202,7 @@ class UserRepository implements IRepository {
             await created.save()
             return created
 
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error creating membership')
         }
     }
@@ -209,7 +213,7 @@ class UserRepository implements IRepository {
         try {
             const membership = await membershipModel.findOne({ name: name })
             return membership
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error finding membership')
         }
     }
@@ -220,7 +224,7 @@ class UserRepository implements IRepository {
         try {
             const membership = await membershipModel.findOne({ _id: id })
             return membership
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error finding membership')
         }
     }
@@ -245,8 +249,29 @@ class UserRepository implements IRepository {
             )
 
             return updated
-        } catch (error) {
+        } catch (error: any) {
             throw new Error('Error updating membership')
+        }
+    }
+
+
+
+    async fetchUsersByIds(userIds: string[]): Promise<any> {
+        try {
+
+            const users = await userModel.find(
+                {
+                    _id: {
+                        $in: userIds
+                    }
+                },
+                { name: 1, phone: 1 }
+            ).exec()
+
+            return users
+
+        } catch (error: any) {
+            throw new Error('Error fetching users')
         }
     }
 }

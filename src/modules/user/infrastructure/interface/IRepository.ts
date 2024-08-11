@@ -38,6 +38,11 @@ interface IRepository {
     }): Promise<any>
 
 
+
+    /** Method only fetchs the user name and phone */
+    fetchUsersByIds(userIds: string[]): Promise<any>
+
+
 }
 
 export default IRepository

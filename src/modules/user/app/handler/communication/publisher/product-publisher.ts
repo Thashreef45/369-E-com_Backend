@@ -40,9 +40,17 @@ export const checkoutCart = async (
 
 
 // product rating
-export const rateProduct = async (data: { userId: string, productId: string,comment: string,rating: number}) => {
+export const rateProduct = async (data: { userId: string, productId: string, comment: string, rating: number }) => {
 
     const response = await productPublisher.rateProduct(data)
     return response
 }
 
+
+
+/**fetch product feedbacks  */
+export const getProductFeedbacks = async (data: { productId: string, page_no?: number, limit?: number }) => {
+
+    const response = await productPublisher.getProductFeedbacks(data)
+    return response
+}

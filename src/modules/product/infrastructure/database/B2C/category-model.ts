@@ -27,7 +27,10 @@ const categorySchema = new Schema({
         trim: true,
     },
 
-    subcategories: [subcategorySchema],
+    subcategories: {
+        type: [subcategorySchema],
+        default: []
+    },
 }, { timestamps: true })
 
 
