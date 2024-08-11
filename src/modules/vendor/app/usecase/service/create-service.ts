@@ -2,13 +2,13 @@ import StatusCode from "../../../infrastructure/config/staus-code"
 import IRepository from "../../../infrastructure/interface/IRepository"
 
 
-class UpdateService {
+class CreateService {
 
-    private updateService: (data: Input & { ownerId: string }) => Promise<Output>
+    private createService: (data: Input & { ownerId: string }) => Promise<Output>
     private repository: IRepository
 
     constructor(dependencies: Dependencies) {
-        this.updateService = dependencies.updateService
+        this.createService = dependencies.createService
         this.repository = dependencies.repository
     }
 
@@ -22,14 +22,13 @@ class UpdateService {
         }
 
         try {
-            //fetch admin
-            const admin = await this.repository.findByEmail(data.email)
-            if (!admin) return {
-                response: { message: "Admin account not found" },
+            const vendor = await this.repository.fetchVendorWithEmail(data.email)
+            if (!vendor) return {
+                response: { message: "Vendor account not found" },
                 status: StatusCode.NOT_FOUND
             }
 
-            const created = await this.updateService({ ...data, ownerId: admin._id })
+            const created = await this.createService({ ...data, ownerId: vendor._id })
             return {
                 response: created.response,
                 status: created.status
@@ -37,7 +36,7 @@ class UpdateService {
         } catch (error) {
 
             return {
-                response: { message: "Error updating service" },
+                response: { message: "Error creating service" },
                 status: StatusCode.INTERNAL_ERROR
             }
         }
@@ -50,8 +49,7 @@ class UpdateService {
 
         // Check if all required fields are provided
         if (!data.name || !data.description || !data.thumbnail ||
-            !data.images || !data.categoryId || !data.subcategoryId || !data.serviceId
-
+            !data.images || !data.categoryId || !data.subcategoryId
         ) return {
             message: "Credentials missing",
             status: StatusCode.BAD_REQUEST,
@@ -61,7 +59,6 @@ class UpdateService {
 
         // Check input credential types
         if (
-            typeof data.serviceId !== 'string' ||
             typeof data.name !== 'string' ||
             typeof data.description !== 'string' ||
             typeof data.thumbnail !== 'string' ||
@@ -108,13 +105,6 @@ class UpdateService {
             success: false
         }
 
-        // Check serviceId
-        if (data.serviceId.length > 25) return {
-            message: "Invalid ServiceId",
-            status: StatusCode.BAD_REQUEST,
-            success: false
-        }
-
 
         // If all checks pass
         return {
@@ -127,13 +117,17 @@ class UpdateService {
 }
 
 
-export default UpdateService
+export default CreateService
 
 
 interface Input {
-    serviceId: string
-    name: string, description: string, thumbnail: string
-    images: string[], categoryId: string, subcategoryId: string
+    name: string
+    description: string
+    thumbnail: string
+    images: string[]
+    categoryId: string
+    subcategoryId: string
+
     email: string
 }
 
@@ -144,5 +138,5 @@ interface Output {
 
 interface Dependencies {
     repository: IRepository
-    updateService(data: Input & { ownerId: string }): Promise<Output>
+    createService(data: Input & { ownerId: string }): Promise<Output>
 }
