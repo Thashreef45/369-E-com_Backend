@@ -23,13 +23,13 @@ class UpdateService {
 
         try {
             //fetch admin
-            const admin = await this.repository.findByEmail(data.email)
-            if (!admin) return {
-                response: { message: "Admin account not found" },
+            const vendor = await this.repository.fetchVendorWithEmail(data.email)
+            if (!vendor) return {
+                response: { message: "Vendor account not found" },
                 status: StatusCode.NOT_FOUND
             }
 
-            const created = await this.updateService({ ...data, ownerId: admin._id })
+            const created = await this.updateService({ ...data, ownerId: vendor._id })
             return {
                 response: created.response,
                 status: created.status

@@ -73,7 +73,13 @@ interface IRepository {
 
 
     /** Fetch all services by ownerId for *vendor/admin */
-    fetchAllServiceByOwnerId(ownerId: string): Promise<any>
+    fetchAllServiceByOwnerId(data:
+        {
+            ownerId: string, query: {
+                category?: string, query?: string, subCategory?: string
+            }
+        }
+    ): Promise<any>
 
 
 }

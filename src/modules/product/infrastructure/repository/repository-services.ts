@@ -182,11 +182,36 @@ class ServiceRepository implements IRepository {
 
 
     async activateService(serviceId: string): Promise<any> {
+        try {
 
+            const updated = await serviceModel.updateOne(
+                { _id: serviceId },
+                {
+                    $set: { active: true }
+                }
+            )
+
+            return updated
+        } catch (error) {
+            throw new Error("Error updating service")
+
+        }
     }
 
     async deactivateService(serviceId: string): Promise<any> {
+        try {
 
+            const updated = await serviceModel.updateOne(
+                { _id: serviceId },
+                {
+                    $set: { active: false }
+                }
+            )
+            return updated
+        } catch (error) {
+            throw new Error("Error updating service")
+
+        }
     }
 
 
@@ -203,11 +228,56 @@ class ServiceRepository implements IRepository {
 
     }
 
-    async fetchAllServiceByOwnerId(ownerId: string): Promise<any> {
 
+    /** Fetch all services by ownerId for *vendor/admin */
+    async fetchAllServiceByOwnerId(data:
+        {
+            ownerId: string; query: { category?: string; query?: string; subCategory?: string; }
+        }
+    ): Promise<any> {
+
+        const Queryfilter = createOwnerQuery(data)
+
+        const projection = { images: 0 }
+
+        const services = await serviceModel.find(Queryfilter).select(projection)
+        return services
     }
 
 }
 
 
 export default ServiceRepository
+
+
+
+/** Function creates Query for fetchall Services */
+const createOwnerQuery = (data:
+    {
+        ownerId: string; query: { category?: string; query?: string; subCategory?: string; }
+    }
+) => {
+
+    const { ownerId, query } = data;
+
+    // Initialize the filter object with the ownerId
+    const filter: any = { ownerId };
+
+    // Add filters based on optional parameters
+    if (query.category) {
+        filter.categoryId = query.category;
+    }
+
+    if (query.subCategory) {
+        filter.subcategoryId = query.subCategory;
+    }
+
+    if (query.query) {
+        filter.$or = [
+            { name: { $regex: query.query, $options: 'i' } },  //  * 'i' handles Case-insensitive
+            { description: { $regex: query.query, $options: 'i' } }
+        ];
+    }
+
+    return filter;
+}

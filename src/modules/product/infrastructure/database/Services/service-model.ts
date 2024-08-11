@@ -15,11 +15,6 @@ const serviceSchema = new Schema({
         required: true,
         trim: true,
     },
-    // price: {
-    //     type: Number,
-    //     required: true,
-    //     min: 0,
-    // },
     thumbnail: {
         type: String,
         required: true,

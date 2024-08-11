@@ -5,95 +5,25 @@ import * as servicePublisher from '../handler/communication/publisher/service-pu
 
 
 //Repository
-import AdminRepository from "../../infrastructure/repository/admin-repository";
+import Repository from '../../infrastructure/repository/repository'
+
 
 
 //usecase
-import CreateCategory from "../usecase/services/create-category";
-import UpdateCategory from "../usecase/services/update-category";
-import CreateSubCategory from "../usecase/services/create-sub-category";
-import UpdateSubCategory from "../usecase/services/update-sub-category";
-import FetchAllCategories from "../usecase/services/fetch-all-categories";
-import CreateService from "../usecase/services/create-service";
-import UpdateService from "../usecase/services/update-service";
-import FetchAService from "../usecase/services/fetch-a-service";
-import DeActivateService from "../usecase/services/deactivate-service";
-import ActivateService from "../usecase/services/activate-service";
-import FetchAllServices from "../usecase/services/fetch-all-services";
+import FetchAllCategories from "../usecase/service/fetch-all-categories";
+
+import CreateService from "../usecase/service/create-service";
+import UpdateService from "../usecase/service/update-service";
+
+import FetchAllServices from "../usecase/service/fetch-all-services";
+import FetchAService from "../usecase/service/fetch-a-service";
+
+import DeActivateService from "../usecase/service/deactivate-service"
+import ActivateService from "../usecase/service/activate-service";
 
 
-const repository = new AdminRepository()
+const repository = new Repository()
 
-
-export const createCategory = async (req: Request, res: Response) => {
-
-    const data = {
-        name: req.body.name,
-        description: req.body.description
-    }
-    const dependencies = {
-        createCategory: servicePublisher.createCategory
-    }
-
-    const interactor = new CreateCategory(dependencies)
-    const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
-}
-
-
-
-/** Update category */
-export const updateCategory = async (req: Request, res: Response) => {
-
-    const data = {
-        categoryId: req.body?.categoryId,
-        name: req.body?.name,
-        description: req.body?.description
-    }
-    const dependencies = {
-        updateCategory: servicePublisher.updateCategory
-    }
-
-    const interactor = new UpdateCategory(dependencies)
-    const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
-}
-
-
-
-
-export const createSubCategory = async (req: Request, res: Response) => {
-    const data = {
-        categoryId: req.body?.categoryId,
-        name: req.body?.name,
-        description: req.body?.description
-    }
-    const dependencies = {
-        createSubCategory: servicePublisher.createSubCategory
-    }
-
-    const interactor = new CreateSubCategory(dependencies)
-    const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
-}
-
-
-export const updateSubCategory = async (req: Request, res: Response) => {
-
-    const data = {
-        subCategoryId: req.body?.subCategoryId,
-        name: req.body?.name,
-        description: req.body?.description
-    }
-    const dependencies = {
-        updateSubCategory: servicePublisher.updateSubCategory
-    }
-
-    const interactor = new UpdateSubCategory(dependencies)
-    const output = await interactor.execute(data)
-    res.status(output.status).json(output.response)
-
-}
 
 
 

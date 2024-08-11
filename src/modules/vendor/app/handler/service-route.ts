@@ -1,5 +1,5 @@
 import express from 'express'
-import * as controller from './controller-service'
+import * as controller from './service-controller'
 
 
 const router = express()
@@ -7,14 +7,6 @@ const router = express()
 
 
 // ====================== Category ======================
-
-router.post('/category',controller.createCategory)
-
-router.patch('/category',controller.updateCategory)
-
-router.post('/sub-category',controller.createSubCategory)
-
-router.patch('/sub-category',controller.updateSubCategory)
 
 router.get('/categories',controller.fetchAllCategories)
 
