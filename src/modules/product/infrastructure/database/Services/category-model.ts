@@ -34,6 +34,6 @@ const categorySchema = new Schema({
 }, { timestamps: true })
 
 
-const categoryModel = model('Category-Serivice', categorySchema,'Category-Serivice');
+const categoryModel = model('Category-Service', categorySchema,'Category-Service');
 
 export default categoryModel;

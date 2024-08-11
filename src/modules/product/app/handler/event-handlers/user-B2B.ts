@@ -6,9 +6,9 @@ import * as adminPublisher from '../../handler/publishers/admin-publisher'
 import * as vendorPublisher from '../../handler/publishers/vendor-publisher'
 
 //user case
-import FetchAllCategories from "../../usecase/user/B2B-fetch-categories"
-import FetchAllProducts from "../../usecase/user/B2B-fetch-products"
-import FetchAProduct from "../../usecase/user/B2B-get-a-product"
+import FetchAllCategories from "../../usecase/user/B2B/fetch-categories"
+import FetchAllProducts from "../../usecase/user/B2B/fetch-products"
+import FetchAProduct from "../../usecase/user/B2B/get-a-product"
 
 
 

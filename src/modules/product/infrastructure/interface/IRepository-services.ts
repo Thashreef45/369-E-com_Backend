@@ -60,16 +60,27 @@ interface IRepository {
     activateService(serviceId: string): Promise<any>
 
 
-    /** Fetch a service by serviceId */
+    /** Fetch a service by serviceId *admin/vendors*/
     fetchAServiceById(serviceId: string): Promise<any>
+
+
+    /** Fetch a service by serviceId *only if it is active */
+    fetchACtiveServiceById(serviceId: string): Promise<any>
+
 
 
     /** Fetch a service by service name */
     fetchAServiceByName(name: string): Promise<any>
 
 
-    /** Fetch all services by query filtration */
-    fetchAllService(query: any): Promise<any>
+    /** Fetch all services by optional query filtration */
+    fetchAllService(query:
+        {
+            category?: string, subCategory?: string, query?: string;
+            limit?: number, page_no?: number;
+        }
+
+    ): Promise<any>
 
 
     /** Fetch all services by ownerId for *vendor/admin */

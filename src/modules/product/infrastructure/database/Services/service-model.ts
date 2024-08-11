@@ -25,12 +25,12 @@ const serviceSchema = new Schema({
     },
     categoryId: {
         type: Schema.Types.ObjectId,
-        ref: 'Category-Serivice',
+        ref: 'Category-Service',
         required: true
     },
     subcategoryId: {
         type: Schema.Types.ObjectId,
-        ref: 'Category-Serivice.subcategories',
+        ref: 'Category-Service.subcategories',
         required: true
     },
 

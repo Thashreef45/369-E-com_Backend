@@ -4,7 +4,7 @@ import ServiceRepository from "../../../infrastructure/repository/repository-ser
 
 //usecase
 
-import FetchAllCategories from "../../usecase/admin/service/fetch-all-categories"
+import FetchAllCategories from "../../usecase/vendor/service/fetch-all-categories"
 
 import CreateService from "../../usecase/vendor/service/create-service"
 import FetchAService from "../../usecase/vendor/service/fetch-a-service"

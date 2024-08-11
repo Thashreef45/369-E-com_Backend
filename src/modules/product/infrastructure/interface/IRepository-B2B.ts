@@ -5,6 +5,9 @@ interface IRepository {
 
     createCategory(data: { name: string, description: string }): Promise<any>
 
+    createSubCategory(data: {categoryId :string, name: string, description: string }): Promise<any>
+
+
     findCategory(id: string): Promise<any>
 
 
@@ -14,6 +17,10 @@ interface IRepository {
 
     /** Find category with its name */
     findCategoryByName(name: string): Promise<any>
+
+
+    /** Fetch Category by subcategory name */
+    findCategoryBySubCategoryId(name: string): Promise<any>
 
 
 

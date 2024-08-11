@@ -16,32 +16,34 @@ import userRepository from '../../infrastructure/repository/user-repository'
 
 //services
 import generateOtp from '../../infrastructure/services/generate-otp'
-import { createAccessToken  ,createRefreshToken, createTempToken } from '../../infrastructure/services/generateToken'
+import { createAccessToken, createRefreshToken, createTempToken } from '../../infrastructure/services/generateToken'
 
 //usecase
-import Login_Signup from '../usecase/login-signup'
-import VerifyOtp from "../usecase/verify-otp";
-import GetCartItems from "../usecase/get-cart-items";
-import UpdateCartItem from "../usecase/update-cart";
-import AddToCart from "../usecase/add-to-cart";
-import DeletFromCart from "../usecase/remove-from-cart";
-import AddToWishlist from "../usecase/add-to-wishlist";
-import RemoveFromWishlist from "../usecase/remove-from-wishlist";
-import GetAllProducts from '../usecase/get-all-products'
-import AddNewAddress from "../usecase/add-new-address";
-import GetAddress from "../usecase/get-a-address";
-import DeleteAddress from "../usecase/remove-a-address";
-import UpdateAddress from "../usecase/update-a-address";
-import FetchAllAddress from "../usecase/fetch-all-address";
-import GetProduct from "../usecase/get-a-product";
-import FetchWishlist from "../usecase/fetch-user-wishlist";
-import CartCheckout from "../usecase/cart-checkout";
-import FetchAllCategories from "../usecase/fetch-all-categories";
-import ProductRating from "../usecase/product-rating";
-import FetchOrders from "../usecase/fetch-orders";
-import FetchAOrder from "../usecase/fetch-a-order";
-import ProductCheckout from "../usecase/product-checkout";
-import CancelOrder from "../usecase/cancel-order";
+import Login_Signup from '../usecase/B2C/login-signup'
+import VerifyOtp from "../usecase/B2C/verify-otp";
+import GetCartItems from "../usecase/B2C/get-cart-items";
+import UpdateCartItem from "../usecase/B2C/update-cart";
+import AddToCart from "../usecase/B2C/add-to-cart";
+import DeletFromCart from "../usecase/B2C/remove-from-cart";
+import AddToWishlist from "../usecase/B2C/add-to-wishlist";
+import RemoveFromWishlist from "../usecase/B2C/remove-from-wishlist";
+import GetAllProducts from '../usecase/B2C/get-all-products'
+import AddNewAddress from "../usecase/B2C/add-new-address";
+import GetAddress from "../usecase/B2C/get-a-address";
+import DeleteAddress from "../usecase/B2C/remove-a-address";
+import UpdateAddress from "../usecase/B2C/update-a-address";
+import FetchAllAddress from "../usecase/B2C/fetch-all-address";
+import GetProduct from "../usecase/B2C/get-a-product";
+import FetchWishlist from "../usecase/B2C/fetch-user-wishlist";
+import CartCheckout from "../usecase/B2C/cart-checkout";
+import FetchAllCategories from "../usecase/B2C/fetch-all-categories";
+import ProductRating from "../usecase/B2C/product-rating";
+import FetchOrders from "../usecase/B2C/fetch-orders";
+import FetchAOrder from "../usecase/B2C/fetch-a-order";
+import ProductCheckout from "../usecase/B2C/product-checkout";
+import CancelOrder from "../usecase/B2C/cancel-order";
+import ResendOTP from "../usecase/B2C/resend-otp";
+import FetchProductFeedbacks from "../usecase/B2C/fetch-feedbacks";
 
 
 
@@ -85,13 +87,36 @@ export const verifyOtp = async (req: Request, res: Response) => {
         otp: req.body?.otp
     }
     const dependencies = {
-        
+
         createAccessToken,
         createRefreshToken,
         repository
     }
 
     const interactor = new VerifyOtp(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+
+
+// verify otp 
+export const resendOtp = async (req: Request, res: Response) => {
+    const data = {
+        phone: req.body.phone,
+    }
+    const dependencies = {
+
+        generateOtp,
+        createToken: createTempToken,
+        sendOtp: notificationPublisher.sendLoginSignUpOtp,
+
+        repository
+    }
+
+    const interactor = new ResendOTP(dependencies)
     const output = await interactor.execute(data)
     responseHandler(req, res, output)
 }
@@ -266,6 +291,28 @@ export const fetchProduct = async (req: Request, res: Response) => {
     }
 
     const interactor = new GetProduct(dependencies)
+    const output = await interactor.execute(data)
+    responseHandler(req, res, output)
+}
+
+
+
+/** fetch  product feedbacks */
+export const fetchProductFeedbacks = async (req: Request, res: Response) => {
+
+    const data = {
+        productId: req.query.productId as string,
+        page_no: Number(req.query.page_no as string),
+        limit: Number(req.query.limit as string),
+        // GET /api/feedbacks?productId=123&limit=10&page_no=2
+    }
+    const dependencies = {
+        getProductFeedbacks : productPublisher.getProductFeedbacks,
+        repository
+        
+    }
+
+    const interactor = new FetchProductFeedbacks(dependencies)
     const output = await interactor.execute(data)
     responseHandler(req, res, output)
 }

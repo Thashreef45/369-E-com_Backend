@@ -3,10 +3,10 @@ import UserRepository from "../../../../infrastructure/repository/user-repositor
 
 
 
-import CreateMembership from "../../../usecase/create-membership"
-import UpdateMembership from "../../../usecase/update-membership"
+import CreateMembership from "../../../usecase/B2C/create-membership"
+import UpdateMembership from "../../../usecase/B2C/update-membership"
 
-import FetchUserById from "../../../usecase/fetch-user-by-id"
+import FetchUserById from "../../../usecase/B2C/fetch-user-by-id"
 
 
 //Repository instance

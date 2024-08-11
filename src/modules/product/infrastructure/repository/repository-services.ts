@@ -215,17 +215,54 @@ class ServiceRepository implements IRepository {
     }
 
 
-    async fetchAServiceById(serviceId: string): Promise<any> {
 
+    async fetchAServiceById(serviceId: string): Promise<any> {
+        try {
+            const service = await serviceModel.findOne({ _id: serviceId })
+            return service
+        } catch (error) {
+            throw new Error("Error fetching service")
+        }
     }
 
     async fetchAServiceByName(name: string): Promise<any> {
+        try {
+            const service = await serviceModel.findOne({ name: name })
+            return service
+        } catch (error) {
+            throw new Error("Error fetching service")
+        }
+    }
 
+    /** Fetch a service by id , only if it is active */
+    async fetchACtiveServiceById(serviceId: string): Promise<any> {
+        try {
+            const service = await serviceModel.findOne({ _id: serviceId, active: true })
+            return service
+        } catch (error) {
+            throw new Error("Error fetching service")
+        }
     }
 
 
-    async fetchAllService(query: any): Promise<any> {
+    /** Fetch all services by optional queries */
+    async fetchAllService(query:
+        {
+            category?: string, subCategory?: string, query?: string;
+            limit?: number, page_no?: number;
+        }
 
+    ): Promise<any> {
+
+        const { filter, options } = createUserQuery(query) // creating query
+        const projection = { images: 0, ownerId: 0, active: 0 }
+
+        try {
+            const services = await serviceModel.find(filter, projection, options)
+            return services
+        } catch (error) {
+            throw new Error("Error fetching services")
+        }
     }
 
 
@@ -281,3 +318,53 @@ const createOwnerQuery = (data:
 
     return filter;
 }
+
+
+
+/** Function creates Query for fetch all Services */
+const createUserQuery = (query:
+    {
+        category?: string, subCategory?: string, query?: string;
+        limit?: number, page_no?: number;
+    }
+
+) => {
+
+    const filter: any = { active: true };
+
+    // Add category filter if provided
+    if (query.category) {
+        filter.categoryId = query.category;
+    }
+
+    // Add subCategory filter if provided
+    if (query.subCategory) {
+        filter.subcategoryId = query.subCategory;
+    }
+
+    // Add search query filter for name or description
+    if (query.query) {
+        filter.$or = [
+            { name: { $regex: query.query, $options: 'i' } }, //  **'i' ---for case-insensitive
+            { description: { $regex: query.query, $options: 'i' } }
+        ];
+    }
+
+    // Default limit and pagination settings
+    const defaultLimit = 10;
+    const defaultPageNo = 1;
+
+    const limit = query.limit ?? defaultLimit;
+    const page_no = query.page_no ?? defaultPageNo;
+
+    // Pagination options
+    const options: any = {
+        limit: limit,
+        skip: (page_no - 1) * limit
+    };
+
+    return { filter, options };
+
+}
+
+
