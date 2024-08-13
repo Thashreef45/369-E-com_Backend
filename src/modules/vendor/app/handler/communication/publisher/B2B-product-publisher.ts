@@ -2,7 +2,12 @@ import * as vendorConsumer from '../../../../../product/app/handler/event-handle
 
 
 // create product 
-export const createProduct = async (data : any) => {
+export const createProduct = async (data:
+    {
+        name: string, description: string, thumbnail: string, images: string[]
+        categoryId: string, subCategoryId: string, ownerId: string
+    }
+) => {
 
     const response = await vendorConsumer.createProduct(data)
     return response
@@ -10,7 +15,7 @@ export const createProduct = async (data : any) => {
 
 
 //fetch product with id 
-export const getProduct = async (id:string) => {
+export const getProduct = async (id: string) => {
 
     const response = await vendorConsumer.getProduct(id)
     return response
@@ -19,7 +24,12 @@ export const getProduct = async (id:string) => {
 
 
 // update a product
-export const updateProduct = async (data :any) => {
+export const updateProduct = async (data:
+    {
+        productId: string, name: string, description: string, thumbnail: string,
+        images: string[], categoryId: string, subCategoryId: string, ownerId: string
+    }
+) => {
 
     const response = await vendorConsumer.updateProduct(data)
     return response
@@ -27,7 +37,7 @@ export const updateProduct = async (data :any) => {
 
 
 //remove product -- (remvoe post/inactivate)
-export const removeProduct = async (data : any) => {
+export const removeProduct = async (data: any) => {
 
     const response = await vendorConsumer.removeProduct(data)
     return response
@@ -36,17 +46,17 @@ export const removeProduct = async (data : any) => {
 
 
 // fetch all post
-export const fetchAllPost = async (data:{ownerId:string,query?:boolean|undefined}) => {
+export const fetchVendorProducts = async (data: { ownerId: string, active?: boolean | undefined }) => {
 
-    const response = await vendorConsumer.fetchAllPosts(data)
+    const response = await vendorConsumer.fetchVendorProducts(data)
     return response
 }
 
 
 
 // acitivate post
-export const activatePost = async (data:{ownerId:string,productId:string}) => {
+export const activateProduct = async (data: { ownerId: string, productId: string }) => {
 
-    const response = await vendorConsumer.activatePost(data)
+    const response = await vendorConsumer.activateProduct(data)
     return response
 }

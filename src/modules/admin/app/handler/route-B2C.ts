@@ -16,14 +16,18 @@ router.post('/profile',controller.updateProfile)
 //create category 
 router.post('/category', middleware, controller.createCategory)
 
+router.patch('/category', middleware, controller.updateCategory)
+
 
 //create subcategory 
 router.post('/subcategory', controller.createSubCategory)
 
 
+router.patch('/subcategory', controller.updateSubCategory)
+
 
 // get all catogery with subcategory
-router.get('/category', controller.fetchAllCategory)
+router.get('/categories', controller.fetchAllCategory)
 
 
 
@@ -57,6 +61,12 @@ router.patch('/product', controller.updateProduct)
 //==================== USER MEMBERSHIP ====================
 
 router.post('/membership', controller.createMembership)
+
+
+router.get('/membership', controller.createMembership)
+
+
+// router.get('/membership', controller.createMembership) // fetch all membership
 
 
 // edit membership

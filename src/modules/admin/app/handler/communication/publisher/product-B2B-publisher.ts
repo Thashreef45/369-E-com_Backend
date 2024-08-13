@@ -1,13 +1,25 @@
 import * as eventPublisher from '../../../../../product/app/handler/event-handlers/admin-B2B'
 // import StatusCode from '../../../../infrastructure/config/staus-code'
 
-
+/** create new category */
 export const createNewCategory = async (data: {
     name: string,
     description: string,
 }): Promise<any> => {
 
     const response = await eventPublisher.createCategory(data)
+    return response
+}
+
+
+/** Update category */
+export const updateCategory = async (data: {
+    categoryId: string
+    name: string,
+    description: string,
+}): Promise<any> => {
+
+    const response = await eventPublisher.updateCategory(data)
     return response
 }
 
@@ -25,15 +37,37 @@ export const createSubCategory = async (data: {
 }
 
 
+/** Update sub-category */
+export const updateSubCategory = async (data: {
+    subCategoryId: string
+    name: string,
+    description: string,
+}): Promise<any> => {
+
+    const response = await eventPublisher.updateSubCategory(data)
+    return response
+}
+
+
+/** Update sub-category */
+export const fetchCategories = async (): Promise<any> => {
+
+    const response = await eventPublisher.fetchCategories()
+    return response
+}
+
+
 
 
 export const createNewProduct = async (data: {
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[]
     categoryId: string,
+
+    subCategoryId: string
+
     ownerId: string
 }): Promise<any> => {
 
@@ -42,25 +76,16 @@ export const createNewProduct = async (data: {
 }
 
 
-export const updateProduct = async (data: {
-    productId: string,
-    name: string,
-    description: string,
-    price: number,
-    thumbnail: string,
-    images: string[],
-    categoryId: string,
-    ownerId: string
-}): Promise<any> => {
+export const updateProduct = async (data:
+    {
+        productId: string, name: string, description: string, thumbnail: string,
+        images: string[], categoryId: string, subCategoryId: string, ownerId: string
+    }
+): Promise<any> => {
 
     const response = await eventPublisher.updateProduct(data)
     return response
 }
-
-// interface Output {
-//     response: { message: string },
-//     status: StatusCode
-// }
 
 
 /** De activate post/product */

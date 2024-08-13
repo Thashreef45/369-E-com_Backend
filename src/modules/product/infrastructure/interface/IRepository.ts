@@ -1,15 +1,35 @@
 interface IRepository {
     //------------------------------------- category -------------------------------------
 
+
+    /** Create category */
+    createCategory(name: string, description: string): Promise<any>
+
+
+    /** Update category */
+    updateCategory(data: { categoryId: string, name: string, description: string }): Promise<any>
+
+
+
+    /** Create Sub-Category */
     createSubCategory(
         id: string,
         subcategory: { name: string, description: string }
     ): Promise<any>
 
-    createCategory(name: string, description: string): Promise<any>
+
+    /** Update sub-category */
+    updateSubCategory(data:
+        { categoryId: string, subCategoryId: string, name: string, description: string }
+    ): Promise<any>
+
 
     getCategory(name: string): Promise<any>
+
     getCategoryById(id: string): Promise<any>
+
+
+    getCategoryBySubCategoryId(subCategoryId: string): Promise<any>
 
 
     //fetch all categories
@@ -32,7 +52,7 @@ interface IRepository {
     /** Fetch a product by productId */
     getProduct(id: string): Promise<any>
 
-    
+
     /** fetch a single product by id  without feedbacks*/
     fetchProduct(id: string): Promise<any>
 

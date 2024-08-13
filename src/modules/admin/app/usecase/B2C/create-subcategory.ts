@@ -3,10 +3,13 @@ import StatusCode from "../../../infrastructure/config/staus-code"
 
 class CreateSubCategory {
 
-    private createNewSubCategory
+    private createSubCategory: (data: {
+        categoryId: string, name: string, description: string;
+    }
+    ) => Promise<any>
 
     constructor(dependencies: Dependencies) {
-        this.createNewSubCategory = dependencies.createNewSubCategory
+        this.createSubCategory = dependencies.createSubCategory
     }
 
     async execute(data: Input): Promise<Output> {
@@ -22,14 +25,14 @@ class CreateSubCategory {
         try {
 
             //create sub-category
-            const updated :Output = await this.createNewSubCategory(data.categoryId, data.name, data.description)
+            const updated: Output = await this.createSubCategory(data)
             return {
                 response: updated.response,
                 status: updated.status,
             }
 
         } catch (error) {
-            console.log(error,'error vannu')
+            console.log(error, 'error vannu')
             return {
                 response: { message: "Error creating sub-category" },
                 status: StatusCode.INTERNAL_ERROR,
@@ -57,7 +60,10 @@ interface Input {
 
 
 interface Dependencies {
-    createNewSubCategory(categoryId: string, name: string, description: string): any
+    createSubCategory(data: {
+        categoryId: string, name: string, description: string;
+    }
+    ): Promise<any>
 }
 
 interface Output {

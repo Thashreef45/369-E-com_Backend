@@ -16,11 +16,10 @@ class UpdateProduct {
     async execute(data: Input): Promise<Output> {
 
         //checking the credentials
-        if (!data.name || !data.description || !data.price ||
-            !data.thumbnail || !data.categoryId || data.productId
-        ) return {
-            response: { message: "Credentials missing" },
-            status: StatusCode.BAD_REQUEST
+        const credentials = this.checkInputCredentials(data)
+        if(!credentials.success) return{
+            response : { message : credentials.message},
+            status : credentials.status
         }
 
         try {
@@ -45,8 +44,6 @@ class UpdateProduct {
             }
         }
 
-
-
     }
 
 
@@ -57,8 +54,8 @@ class UpdateProduct {
 
 
         // check input credentials
-        if (!data.name || !data.description || !data.price
-            || !data.thumbnail || !data.images || !data.categoryId || !data.productId
+        if (!data.name || !data.description || !data.thumbnail || !data.images ||
+            !data.categoryId || !data.subCategoryId || !data.productId
         ) return {
             message: "Credentials missing",
             status: StatusCode.BAD_REQUEST,
@@ -70,14 +67,15 @@ class UpdateProduct {
         if (
             typeof data.name != 'string' ||
             typeof data.description != 'string' ||
-            typeof data.price != 'number' ||
             typeof data.thumbnail != 'string' ||
             typeof data.productId != 'string' ||
 
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image != 'string') ||
 
-            typeof data.categoryId != 'string'
+            typeof data.categoryId != 'string' ||
+            typeof data.subCategoryId != 'string'
+
         ) return {
             message: 'Credential type not matching',
             status: StatusCode.BAD_REQUEST,
@@ -98,16 +96,21 @@ class UpdateProduct {
         }
 
         //check images 
-        if(data.images.length > 5) return {
+        if (data.images.length > 5) return {
             message: "You can upload a maximum of 5 images.",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
 
 
-        //check pricing
-        if (data.price < 1) return {
-            message: "Price should be at least one",
+        if (data.categoryId.length > 25) return {
+            message: "Invalid categroyId",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        if (data.subCategoryId.length > 25) return {
+            message: "Invalid subCategroyId",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
@@ -125,14 +128,15 @@ export default UpdateProduct
 
 
 interface Input {
+    productId: string,
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[],
     categoryId: string,
 
-    productId: string,
+    subCategoryId: string
+
     email: string,
 }
 

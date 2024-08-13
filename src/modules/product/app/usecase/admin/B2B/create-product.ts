@@ -22,10 +22,7 @@ class CreateProduct {
 
 
             // product creation
-            const product = await this.repository.createProduct( data.name,data.description,data.price,
-                data.images,data.thumbnail,
-                data.categoryId,data.ownerId
-            )
+            const product = await this.repository.createProduct(data)
             return {
                 response: { message: "Success" ,product:product},
                 status: StatusCode.CREATED
@@ -42,10 +39,13 @@ class CreateProduct {
 interface Input {
     name: string,
     description: string,
-    price: number,
+    // price: number,
     thumbnail: string,
     images: string[]
     categoryId: string,
+
+    subCategoryId: string
+
     ownerId: string
 }
 

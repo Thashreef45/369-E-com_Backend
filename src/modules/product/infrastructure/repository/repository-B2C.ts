@@ -22,6 +22,29 @@ class productRepository implements IRepository {
         return updated
     }
 
+
+    async updateCategory(data:
+        { categoryId: string; name: string; description: string; }
+    ): Promise<any> {
+        try {
+            const updated = await categoryModel.updateOne(
+                { _id: data.categoryId },
+                {
+                    $set: {
+                        name: data.name,
+                        description: data.description
+                    }
+                }
+            )
+            return updated
+        } catch (error: any) {
+            throw new Error("Error updating category")
+        }
+    }
+
+
+
+
     // find a category by name 
     async getCategory(name: string) {
         const result = await categoryModel.findOne({ name: name })
@@ -52,6 +75,38 @@ class productRepository implements IRepository {
             }
         )
         return updated
+    }
+
+    /** Update sub-category */
+    async updateSubCategory(data:
+        { categoryId: string; subCategoryId: string; name: string; description: string; }
+    ): Promise<any> {
+
+        try {
+            const category = await categoryModel.updateOne(
+                { _id: data.categoryId, 'subcategories._id': data.subCategoryId },
+                {
+                    $set: {
+                        'subcategories.$.name': data.name,
+                        'subcategories.$.description': data.description
+                    }
+                }
+            )
+            return category
+        } catch (error: any) {
+            throw new Error("Error updating sub-category")
+        }
+    }
+
+    async getCategoryBySubCategoryId(subCategoryId: string): Promise<any> {
+        try {
+            const category = await categoryModel.findOne(
+                { 'subcategories._id': subCategoryId }
+            )
+            return category
+        } catch (error: any) {
+            throw new Error("Error fetching category")
+        }
     }
 
 
@@ -100,7 +155,7 @@ class productRepository implements IRepository {
 
     /** fetch a single product by id  without feedbacks*/
     async fetchProduct(id: string) {
-        return await productModel.findOne({ _id: id },{ feedbacks: 0 })
+        return await productModel.findOne({ _id: id }, { feedbacks: 0 })
     }
 
 

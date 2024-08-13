@@ -2,13 +2,13 @@ import StatusCode from "../../../infrastructure/config/staus-code"
 import IRepository from "../../../infrastructure/interface/IRepository"
 
 
-class ActivatePost {
+class ActivateProduct {
 
-    private activatePost
-    private repository : IRepository
+    private activateProduct: (param: { ownerId: string, productId: string }) => Promise<Output>
+    private repository: IRepository
 
     constructor(dependencies: Dependencies) {
-        this.activatePost = dependencies.activatePost
+        this.activateProduct = dependencies.activateProduct
         this.repository = dependencies.repository
     }
 
@@ -24,10 +24,7 @@ class ActivatePost {
 
         try {
 
-            // fetch user
-            // const user = await this.fetchUser(data.phone)
             const vendor = await this.repository.fetchVendorWithEmail(data.email)
-
             if (!vendor) return {
                 response: { message: "Vendor account not found" },
                 status: StatusCode.NOT_FOUND
@@ -38,8 +35,9 @@ class ActivatePost {
             const param = {
                 ownerId: vendor._id, productId: data.productId
             }
+
             // publish
-            const updated: Output = await this.activatePost(param)
+            const updated = await this.activateProduct(param)
             // response
             return {
                 response: updated.response,
@@ -56,7 +54,7 @@ class ActivatePost {
 }
 
 
-export default ActivatePost
+export default ActivateProduct
 
 
 interface Input {
@@ -70,6 +68,6 @@ interface Output {
 }
 
 interface Dependencies {
-    activatePost(param: { ownerId: string, productId: string })
-    repository : IRepository
+    activateProduct(param: { ownerId: string, productId: string }): Promise<Output>
+    repository: IRepository
 }

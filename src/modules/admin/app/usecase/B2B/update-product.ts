@@ -5,10 +5,11 @@ import IRepository from "../../../infrastructure/interface/IRepository";
 class UpdateProduct {
 
     private repository: IRepository
-    private updateProduct: any
+    private updateProduct: (data: Input & { ownerId: string }) => Promise<any>
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
+        this.updateProduct = dependencies.updateProduct
     }
 
     async execute(data: Input): Promise<Output> {
@@ -52,8 +53,8 @@ class UpdateProduct {
 
 
         // check input credentials
-        if (!data.productId || !data.name || !data.description || !data.price
-            || !data.thumbnail || !data.images || !data.categoryId
+        if (!data.productId || !data.name || !data.description || !data.thumbnail ||
+            !data.images || !data.categoryId || !data.subCategoryId
         ) return {
             message: "Credentials missing",
             status: StatusCode.BAD_REQUEST,
@@ -66,13 +67,13 @@ class UpdateProduct {
             typeof data.productId != 'string' ||
             typeof data.name != 'string' ||
             typeof data.description != 'string' ||
-            typeof data.price != 'number' ||
             typeof data.thumbnail != 'string' ||
 
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image != 'string') ||
 
-            typeof data.categoryId != 'string'
+            typeof data.categoryId != 'string' ||
+            typeof data.subCategoryId != 'string'
         ) return {
             message: 'Credential type not matching',
             status: StatusCode.BAD_REQUEST,
@@ -93,14 +94,6 @@ class UpdateProduct {
         }
 
 
-        //check pricing
-        if (data.price < 1) return {
-            message: "Price should be at least one",
-            status: StatusCode.BAD_REQUEST,
-            success: false
-        }
-
-
         return {
             message: "",
             status: StatusCode.OK,
@@ -113,10 +106,11 @@ interface Input {
     productId: string,
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[]
     categoryId: string,
+
+    subCategoryId: string,
 
     email: string
 }
@@ -127,7 +121,7 @@ interface Output {
 }
 
 interface Dependencies {
-    updateProduct(data: any): any
+    updateProduct(data: Input & { ownerId: string }): Promise<any>
     repository: IRepository
 }
 

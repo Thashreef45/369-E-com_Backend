@@ -25,9 +25,6 @@ export const fetchOrdersWithIds = async (data: {
     const dependencies = {
         repository
     }
-    // const data = {
-    //     productIds,status
-    // }
 
     const interactor = new FetchOrders(dependencies)
     const output = await interactor.execute(data)

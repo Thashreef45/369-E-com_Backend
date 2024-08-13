@@ -1,12 +1,11 @@
 import StatusCode from "../../../infrastructure/config/staus-code"
 
+class UpdateCategory {
 
-class CreateCategory {
-
-    private createCategory: (data: Input) => Promise<Output>
+    private updateCategory: (data: Input) => Promise<Output>
 
     constructor(dependencies: Dependencies) {
-        this.createCategory = dependencies.createCategory
+        this.updateCategory = dependencies.updateCategory
     }
 
 
@@ -21,16 +20,16 @@ class CreateCategory {
 
         try {
             //create category
-            const created = await this.createCategory(data)
+            const updated = await this.updateCategory(data)
             return {
-                response: created.response,
-                status: created.status
+                response: updated.response,
+                status: updated.status
             }
 
         } catch (error) {
 
             return {
-                response: { message: "Error creating category" },
+                response: { message: "Error updating category" },
                 status: StatusCode.INTERNAL_ERROR
             }
         }
@@ -43,7 +42,7 @@ class CreateCategory {
     /** Check input credentials */
     checkInputCredentials(data: Input): { message: string, status: StatusCode, success: boolean } {
 
-        if (!data.name || !data.description) return {
+        if (!data.name || !data.description || !data.categoryId) return {
             message: 'Credentials missing',
             status: StatusCode.BAD_REQUEST,
             success: false
@@ -52,9 +51,17 @@ class CreateCategory {
         // credential type checking
         if (
             typeof data.name != 'string' ||
-            typeof data.description != 'string'
+            typeof data.description != 'string' ||
+            typeof data.categoryId != 'string'
         ) return {
             message: "Credential type not matching",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        //check category id
+        if (data.categoryId.length > 25) return {
+            message: "Invalid categoryId",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
@@ -82,9 +89,11 @@ class CreateCategory {
     }
 }
 
-export default CreateCategory
+export default UpdateCategory
+
 
 interface Input {
+    categoryId: string
     name: string
     description: string
 }
@@ -97,5 +106,5 @@ interface Output {
 
 
 interface Dependencies {
-    createCategory(data: Input): Promise<Output>
+    updateCategory(data: Input): Promise<Output>
 }

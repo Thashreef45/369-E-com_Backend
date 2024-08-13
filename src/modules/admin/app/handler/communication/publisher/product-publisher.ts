@@ -3,17 +3,33 @@ import * as eventPublisher from '../../../../../product/app/handler/event-handle
 
 // publisher for creating a category
 export const createNewCategory = async (name: string, description: string) => {
-
     const result = await eventPublisher.createCategory({ name, description })
     return result
 }
 
 
+export const updateCategory = async (data:
+    { categoryId: string, name: string, description: string }
+) => {
+    const result = await eventPublisher.updateCategory(data)
+    return result
+}
+
 
 // publisher for creating a subcategory
-export const createNewSubCategory = async (categoryId: string, name: string, description: string) => {
+export const createNewSubCategory = async (data:
+    { categoryId: string, name: string, description: string }
+) => {
+    const result = await eventPublisher.createSubCategory(data)
+    return result
+}
 
-    const result = await eventPublisher.createSubCategory({ categoryId, name, description })
+
+/** Update sub-category */
+export const updateSubCategory = async (data:
+    { subCategoryId: string, name: string, description: string }
+) => {
+    const result = await eventPublisher.updateSubCategory(data)
     return result
 }
 

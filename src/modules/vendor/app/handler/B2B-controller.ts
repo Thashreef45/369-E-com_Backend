@@ -2,9 +2,9 @@ import { Request, Response } from "express"
 
 
 // publisher
-import * as userPublisher from "./communication/publisher/user-publisher"
+// import * as userPublisher from "./communication/publisher/user-publisher"
 import * as productPublisher from "./communication/publisher/B2B-product-publisher"
-import * as notificationPublisher from './communication/publisher/notification-publisher'
+// import * as notificationPublisher from './communication/publisher/notification-publisher'
 
 
 //dependencies
@@ -16,8 +16,8 @@ import AddProduct from "../usecase/B2B/add-product"
 import GetAProduct from "../usecase/B2B/fetch-a-product"
 import UpdateProduct from '../usecase/B2B/update-product'
 import RemoveProduct from "../usecase/B2B/remove-product"
-import FetchUserPost from "../usecase/B2B/fetch-user-posts"
-import ActivatePost from "../usecase/B2B/activate-post"
+import FetchVendorProducts from "../usecase/B2B/fetch-user-posts"
+import ActivateProduct from "../usecase/B2B/activate-post"
 
 
 //repository instance
@@ -25,9 +25,9 @@ const repository = new Repository()
 
 
 //  create new product
-export const addproduct =  async(req : Request, res : Response) => {
+export const addproduct = async (req: Request, res: Response) => {
     const dependencies = {
-        createProduct : productPublisher.createProduct,
+        createProduct: productPublisher.createProduct,
         repository,
     }
     const data = req.body
@@ -41,12 +41,12 @@ export const addproduct =  async(req : Request, res : Response) => {
 
 
 //  fetch a product
-export const getProduct = async(req : Request, res : Response) => {
+export const getProduct = async (req: Request, res: Response) => {
     const dependencies = {
-        fetchProduct : productPublisher.getProduct
+        fetchProduct: productPublisher.getProduct
     }
     const data = {
-        productId : req.body.productId
+        productId: req.params?.productId
     }
     const interactor = new GetAProduct(dependencies)
     const output = await interactor.execute(data)
@@ -57,21 +57,22 @@ export const getProduct = async(req : Request, res : Response) => {
 
 
 // update a product
-export const updateProduct = async(req : Request, res : Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
     const dependencies = {
-        updateProduct : productPublisher.updateProduct,
+        updateProduct: productPublisher.updateProduct,
         repository,
     }
 
     const data = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        thumbnail: req.body.thumbnail,
-        images : req.body.images,
-        categoryId: req.body.categoryId,
-        productId : req.body.productId,
-        email : req.body.email
+        productId: req.body?.productId,
+        name: req.body?.name,
+        description: req.body?.description,
+        thumbnail: req.body?.thumbnail,
+        images: req.body?.images,
+        categoryId: req.body?.categoryId,
+
+        subCategoryId: req.body?.subCategoryId,
+        email: req.body?.email
     }
 
     const interactor = new UpdateProduct(dependencies)
@@ -83,16 +84,16 @@ export const updateProduct = async(req : Request, res : Response) => {
 
 
 //  remove a product
-export const removeProduct = async(req : Request, res : Response) => {
+export const deactivateProduct = async (req: Request, res: Response) => {
     const dependencies = {
         // fetchProduct : productPublisher.getProduct ==
 
-        removeProduct : productPublisher.removeProduct,
+        removeProduct: productPublisher.removeProduct,
         repository
     }
     const data = {
-        email : req.body.email,
-        productId : req.body.productId
+        email: req.body.email,
+        productId: req.body.productId
     }
 
     const interactor = new RemoveProduct(dependencies)
@@ -105,18 +106,18 @@ export const removeProduct = async(req : Request, res : Response) => {
 
 
 //  fetch user posts
-export const getVenodrPosts = async(req : Request, res : Response) => {
+export const getVenodrProducts = async (req: Request, res: Response) => {
     const dependencies = {
-        fetchUserPosts : productPublisher.fetchAllPost,
+        fetchVendorProducts: productPublisher.fetchVendorProducts,
         repository,
     }
-    
+
     const data = {
-        email : req.body?.email,
-        query : req.query?.ActivatePost
+        email: req.body?.email,
+        active: req.query?.active as string
     }
 
-    const interactor = new FetchUserPost(dependencies)
+    const interactor = new FetchVendorProducts(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
@@ -124,22 +125,20 @@ export const getVenodrPosts = async(req : Request, res : Response) => {
 
 
 
-//on work
 // activate user product || post
-export const activatePost = async(req : Request, res : Response) => {
+export const activatePost = async (req: Request, res: Response) => {
     const dependencies = {
         // fetchUser : userPublisher.fetchUserByPhone,
-        activatePost : productPublisher.activatePost,
+        activateProduct: productPublisher.activateProduct,
         repository
     }
 
     const data = {
-        email : req.body.email,
-        productId : req.body.productId
+        email: req.body.email,
+        productId: req.body.productId
     }
 
-    const interactor = new ActivatePost(dependencies)
+    const interactor = new ActivateProduct(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
-
 }

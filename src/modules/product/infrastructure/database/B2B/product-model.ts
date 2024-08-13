@@ -12,11 +12,11 @@ const productSchema = new Schema({
         required: true,
         trim: true,
     },
-    price: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
+    // price: {
+    //     type: Number,
+    //     required: true,
+    //     min: 0,
+    // },
     thumbnail: {
         type: String,
         required: true,
@@ -30,6 +30,13 @@ const productSchema = new Schema({
         ref: 'Category-B2B',
         required: true
     },
+
+    subcategoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category-B2B',
+        required: true
+    },
+    
     ownerId: {
         type: Schema.Types.ObjectId,
         required: true
