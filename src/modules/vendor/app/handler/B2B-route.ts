@@ -9,44 +9,29 @@ const router = express()
 router.post('/product',controller.addproduct)
 
 
-// get product
-router.get('/product',controller.getProduct)
+// get a product
+router.get('/product/:productId',controller.getProduct)
 
 
-// update product
+// update a product
 router.patch('/product',controller.updateProduct)
 
 
 
 // remove product
-router.delete('/product',controller.removeProduct)
+router.delete('/product',controller.deactivateProduct)
 
 
 
 // fetch user posts
-router.get('/posts',controller.getVenodrPosts)
+router.get('/products',controller.getVenodrProducts)
 
 
 
 //on work
 // update - reactivate post
-router.post('/active',controller.activatePost)
+router.post('/activate',controller.activatePost)
 
-
-
-
-
-// get all products || filtered by query
-// router.get('/products',controller.fetchProducts) // todo : logic side
-
-
-
-
-// router.post('/sold',controller.soldProductUpdate)  // todo : api name
-
-
-// fetch all user sale post
-// router.get('/post',controller.soldProductUpdate)
 
 
 export default router

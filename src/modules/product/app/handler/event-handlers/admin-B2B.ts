@@ -12,6 +12,9 @@ import ActivatePost from "../../usecase/admin/B2B/activate-post"
 import FetchAdminProducts from "../../usecase/admin/B2B/fetch-admin-products"
 import FetchAProduct from "../../usecase/admin/B2B/fetch-a-product"
 import CreateSubCategory from "../../usecase/admin/B2B/create-sub-category"
+import UpdateCategory from '../../usecase/admin/B2B/update-category'
+import UpdateSubCategory from "../../usecase/admin/B2B/update-sub-category"
+import FetchCategories from "../../usecase/admin/B2B/fetch-all-categories"
 
 
 
@@ -45,7 +48,7 @@ export const createSubCategory = async (data:
         repository: repository
     }
     const params = {
-        categoryId : data.categoryId,
+        categoryId: data.categoryId,
         name: data.name,
         description: data.description
     }
@@ -56,6 +59,50 @@ export const createSubCategory = async (data:
 }
 
 
+
+/** Update a category */
+export const updateCategory = async (data:
+    { categoryId: string, name: string, description: string, }
+) => {
+
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new UpdateCategory(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
+
+/** Update a sub-category */
+export const updateSubCategory = async (data:
+    { subCategoryId: string, name: string, description: string, }
+) => {
+
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new UpdateSubCategory(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
+
+/** fetch categories */
+export const fetchCategories = async () => {
+
+    const dependencies = {
+        repository: repository
+    }
+
+    const interactor = new FetchCategories(dependencies)
+    const output = await interactor.execute()
+    return output
+}
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,8 +125,13 @@ export const createProduct = async (data: any) => {
 
 
 // create product
-export const updateProduct = async (data: any) => {
-    data = data // ----
+export const updateProduct = async (data:
+    {
+        productId: string, name: string, description: string, thumbnail: string,
+        images: string[], categoryId: string, subCategoryId: string, ownerId: string
+    }
+) => {
+    // data = data // ----
 
     const dependencies = {
         repository: repository

@@ -14,11 +14,30 @@ class MarketPlaceRepository implements IRepository {
                 name: data.name,
                 description: data.description
             })
-            await newCategory.save()
             return newCategory
 
         } catch (error: any) {
             throw new Error("Error creating category")
+        }
+    }
+
+
+
+    async updateCategory(data: { categoryId: string; name: string; description: string; }): Promise<any> {
+        try {
+
+            const update = await categoryModel.updateOne(
+                { _id: data.categoryId },
+                {
+                    $set: {
+                        name: data.name,
+                        description: data.description
+                    }
+                }
+            )
+
+        } catch (error: any) {
+            throw new Error("Error updating category")
         }
     }
 
@@ -40,6 +59,29 @@ class MarketPlaceRepository implements IRepository {
             )
         } catch (error) {
             throw new Error("Error creating sub-category")
+        }
+    }
+
+
+    /** Update sub-category */
+    async updateSubCategory(data:
+        {
+            categoryId: string; subCategoryId: string; name: string; description: string;
+        }
+    ): Promise<any> {
+        try {
+            const updated = await categoryModel.updateOne(
+                { _id: data.categoryId, 'subcategories._id': data.subCategoryId },
+                {
+                    $set: {
+                        'subcategories.$.name': data.name,
+                        'subcategories.$.description': data.description
+                    }
+                }
+            )
+            return updated
+        } catch (error: any) {
+            throw new Error("Error updating sub-category")
         }
     }
 
@@ -93,18 +135,22 @@ class MarketPlaceRepository implements IRepository {
 
     // on work *1
     // create a new product | post
-    async createProduct(data: any): Promise<any> {
+    async createProduct(data: {
+        name: string, description: string, images: string[],
+        thumbnail: string, categoryId: string, subCategoryId: string, ownerId: string
+    }): Promise<any> {
         try {
 
             const newProduct = await productModel.create({
                 name: data.name,
                 description: data.description,
-                price: data.price,
-                quantity: data.quantity,
                 thumbnail: data.thumbnail,
                 images: data.images,
                 categoryId: data.categoryId,
-                ownerId: data.userId,
+
+                subcategoryId: data.subCategoryId,
+
+                ownerId: data.ownerId,
             })
 
             return newProduct
@@ -138,31 +184,33 @@ class MarketPlaceRepository implements IRepository {
     }
 
 
-
-    // on work *4
-    async updateProduct(name: string, description: string,
-        price: number, thumbnail: string, images: string[],
-        categoryId: string, productId: string): Promise<any> {
-
+    /** Update product */
+    async updateProduct(data:
+        {
+            name: string; description: string, thumbnail: string, images: string[];
+            categoryId: string; subCategoryId: string; productId: string;
+        }
+    ): Promise<any> {
         try {
             const updated = productModel.updateOne(
-                { _id: productId },
+                { _id: data.productId },
                 {
                     $set: {
-                        name: name,
-                        description: description,
-                        price: price,
-                        thumbnail: thumbnail,
-                        images: images,
-                        categoryId: images,
+                        name: data.name,
+                        description: data.description,
+                        thumbnail: data.thumbnail,
+                        images: data.images,
+                        categoryId: data.images,
+
+                        subcategoryId: data.subCategoryId
                     }
                 }
             )
             return updated
         } catch (error: any) {
+            
             throw new Error("Error updating product")
         }
-
     }
 
 

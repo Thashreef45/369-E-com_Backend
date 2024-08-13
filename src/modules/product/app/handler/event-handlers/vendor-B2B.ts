@@ -19,7 +19,12 @@ const repository = new MarketPlaceRepository()
 
 
 // create product
-export const createProduct = async (data:any) => {
+export const createProduct = async (data:
+    {
+        name: string, description: string, thumbnail: string, images: string[]
+        categoryId: string, subCategoryId: string, ownerId: string
+    }
+) => {
     data = data // ----
 
     const dependencies = {
@@ -34,7 +39,7 @@ export const createProduct = async (data:any) => {
 
 
 // fetch a product
-export const getProduct = async (id:string) => {
+export const getProduct = async (id: string) => {
 
     const data = { id }
     const dependencies = {
@@ -49,7 +54,12 @@ export const getProduct = async (id:string) => {
 
 
 // update product 
-export const updateProduct = async (data:any) => {
+export const updateProduct = async (data:
+    {
+        productId: string, name: string, description: string, thumbnail: string,
+        images: string[], categoryId: string, subCategoryId: string, ownerId: string
+    }
+) => {
 
     // const data = { id }
     const dependencies = {
@@ -62,7 +72,7 @@ export const updateProduct = async (data:any) => {
 }
 
 
-export const removeProduct = async (data:{ownerId:string,productId:string}) => {
+export const removeProduct = async (data: { ownerId: string, productId: string }) => {
 
     // const data = { id }
     const dependencies = {
@@ -74,12 +84,12 @@ export const removeProduct = async (data:{ownerId:string,productId:string}) => {
     return output
 }
 
+/** Fetch all vendor products  * active = true/false */
+export const fetchVendorProducts = async (data: { ownerId: string, active?: boolean | undefined }) => {
 
-export const fetchAllPosts = async (data:{ownerId:string,query?:boolean|undefined}) => {
-
-    const params = { 
-        ownerId : data.ownerId,
-        query : data.query
+    const params = {
+        ownerId: data.ownerId,
+        active: data.active //
     }
     const dependencies = {
         repository: repository
@@ -92,11 +102,11 @@ export const fetchAllPosts = async (data:{ownerId:string,query?:boolean|undefine
 
 
 
-export const activatePost = async (data:{ownerId:string,productId:string}) => {
+export const activateProduct = async (data: { ownerId: string, productId: string }) => {
 
     const params = {
-        ownerId : data.ownerId,
-        productId : data.productId
+        ownerId: data.ownerId,
+        productId: data.productId
     }
     const dependencies = {
         repository: repository

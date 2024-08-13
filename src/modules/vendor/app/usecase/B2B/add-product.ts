@@ -3,7 +3,7 @@ import IRepository from '../../../infrastructure/interface/IRepository'
 
 class AddProduct {
 
-    private createProduct: (data: Input & {ownerId:string}) => Promise<Output>
+    private createProduct: (data: Input & { ownerId: string }) => Promise<Output>
     private repository: IRepository
 
     constructor(dependencies: Dependencies) {
@@ -56,8 +56,8 @@ class AddProduct {
 
 
         // check input credentials
-        if (!data.name || !data.description || !data.price
-            || !data.thumbnail || !data.images || !data.categoryId
+        if (!data.name || !data.description || !data.thumbnail ||
+            !data.images || !data.categoryId || !data.subCategoryId
         ) return {
             message: "Credentials missing",
             status: StatusCode.BAD_REQUEST,
@@ -69,13 +69,13 @@ class AddProduct {
         if (
             typeof data.name != 'string' ||
             typeof data.description != 'string' ||
-            typeof data.price != 'number' ||
             typeof data.thumbnail != 'string' ||
 
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image != 'string') ||
 
-            typeof data.categoryId != 'string'
+            typeof data.categoryId != 'string' ||
+            typeof data.subCategoryId != 'string'
         ) return {
             message: 'Credential type not matching',
             status: StatusCode.BAD_REQUEST,
@@ -102,10 +102,14 @@ class AddProduct {
             success: false
         }
 
+        if(data.categoryId.length > 25) return {
+            message: "Invalid categoryId",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
 
-        //check pricing
-        if (data.price < 1) return {
-            message: "Price should be at least one",
+        if(data.subCategoryId.length > 25) return {
+            message: "Invalid subCategoryId",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
@@ -125,10 +129,11 @@ export default AddProduct
 interface Input {
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[]
     categoryId: string,
+
+    subCategoryId: string
 
     email: string
 }
@@ -139,6 +144,6 @@ interface Output {
 }
 
 interface Dependencies {
-    createProduct(data: Input & {ownerId:string}): Promise<Output>
+    createProduct(data: Input & { ownerId: string }): Promise<Output>
     repository: IRepository
 }

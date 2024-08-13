@@ -5,7 +5,7 @@ class CreateProduct {
 
     private createProduct: any
     private repository: IRepository
-    
+
     constructor(dependencies: Dependencies) {
         this.createProduct = dependencies.createProduct
     }
@@ -57,7 +57,7 @@ class CreateProduct {
 
         // check input credentials
         if (!data.name || !data.description || !data.price
-            || !data.thumbnail || !data.images || !data.categoryId
+            || !data.thumbnail || !data.images || !data.categoryId || !data.subCategoryId
         ) return {
             message: "Credentials missing",
             status: StatusCode.BAD_REQUEST,
@@ -75,7 +75,10 @@ class CreateProduct {
             !Array.isArray(data.images) ||
             data.images.every(image => typeof image != 'string') ||
 
-            typeof data.categoryId != 'string'
+            typeof data.categoryId != 'string' ||
+            typeof data.subCategoryId != 'string'
+
+
         ) return {
             message: 'Credential type not matching',
             status: StatusCode.BAD_REQUEST,
@@ -103,6 +106,18 @@ class CreateProduct {
             success: false
         }
 
+        if (data.categoryId.length) return {
+            message: "Invalid categoryId",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+        if (data.subCategoryId.length) return {
+            message: "Invalid subCategoryId",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
 
         return {
             message: "",
@@ -122,6 +137,8 @@ interface Input {
     thumbnail: string,
     images: string[]
     categoryId: string,
+
+    subCategoryId: string,
 
     email: string
 }

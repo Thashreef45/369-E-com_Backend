@@ -3,14 +3,14 @@ import IRepository from "../../../infrastructure/interface/IRepository"
 
 
 
-class FetchUserPost {
+class FetchVendorProducts {
 
-    private fetchUserPosts
+    private fetchVendorProducts: any
     private repository: IRepository
 
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
-        this.fetchUserPosts = dependencies.fetchUserPosts
+        this.fetchVendorProducts = dependencies.fetchVendorProducts
     }
 
 
@@ -20,7 +20,7 @@ class FetchUserPost {
         try {
 
             // check query
-            if (data.query && (data.query !== 'true' && data.query !== 'false')) return {
+            if (data.active && (data.active !== 'true' && data.active !== 'false')) return {
                 response: { message: "Invalid query parameter" },
                 status: StatusCode.BAD_REQUEST
             }
@@ -39,7 +39,7 @@ class FetchUserPost {
             const param = this.createParams(data, vendor._id)
 
             // fetch all post
-            const output: Output = await this.fetchUserPosts(param)
+            const output: Output = await this.fetchVendorProducts(param)
             return {
                 response: output.response,
                 status: output.status
@@ -54,27 +54,27 @@ class FetchUserPost {
     }
 
 
-    // creats parameter for post fetching publisher
+    /** creats parameter for post fetching publisher */
     createParams(data: Input, ownerId: string) {
-        if (!data.query) return {
+        if (!data.active) return {
             ownerId,
         }
-        if (data.query == 'true') return {
-            ownerId, query: true
+        if (data.active == 'true') return {
+            ownerId, active: true
         }
-        if (data.query == 'false') return {
-            ownerId, query: false
+        if (data.active == 'false') return {
+            ownerId, active: false
         }
     }
 
 }
 
 
-export default FetchUserPost
+export default FetchVendorProducts
 
 interface Input {
     email: string
-    query?: any
+    active?: string | undefined
 }
 
 
@@ -84,6 +84,6 @@ interface Output {
 }
 
 interface Dependencies {
-    fetchUserPosts(param: { ownerId: string, query?: boolean }): Promise<Output>
+    fetchVendorProducts(param: { ownerId: string, active?: boolean }): Promise<Output>
     repository: IRepository
 }

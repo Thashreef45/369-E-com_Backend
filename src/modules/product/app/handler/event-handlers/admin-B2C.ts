@@ -9,6 +9,8 @@ import FetchAllCategory from '../../usecase/admin/B2C/fetch-all-categories'
 import GetAllProducts from '../../usecase/admin/B2C/get-all-products'
 import GetAProduct from '../../usecase/admin/B2C/get-a-product'
 import UpdateProduct from '../../usecase/admin/B2C/update-a-product'
+import UpdateCategory from '../../usecase/admin/B2C/update-category'
+import UpdateSubCategory from '../../usecase/admin/B2C/update-sub-category'
 // import FetchAdminProducts from '../../usecase/admin/B2C/fetch-admin-products'
 
 // repository instance
@@ -18,10 +20,7 @@ const productRepository = new repository()
 
 // create category
 export const createCategory = async (data: { name: string, description: string }) => {
-    data = {
-        name: data.name,
-        description: data.description
-    }
+
     const dependencies = {
         repository: productRepository
     }
@@ -31,6 +30,16 @@ export const createCategory = async (data: { name: string, description: string }
 }
 
 
+
+// update category
+export const updateCategory = async (data: { categoryId: string, name: string, description: string }) => {
+    const dependencies = {
+        repository: productRepository
+    }
+    const interactor = new UpdateCategory(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
 
 
 // create sub-category
@@ -49,6 +58,17 @@ export const createSubCategory = async (data: { categoryId: string, name: string
 }
 
 
+// update category
+export const updateSubCategory = async (data: { subCategoryId: string, name: string, description: string }) => {
+    const dependencies = {
+        repository: productRepository
+    }
+    const interactor = new UpdateSubCategory(dependencies)
+    const output = await interactor.execute(data)
+    return output
+}
+
+
 
 // fetch all categories along with sub-category
 export const fetchAllCategory = async () => {
@@ -56,7 +76,7 @@ export const fetchAllCategory = async () => {
         repository: productRepository
     }
     const interactor = new FetchAllCategory(dependencies)
-    const output = await interactor.execute() 
+    const output = await interactor.execute()
     return output
 }
 
@@ -64,7 +84,7 @@ export const fetchAllCategory = async () => {
 
 
 // create product
-export const createProduct = async (data:any) => {
+export const createProduct = async (data: any) => {
     // data = data // ----
 
     const dependencies = {
@@ -78,7 +98,7 @@ export const createProduct = async (data:any) => {
 
 
 // get all admin products || filter by query
-export const getAllProducts = async (query:any) => {
+export const getAllProducts = async (query: any) => {
     const dependencies = {
         repository: productRepository
     }
@@ -91,10 +111,10 @@ export const getAllProducts = async (query:any) => {
 
 
 // fetch a product
-export const getAProduct = async (productId:string) => {
+export const getAProduct = async (productId: string) => {
 
     const data = {
-        id : productId
+        id: productId
     }
     const dependencies = {
         repository: productRepository
@@ -109,10 +129,11 @@ export const getAProduct = async (productId:string) => {
 
 
 // update a product
-export const updateProduct = async (data:{
-    productId: string, name: string ,description: string,actualPrice: number ,price: number,
-    offer: boolean,images: string[] ,thumbnail: string, stock: number ,categoryId: string ,
-    subCategoryId: string , ownerId : string}) => {
+export const updateProduct = async (data: {
+    productId: string, name: string, description: string, actualPrice: number, price: number,
+    offer: boolean, images: string[], thumbnail: string, stock: number, categoryId: string,
+    subCategoryId: string, ownerId: string
+}) => {
 
     // const data = data
 

@@ -23,6 +23,7 @@ import UpdateProfile from "../usecase/B2C/update-profile"
 
 import CreateCategory from "../usecase/B2C/create-category"
 import CreateSubCategory from "../usecase/B2C/create-subcategory"
+
 import CreateProduct from "../usecase/B2C/create-product"
 import FetchAllCategory from "../usecase/B2C/fetch-all-category"
 import GetAllProducts from "../usecase/B2C/get-all-products"
@@ -38,6 +39,8 @@ import UpdateMembership from "../usecase/B2C/update-membership"
 import FetchOrders from "../usecase/B2C/fetch-orders"
 import FetchAOrder from "../usecase/B2C/fetch-a-order"
 import UpdateOrder from "../usecase/B2C/update-order"
+import UpdateCategory from "../usecase/B2C/update-category"
+import UpdateSubCategory from "../usecase/B2C/update-sub-category"
 
 
 
@@ -67,9 +70,9 @@ export const login = async (req: Request, res: Response) => {
 //login
 export const updateProfile = async (req: Request, res: Response) => {
     const data = {
-        email: req.body?.email,
+        email: req.body?.email,// from  middleware
         whatsapp: req.body?.whatsapp,
-        phone: req.body?.phone // from  middleware
+        phone: req.body?.phone
     }
     const dependencies = {
         repository,
@@ -100,6 +103,22 @@ export const createCategory = async (req: Request, res: Response) => {
 }
 
 
+// create new category
+export const updateCategory = async (req: Request, res: Response) => {
+
+    const data = {
+        categoryId: req.body.categoryId,
+        name: req.body.name,
+        description: req.body.description
+    }
+    const dependencies = {
+        updateCategory: productPublisher.updateCategory
+    }
+
+    const interactor = new UpdateCategory(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
 
 
 
@@ -111,10 +130,27 @@ export const createSubCategory = async (req: Request, res: Response) => {
         description: req.body.description
     }
     const dependencies = {
-        createNewSubCategory: productPublisher.createNewSubCategory
+        createSubCategory: productPublisher.createNewSubCategory
     }
 
     const interactor = new CreateSubCategory(dependencies)
+    const output = await interactor.execute(data)
+    res.status(output.status).json(output.response)
+}
+
+
+/** Update sub-category */
+export const updateSubCategory = async (req: Request, res: Response) => {
+    const data = {
+        subCategoryId: req.body.subCategoryId,
+        name: req.body.name,
+        description: req.body.description
+    }
+    const dependencies = {
+        updateSubCategory: productPublisher.updateSubCategory
+    }
+
+    const interactor = new UpdateSubCategory(dependencies)
     const output = await interactor.execute(data)
     res.status(output.status).json(output.response)
 }
@@ -268,7 +304,7 @@ export const updateMembership = async (req: Request, res: Response) => {
 
 /** Fetch orders by queries -- {status,data,page_no,limit} */
 export const fetchOrders = async (req: Request, res: Response) => {
-    
+
     const dependencies = {
         repository,
         fetchAdminProducts: productPublisher.getProducts,
@@ -278,10 +314,10 @@ export const fetchOrders = async (req: Request, res: Response) => {
     const data = {
         email: req.body?.email,
         status: req.query?.status as string,
-    
+
         startDate: req.query?.startDate as string,
         endDate: req.query?.endDate as string,
-        
+
         page_no: parseInt(req.query?.page_no as string, 10),
         limit: parseInt(req.query?.limit as string, 10)
     }

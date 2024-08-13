@@ -20,6 +20,9 @@ class UpdateProduct {
             }
 
 
+            //check subcategory exist or not
+
+
             // fetch product
             const product = await this.repository.findProduct(data.productId)
             if (!product) return {
@@ -36,11 +39,7 @@ class UpdateProduct {
 
 
             //update product
-            const updated = await this.repository.updateProduct(
-                data.name, data.description, data.price,
-                data.thumbnail, data.images, data.categoryId, data.productId
-            )
-
+            const updated = await this.repository.updateProduct(data)
             return {
                 response: { message: "Success" },
                 status: StatusCode.OK
@@ -63,17 +62,18 @@ export default UpdateProduct
 interface Input {
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[],
     categoryId: string,
+
+    subCategoryId: string
+
     productId: string,
-    // phone: string,
     ownerId: string
 }
 
 interface Output {
-    response: { message: string},
+    response: { message: string },
     status: StatusCode
 }
 

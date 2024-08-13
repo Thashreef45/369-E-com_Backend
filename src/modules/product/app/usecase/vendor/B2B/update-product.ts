@@ -36,10 +36,7 @@ class UpdateProduct {
 
 
             //update product
-            const updated = await this.repository.updateProduct(
-                data.name, data.description, data.price,
-                data.thumbnail, data.images, data.categoryId, data.productId
-            )
+            const updated = await this.repository.updateProduct(data)
 
             return {
                 response: { message: "Success" },
@@ -61,19 +58,18 @@ export default UpdateProduct
 
 
 interface Input {
+    productId: string,
     name: string,
     description: string,
-    price: number,
     thumbnail: string,
     images: string[],
     categoryId: string,
-    productId: string,
-    // phone: string,
+    subCategoryId: string,
     ownerId: string
 }
 
 interface Output {
-    response: { message: string},
+    response: { message: string },
     status: StatusCode
 }
 

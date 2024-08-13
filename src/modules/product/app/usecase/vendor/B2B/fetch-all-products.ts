@@ -16,7 +16,7 @@ class FetchAllProducts {
         try {
 
             // fetching all posts
-            if (typeof data.query == 'undefined') {
+            if (typeof data.active == 'undefined') {
                 const posts = await this.repository.fetchOwnerAllPosts(data.ownerId)
                 return {
                     response: { message: "Succes", data: posts },
@@ -26,8 +26,8 @@ class FetchAllProducts {
 
 
             // fetching posts on active - true/false
-            if (data.query == true || data.query == false) {
-                const posts = await this.repository.fetchOwnerPosts(data.ownerId, data.query)
+            if (data.active == true || data.active == false) {
+                const posts = await this.repository.fetchOwnerPosts(data.ownerId, data.active)
                 return {
                     response: { message: "Success", data: posts },
                     status: StatusCode.OK
@@ -50,7 +50,7 @@ export default FetchAllProducts
 
 interface Input {
     ownerId: string,
-    query?: boolean | undefined
+    active?: boolean | undefined
 }
 
 interface Output {

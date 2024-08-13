@@ -5,7 +5,14 @@ interface IRepository {
 
     createCategory(data: { name: string, description: string }): Promise<any>
 
-    createSubCategory(data: {categoryId :string, name: string, description: string }): Promise<any>
+    updateCategory(data: { categoryId: string, name: string, description: string }): Promise<any>
+
+
+    createSubCategory(data: { categoryId: string, name: string, description: string }): Promise<any>
+
+
+    /** Update a sub-category */
+    updateSubCategory(data: { categoryId: string, subCategoryId: string, name: string, description: string }): Promise<any>
 
 
     findCategory(id: string): Promise<any>
@@ -27,12 +34,11 @@ interface IRepository {
     //------------------------------------- product -------------------------------------
 
     // create product
-    createProduct(
-        name: String, description: String,
-        price: Number, images: String[],
-        thumbnail: String,
-        categoryId: String,
-        userId: string
+    createProduct(data:
+        {
+            name: string, description: string, images: string[], thumbnail: string,
+            categoryId: string, subCategoryId: string, ownerId: string
+        }
     ): Promise<any>
 
 
@@ -42,9 +48,11 @@ interface IRepository {
     /** Fetch a product,with id */
     fetchProuct(id: string): Promise<any>
 
-    updateProduct(name: string, description: string,
-        price: number, thumbnail: string, images: string[],
-        categoryId: string, productId: string
+    updateProduct(data:
+        {
+            name: string, description: string, thumbnail: string, images: string[],
+            categoryId: string, subCategoryId: string, productId: string
+        }
     ): Promise<any>
 
 
