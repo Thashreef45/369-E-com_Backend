@@ -69,9 +69,9 @@ export const login_signup = async (req: Request, res: Response) => {
         sendOtp: notificationPublisher.sendLoginSignUpOtp
     }
 
-
     const interactor = new Login_Signup(dependencies)
     const output = await interactor.execute(data)
+
     responseHandler(req, res, output)
 }
 
@@ -159,7 +159,6 @@ export const addToCart = async (req: Request, res: Response) => {
     const output = await interactor.execute(data)
     responseHandler(req, res, output)
 }
-
 
 
 
@@ -293,6 +292,7 @@ export const fetchProduct = async (req: Request, res: Response) => {
     const interactor = new GetProduct(dependencies)
     const output = await interactor.execute(data)
     responseHandler(req, res, output)
+
 }
 
 
@@ -307,9 +307,8 @@ export const fetchProductFeedbacks = async (req: Request, res: Response) => {
         // GET /api/feedbacks?productId=123&limit=10&page_no=2
     }
     const dependencies = {
-        getProductFeedbacks : productPublisher.getProductFeedbacks,
+        getProductFeedbacks: productPublisher.getProductFeedbacks,
         repository
-        
     }
 
     const interactor = new FetchProductFeedbacks(dependencies)
@@ -474,7 +473,7 @@ export const cartCheckout = async (req: Request, res: Response) => {
         getProductsById: productPublisher.getProductsById,
 
         checkoutCart: productPublisher.checkoutCart,
-        createOrder: orderPublisher.checkoutCart,
+        createOrder: orderPublisher.creatOrder,
     }
 
     const interactor = new CartCheckout(dependencies)
@@ -488,7 +487,7 @@ export const cartCheckout = async (req: Request, res: Response) => {
 // Product checkout
 export const productCheckout = async (req: Request, res: Response) => {
     const data = {
-        phone: req.body?.phone,
+        phone: req.body?.phone, // from token
         addressId: req.body?.addressId,
         productId: req.body?.productId,
         quantity: req.body?.quantity,
@@ -497,7 +496,8 @@ export const productCheckout = async (req: Request, res: Response) => {
     const dependencies = {
         repository,
         updateStock: productPublisher.checkoutCart,
-        fetchProductWithId: productPublisher.getProduct
+        fetchProductWithId: productPublisher.getProduct,
+        // createProductOrder: () => { }
     }
 
     const interactor = new ProductCheckout(dependencies)

@@ -1,8 +1,8 @@
 import * as orderPublisher from '../../../../../orders/app/event-handler/user'
 
 
-
-export const checkoutCart = async (data: {
+/** Create order */
+export const creatOrder = async (data: {
     products: { productId: string, quantity: number, price: number }[]
     userId: string; addressId: string; cod: boolean
 }

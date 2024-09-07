@@ -5,7 +5,7 @@ import CancelOrder from "../usecase/user/cancel-order"
 
 
 //use case
-import CheckoutCart from "../usecase/user/cart-checkout"
+import CreateOrder from "../usecase/user/create-order"
 import FetchDeliveredOrder from "../usecase/user/fetch-a-delivered-order"
 import FetchOrder from "../usecase/user/fetch-a-order"
 import FetchUserOrders from "../usecase/user/fetch-user-orders"
@@ -28,7 +28,7 @@ export const creatOrder = async (
         repository
     }
 
-    const interactor = new CheckoutCart(dependencies)
+    const interactor = new CreateOrder(dependencies)
     const output = await interactor.execute(data)
     return output
 }

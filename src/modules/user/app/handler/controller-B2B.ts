@@ -8,7 +8,7 @@ import * as productPublisher from '../handler/communication/publisher/B2B-produc
 import responseHandler from "./response-handler"
 
 //usecase
-import FetchCategories from "../usecase/B2C/B2B-fetch-categories"
+import FetchCategories from "../usecase/B2B/B2B-fetch-categories"
 import FetchAProduct from "../usecase/B2B/B2B-get-product"
 import FetchAllProducts from "../usecase/B2B/B2B-fetch-products"
 

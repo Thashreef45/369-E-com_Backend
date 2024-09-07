@@ -2,7 +2,7 @@
 interface IRepository {
 
     /**Create new order  */
-    checkOutCart(data:
+    createOrder(data:
         {
             products: { productId: string, quantity: number, price: number }[],
             userId: string, addressId: string, cod: boolean

@@ -54,6 +54,10 @@ class ProductCheckout {
             //create order
 
 
+            // check cod or not
+            //responde with orderId , price , order description
+
+
 
             // demo response
             return {
@@ -94,6 +98,20 @@ class ProductCheckout {
             typeof data.addressId != 'string'
         ) return {
             message: "Credential types not matching",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        if (data.productId.length > 25) return {
+            message: "Invalid productId",
+            status: StatusCode.BAD_REQUEST,
+            success: false
+        }
+
+
+        if (data.addressId.length > 25) return {
+            message: "Invalid address",
             status: StatusCode.BAD_REQUEST,
             success: false
         }
