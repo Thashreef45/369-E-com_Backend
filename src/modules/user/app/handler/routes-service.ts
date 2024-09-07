@@ -13,6 +13,5 @@ ServiceRouter.get('/services',controller.fetchAllServices)
 
 ServiceRouter.get('/service/:serviceId',controller.fetchAService)
 
-
 export default ServiceRouter
 

@@ -66,7 +66,7 @@ userRouter.get('/product/:productId', controller.fetchProduct)
 
 
 // fetch product feedbacks 
-userRouter.get('/feedback/:productId', controller.fetchProductFeedbacks) // ** 
+userRouter.get('/feedback/:productId', controller.fetchProductFeedbacks) // **
 
 
 
@@ -126,13 +126,7 @@ userRouter.post('/payment', controller.rateProduct)  //pending work
 
 
 
-// userRouter.use(express.text())
-// userRouter.post('/test',(req:any,res:any)=>{
 
-
-//     console.log(req.body,'Recieved here -- plain/text')
-//     res.end()
-// })
 
 
 

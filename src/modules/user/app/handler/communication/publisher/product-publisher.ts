@@ -3,6 +3,7 @@ import * as productPublisher from '../../../../../product/app/handler/event-hand
 export const getProductsById = async (productIds: string[]) => {
     const response = await productPublisher.getProducts(productIds)
     return response
+
 }
 
 

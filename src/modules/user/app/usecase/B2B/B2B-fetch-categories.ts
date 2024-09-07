@@ -34,7 +34,8 @@ class FetchCategories {
     /** Mapper method for categories */
     Mapper(data: Category[]): Category[] {
         return data.map(x => ({
-            _id: x._id, name: x.name, description: x.description
+            _id: x._id, name: x.name, description: x.description,
+            subcategories: x.subcategories
         }))
     }
 }
@@ -53,7 +54,7 @@ interface Dependencies {
 
 
 interface Category {
-    _id: string, name: string, description: string 
+    _id: string, name: string, description: string, subcategories: Category[]
 }
 
 

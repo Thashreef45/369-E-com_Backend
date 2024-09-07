@@ -6,6 +6,7 @@ interface IRepository {
     findById(userId: string): Promise<any>
 
 
+
     createUser(phone: string, otp: string): Promise<any>
     updateOtp(phone: string, otp: string): Promise<any>
 

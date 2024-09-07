@@ -9,7 +9,7 @@ class Repository implements IRepository {
 
 
     /**Create new order  */
-    async checkOutCart(data:
+    async createOrder(data:
         {
             products: { productId: string, quantity: number, price: number }[],
             userId: string, addressId: string, cod: boolean

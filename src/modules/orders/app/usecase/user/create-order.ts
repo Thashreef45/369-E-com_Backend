@@ -3,10 +3,11 @@ import StatusCode from '../../../infrastructure/config/staus-code'
 
 
 
-class CheckoutCart {
+class CreateOrder {
 
 
     private repository: IRepository
+    
     constructor(dependencies: Dependencies) {
         this.repository = dependencies.repository
     }
@@ -17,8 +18,12 @@ class CheckoutCart {
 
         try {
 
-            const order = await this.repository.checkOutCart(data)
+            // have to create paypal order
+            const order = await this.repository.createOrder(data)
             const total = this.calculateTotalAmount(data.products)
+
+
+
             return {
                 response: { message: "Success", data: { orderId: order._id, total } },
                 status: StatusCode.OK // have to complete work here
@@ -45,7 +50,7 @@ class CheckoutCart {
 }
 
 
-export default CheckoutCart
+export default CreateOrder
 
 interface Input {
     userId: string,

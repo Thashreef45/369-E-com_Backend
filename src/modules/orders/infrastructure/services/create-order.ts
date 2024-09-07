@@ -23,3 +23,8 @@ const razorpayInstance = new Razorpay({
      currency,
      receipt: String(orderCreated._id),
  });
+
+
+const createOrder = () => {
+    
+}

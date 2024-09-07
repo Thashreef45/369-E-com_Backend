@@ -3,7 +3,7 @@ import StatusCode from "../../../infrastructure/config/staus-code"
 
 class FetchAllCategory {
 
-    private fetchAllCategory
+    private fetchAllCategory: () => Promise<any>
 
     constructor(dependencies: Dependencies) {
         this.fetchAllCategory = dependencies.fetchAllCategory

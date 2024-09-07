@@ -82,6 +82,7 @@ class CartCheckout {
 
             // create order
             const orderParams = this.createOrderParams(user?.cart, products, user._id, data.addressId, data.cod)
+            
             const orderCreated:Output = await this.createOrder(orderParams) // order publisher
             return {
                 response: orderCreated.response,
